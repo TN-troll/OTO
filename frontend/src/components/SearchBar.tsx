@@ -1,14 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api, SearchResult } from '../api/client';
+import { useLanguage } from '../i18n';
 
 interface SearchBarProps {
   /** Called when search results change (including empty query reset) */
   onSearchResults?: (results: SearchResult | null) => void;
-  /** Active filter criteria to combine with search */
-  activeFilters?: Record<string, unknown>;
-  /** Placeholder text */
-  placeholder?: string;
 }
 
 const DEBOUNCE_MS = 300;
@@ -32,7 +29,8 @@ const KNOWN_ABBREVIATIONS: Record<string, string> = {
   porsche: 'Porsche',
 };
 
-export function SearchBar({ onSearchResults, placeholder = 'Search by make or model...' }: SearchBarProps) {
+export function SearchBar({ onSearchResults }: SearchBarProps) {
+  const { t } = useLanguage();
   const [inputValue, setInputValue] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -122,7 +120,7 @@ export function SearchBar({ onSearchResults, placeholder = 'Search by make or mo
           type="text"
           value={inputValue}
           onChange={handleInputChange}
-          placeholder={placeholder}
+          placeholder={t.searchPlaceholder}
           maxLength={MAX_QUERY_LENGTH}
           className="block w-full rounded-xl border border-surface-200/60 bg-white/10 py-3 pl-12 pr-12 text-sm text-white placeholder-surface-400 shadow-sm backdrop-blur-sm transition-all duration-200 focus:border-brand-accent focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 md:bg-white/10 md:text-white md:placeholder-surface-400"
           aria-label="Search cars by make or model"

@@ -189,6 +189,16 @@ export function createMockApp(): express.Application {
     res.status(404).json({ error: 'Audio clip not available in mock mode' });
   });
 
+  // GET /api/scrape/status
+  app.get('/api/scrape/status', (_req, res) => {
+    res.json({ activeListings: MOCK_LISTINGS.length, mode: 'mock' });
+  });
+
+  // POST /api/scrape/autotrack
+  app.post('/api/scrape/autotrack', (_req, res) => {
+    res.json({ success: true, scraped: 10, inserted: 0, skipped: 10, message: 'Mock mode: data already loaded' });
+  });
+
   return app;
 }
 

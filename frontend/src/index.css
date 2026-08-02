@@ -13,6 +13,13 @@
     color: #171717;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .dark body,
+  html.dark body {
+    background-color: #171717;
+    color: #fafafa;
   }
 
   /* Custom scrollbar */

@@ -5,6 +5,7 @@ import { SearchBar } from './components/SearchBar';
 import { FilterPanel } from './components/FilterPanel';
 import { MarketplaceHealthBanner } from './components/MarketplaceHealthBanner';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
+import { ThemeToggle } from './components/ThemeToggle';
 import { useLanguage } from './i18n';
 
 function Header() {
@@ -31,7 +32,8 @@ function Header() {
           </div>
 
           {/* Right side */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
             <LanguageSwitcher />
           </div>
         </div>
@@ -75,7 +77,7 @@ function Footer() {
 
 export function App() {
   return (
-    <div className="flex min-h-screen flex-col bg-surface-50">
+    <div className="flex min-h-screen flex-col bg-surface-50 dark:bg-surface-900 transition-colors duration-300">
       <MarketplaceHealthBanner />
       <Header />
       <div className="flex flex-1">
