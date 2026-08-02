@@ -1,6 +1,7 @@
 [build]
 builder = "nixpacks"
-buildCommand = "npm ci"
+installCommand = "npm install --prefer-offline"
+buildCommand = "echo 'Build complete'"
 
 [deploy]
 startCommand = "cd backend && npx tsx src/index.ts"
