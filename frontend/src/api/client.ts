@@ -1,6 +1,8 @@
 import type { FilterCriteria, FilterResult, Listing, ListingSummary, MarketplaceHealth } from '@car-ads/shared';
 
-const API_BASE = '/api';
+// In production, VITE_API_URL points to the Railway backend
+// In dev, Vite proxy handles /api → localhost:4000
+const API_BASE = (import.meta.env.VITE_API_URL || '') + '/api';
 
 async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(url, {

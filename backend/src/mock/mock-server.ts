@@ -9,6 +9,15 @@ export function createMockApp(): express.Application {
   const app = express();
   app.use(express.json());
 
+  // CORS - allow frontend on any origin (Vercel, localhost, etc.)
+  app.use((_req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    if (_req.method === 'OPTIONS') { res.sendStatus(204); return; }
+    next();
+  });
+
   // GET /api/listings - Browse with pagination and sorting
   app.get('/api/listings', (req, res) => {
     const page = Math.max(1, parseInt(req.query.page as string) || 1);
