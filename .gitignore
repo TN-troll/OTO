@@ -1,6 +1,7 @@
 # Dependencies
 node_modules/
 .local-services/
+package-lock.json
 
 # Build outputs
 dist/

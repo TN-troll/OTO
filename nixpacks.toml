@@ -1,0 +1,8 @@
+[phases.install]
+cmds = ["npm install"]
+
+[phases.build]
+cmds = ["echo 'No build step needed - tsx handles TypeScript at runtime'"]
+
+[start]
+cmd = "cd backend && npx tsx src/index.ts"
