@@ -2,21 +2,24 @@ FROM node:22-slim
 
 WORKDIR /app
 
-# Copy package files
+# Copy all package files for workspace install
 COPY package.json ./
 COPY backend/package.json ./backend/
 COPY frontend/package.json ./frontend/
 COPY shared/package.json ./shared/
 COPY .npmrc ./
 
-# Install dependencies with npm install (not ci)
+# Install all dependencies
 RUN npm install --workspaces --include-workspace-root
 
-# Copy source code
+# Copy all source code
 COPY . .
+
+# Build the frontend (Vite produces dist/ folder)
+RUN cd frontend && npx vite build
 
 # Expose port
 EXPOSE 4000
 
-# Start with tsx
+# Start the backend (which also serves the frontend static files)
 CMD ["npx", "tsx", "backend/src/index.ts"]

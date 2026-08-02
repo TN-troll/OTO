@@ -1,6 +1,6 @@
 import type { FilterCriteria, FilterResult, Listing, ListingSummary, MarketplaceHealth } from '@car-ads/shared';
 
-// In production, VITE_API_URL points to the Railway backend
+// In production, frontend is served from the same origin as the API
 // In dev, Vite proxy handles /api → localhost:4000
 const API_BASE = (import.meta.env.VITE_API_URL || '') + '/api';
 
