@@ -9,6 +9,32 @@ import { useLanguage } from '../i18n';
 
 const DEFAULT_PAGE_SIZE = 50;
 
+/** Skeleton card placeholder for loading state */
+function SkeletonCard() {
+  return (
+    <div className="animate-pulse overflow-hidden rounded-xl bg-white shadow-card">
+      <div className="aspect-[3/2] bg-surface-200" />
+      <div className="p-4 space-y-3">
+        <div className="h-4 w-3/4 rounded bg-surface-200" />
+        <div className="flex gap-2">
+          <div className="h-6 w-16 rounded-md bg-surface-100" />
+          <div className="h-6 w-12 rounded-md bg-surface-100" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SkeletonGrid() {
+  return (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: 9 }).map((_, i) => (
+        <SkeletonCard key={i} />
+      ))}
+    </div>
+  );
+}
+
 export function BrowsePage() {
   const { t } = useLanguage();
   const [page, setPage] = useState(1);
@@ -61,12 +87,14 @@ export function BrowsePage() {
 
   if (timedOut && isFetching) {
     return (
-      <div className="flex flex-col items-center justify-center py-16">
-        <p className="text-base font-medium text-gray-800">{t.takingLonger}</p>
-        <p className="mt-1 text-sm text-gray-500">{t.takingLongerHint}</p>
-        <div className="mt-4 flex gap-3">
-          <button onClick={() => { setTimedOut(false); refetch(); }} className="rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">{t.retry}</button>
-          <button onClick={() => setTimedOut(false)} className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">{t.cancel}</button>
+      <div className="flex flex-col items-center justify-center py-20">
+        <div className="rounded-xl bg-white p-8 shadow-premium text-center">
+          <p className="text-base font-semibold text-surface-900">{t.takingLonger}</p>
+          <p className="mt-2 text-sm text-surface-500">{t.takingLongerHint}</p>
+          <div className="mt-6 flex justify-center gap-3">
+            <button onClick={() => { setTimedOut(false); refetch(); }} className="btn-primary">{t.retry}</button>
+            <button onClick={() => setTimedOut(false)} className="btn-ghost">{t.cancel}</button>
+          </div>
         </div>
       </div>
     );
@@ -74,11 +102,12 @@ export function BrowsePage() {
 
   if (isLoading && showLoading) {
     return (
-      <div className="flex items-center justify-center py-16">
-        <div className="flex items-center gap-3">
-          <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-200 border-t-primary-600" />
-          <span className="text-sm text-gray-500">{t.loading}</span>
+      <div className="animate-fade-in">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="h-7 w-48 animate-pulse rounded-lg bg-surface-200" />
+          <div className="h-8 w-40 animate-pulse rounded-lg bg-surface-200" />
         </div>
+        <SkeletonGrid />
       </div>
     );
   }
@@ -87,10 +116,17 @@ export function BrowsePage() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center py-16">
-        <p className="text-base font-medium text-red-600">{t.failedToLoad}</p>
-        <p className="mt-1 text-sm text-gray-500">{t.failedToLoadHint}</p>
-        <button onClick={() => refetch()} className="mt-4 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">{t.retry}</button>
+      <div className="flex flex-col items-center justify-center py-20">
+        <div className="rounded-xl bg-white p-8 shadow-premium text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+            <svg className="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          <p className="text-base font-semibold text-surface-900">{t.failedToLoad}</p>
+          <p className="mt-2 text-sm text-surface-500">{t.failedToLoadHint}</p>
+          <button onClick={() => refetch()} className="btn-primary mt-6">{t.retry}</button>
+        </div>
       </div>
     );
   }
@@ -99,24 +135,25 @@ export function BrowsePage() {
 
   return (
     <div className="relative">
+      {/* Updating overlay */}
       {isFetching && showLoading && (
-        <div className="absolute inset-0 z-10 flex items-start justify-center bg-white/60 pt-12">
-          <div className="flex items-center gap-2 rounded-md bg-white px-4 py-2 shadow-md">
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-200 border-t-primary-600" />
-            <span className="text-sm text-gray-600">{t.updating}</span>
+        <div className="absolute inset-0 z-10 flex items-start justify-center bg-surface-50/80 pt-16 backdrop-blur-[1px]">
+          <div className="flex items-center gap-3 rounded-xl bg-white px-5 py-3 shadow-premium">
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-surface-200 border-t-brand-accent" />
+            <span className="text-sm font-medium text-surface-700">{t.updating}</span>
           </div>
         </div>
       )}
 
       {/* Results header */}
-      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">
-            {data?.totalCount != null && (
-              <span className="text-primary-600">{data.totalCount.toLocaleString('nl-NL')}</span>
-            )}{' '}
-            {t.exclusiveCars}
-          </h1>
+          {data?.totalCount != null && (
+            <h1 className="text-2xl font-bold text-surface-900">
+              <span className="text-brand-accent">{data.totalCount.toLocaleString('nl-NL')}</span>{' '}
+              <span className="text-surface-600 font-normal text-lg">{t.carsFound}</span>
+            </h1>
+          )}
         </div>
         <SortControls sortBy={sortBy} sortOrder={sortOrder} onSortChange={handleSortChange} />
       </div>
@@ -124,20 +161,23 @@ export function BrowsePage() {
       {hasListings ? (
         <>
           <ListingGrid listings={data.listings} />
-          <div className="mt-8">
+          <div className="mt-10">
             <Pagination currentPage={data.page} totalPages={data.totalPages} onPageChange={handlePageChange} />
           </div>
-          <div className="mt-3 text-center text-xs text-gray-400">
+          <div className="mt-3 text-center text-xs text-surface-400">
             {t.page} {data.page} {t.of} {data.totalPages}
           </div>
         </>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white py-16">
-          <svg className="mb-4 h-12 w-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-          </svg>
-          <p className="text-base font-medium text-gray-800">{t.noListingsFound}</p>
-          <p className="mt-2 max-w-md text-center text-sm text-gray-500">{t.noListingsHint}</p>
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-surface-300 bg-white py-20">
+          {/* Car illustration placeholder */}
+          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-surface-100">
+            <svg className="h-10 w-10 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125v-2.688M5.857 6.143l2.25-2.25m0 0l2.25 2.25M8.107 3.893v6.214M20.625 14.25h-3.375m0 0v-2.688c0-.621-.504-1.125-1.125-1.125H12.89m-7.515 3.813h7.515m0 0v-2.688" />
+            </svg>
+          </div>
+          <p className="text-lg font-semibold text-surface-800">{t.noListingsFound}</p>
+          <p className="mt-3 max-w-md text-center text-sm text-surface-500">{t.noListingsHint}</p>
         </div>
       )}
     </div>

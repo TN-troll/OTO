@@ -65,32 +65,34 @@ export function MarketplaceHealthBanner() {
   return (
     <div
       role="alert"
-      className="flex items-center justify-between gap-3 border-b border-amber-300 bg-amber-50 px-4 py-3"
+      className="flex items-center justify-between gap-3 border-b border-amber-400/30 bg-amber-50 px-4 py-3 sm:px-6"
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         {/* Warning icon */}
-        <svg
-          className="h-5 w-5 shrink-0 text-amber-600"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            fillRule="evenodd"
-            d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.168 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z"
-            clipRule="evenodd"
-          />
-        </svg>
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100">
+          <svg
+            className="h-4 w-4 text-amber-600"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              fillRule="evenodd"
+              d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.168 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
         <p className="text-sm text-amber-800">
-          <span className="font-medium">{marketplaceList}</span>
+          <span className="font-semibold">{marketplaceList}</span>
           {plural ? ' are' : ' is'} currently unreachable. Listings from{' '}
           {plural ? 'these sources' : 'this source'} may not be up to date.
         </p>
       </div>
       <button
         onClick={() => setDismissed(true)}
-        className="shrink-0 rounded p-1 text-amber-600 transition hover:bg-amber-100 hover:text-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-500"
+        className="shrink-0 rounded-lg p-1.5 text-amber-600 transition-colors hover:bg-amber-100 hover:text-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-500"
         aria-label="Dismiss notification"
       >
         <svg

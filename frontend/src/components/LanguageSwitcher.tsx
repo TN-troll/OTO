@@ -9,25 +9,21 @@ export function LanguageSwitcher() {
   const { locale, setLocale } = useLanguage();
 
   return (
-    <div className="flex items-center gap-0.5">
-      {LANGUAGES.map((lang, i) => (
-        <span key={lang.code} className="flex items-center">
-          <button
-            onClick={() => setLocale(lang.code)}
-            className={`px-1.5 py-0.5 text-xs font-medium transition ${
-              locale === lang.code
-                ? 'text-white underline underline-offset-2'
-                : 'text-white/60 hover:text-white/90'
-            }`}
-            aria-label={`Switch to ${lang.label}`}
-            aria-pressed={locale === lang.code}
-          >
-            {lang.label}
-          </button>
-          {i < LANGUAGES.length - 1 && (
-            <span className="text-white/30">|</span>
-          )}
-        </span>
+    <div className="flex items-center rounded-lg bg-white/10 backdrop-blur-sm">
+      {LANGUAGES.map((lang) => (
+        <button
+          key={lang.code}
+          onClick={() => setLocale(lang.code)}
+          className={`px-3 py-1.5 text-xs font-semibold transition-all duration-200 first:rounded-l-lg last:rounded-r-lg ${
+            locale === lang.code
+              ? 'bg-brand-accent text-brand'
+              : 'text-surface-300 hover:text-white'
+          }`}
+          aria-label={`Switch to ${lang.label}`}
+          aria-pressed={locale === lang.code}
+        >
+          {lang.label}
+        </button>
       ))}
     </div>
   );

@@ -102,9 +102,9 @@ export function SearchBar({ onSearchResults, placeholder = 'Search by make or mo
     <div className="w-full">
       <div className="relative">
         {/* Search icon */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
           <svg
-            className="h-5 w-5 text-gray-400"
+            className="h-5 w-5 text-surface-400"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
@@ -124,16 +124,16 @@ export function SearchBar({ onSearchResults, placeholder = 'Search by make or mo
           onChange={handleInputChange}
           placeholder={placeholder}
           maxLength={MAX_QUERY_LENGTH}
-          className="block w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-10 text-sm text-gray-900 placeholder-gray-400 shadow-sm transition focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          className="block w-full rounded-xl border border-surface-200/60 bg-white/10 py-3 pl-12 pr-12 text-sm text-white placeholder-surface-400 shadow-sm backdrop-blur-sm transition-all duration-200 focus:border-brand-accent focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 md:bg-white/10 md:text-white md:placeholder-surface-400"
           aria-label="Search cars by make or model"
           role="searchbox"
         />
 
         {/* Loading spinner or clear button */}
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+        <div className="absolute inset-y-0 right-0 flex items-center pr-4">
           {(isLoading || isFetching) && isQueryValid ? (
             <svg
-              className="h-4 w-4 animate-spin text-gray-400"
+              className="h-4 w-4 animate-spin text-brand-accent"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -145,7 +145,7 @@ export function SearchBar({ onSearchResults, placeholder = 'Search by make or mo
           ) : inputValue.length > 0 ? (
             <button
               onClick={handleClear}
-              className="rounded p-0.5 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="rounded-full p-1 text-surface-400 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-brand-accent/50"
               aria-label="Clear search"
             >
               <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -161,22 +161,22 @@ export function SearchBar({ onSearchResults, placeholder = 'Search by make or mo
       </div>
 
       {/* Hint and status messages */}
-      <div className="mt-1 min-h-[1.25rem] text-xs">
+      <div className="mt-1.5 min-h-[1.25rem] text-xs">
         {/* Character count warning */}
         {showCharWarning && (
-          <span className="text-amber-600">
+          <span className="text-amber-400">
             {charsRemaining} character{charsRemaining !== 1 ? 's' : ''} remaining
           </span>
         )}
 
         {/* Minimum characters hint */}
         {inputValue.length > 0 && inputValue.trim().length < MIN_QUERY_LENGTH && !showCharWarning && (
-          <span className="text-gray-400">Type at least {MIN_QUERY_LENGTH} characters to search</span>
+          <span className="text-surface-400">Type at least {MIN_QUERY_LENGTH} characters to search</span>
         )}
 
         {/* Abbreviation expansion notice */}
         {expandedName && isQueryValid && (
-          <span className="text-primary-600">
+          <span className="text-brand-accent">
             Showing results for: <strong>{expandedName}</strong>
           </span>
         )}
@@ -184,14 +184,14 @@ export function SearchBar({ onSearchResults, placeholder = 'Search by make or mo
 
       {/* No results message with suggestions */}
       {isQueryValid && data && data.totalCount === 0 && !isFetching && (
-        <div className="mt-2 rounded-md border border-gray-200 bg-gray-50 p-3">
-          <p className="text-sm text-gray-600">
-            No listings found for &quot;<span className="font-medium">{debouncedQuery}</span>&quot;
+        <div className="mt-2 rounded-xl border border-surface-200/20 bg-white/10 p-4 backdrop-blur-sm">
+          <p className="text-sm text-surface-300">
+            No listings found for &quot;<span className="font-medium text-white">{debouncedQuery}</span>&quot;
           </p>
           {data.suggestions && data.suggestions.length > 0 && (
-            <div className="mt-2">
-              <p className="text-xs text-gray-500">Try searching for:</p>
-              <div className="mt-1 flex flex-wrap gap-1">
+            <div className="mt-3">
+              <p className="text-xs text-surface-400">Try searching for:</p>
+              <div className="mt-2 flex flex-wrap gap-2">
                 {data.suggestions.map((suggestion) => (
                   <button
                     key={suggestion}
@@ -199,7 +199,7 @@ export function SearchBar({ onSearchResults, placeholder = 'Search by make or mo
                       setInputValue(suggestion);
                       setDebouncedQuery(suggestion);
                     }}
-                    className="rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-primary-700 shadow-sm ring-1 ring-inset ring-gray-300 transition hover:bg-primary-50"
+                    className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white transition-all hover:bg-brand-accent hover:text-brand"
                   >
                     {suggestion}
                   </button>

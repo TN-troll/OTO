@@ -3,6 +3,7 @@ import { RangeFilter } from './filters/RangeFilter';
 import { MultiSelect } from './filters/MultiSelect';
 import { SoundFilters } from './filters/SoundFilters';
 import { useFilters } from '../hooks/useFilters';
+import { useLanguage } from '../i18n';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -21,23 +22,31 @@ const FUEL_TYPE_OPTIONS = [
 interface CollapsibleSectionProps {
   title: string;
   defaultOpen?: boolean;
+  count?: number;
   children: React.ReactNode;
 }
 
-function CollapsibleSection({ title, defaultOpen = false, children }: CollapsibleSectionProps) {
+function CollapsibleSection({ title, defaultOpen = false, count = 0, children }: CollapsibleSectionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-gray-200 py-3">
+    <div className="border-b border-surface-100 py-4 last:border-b-0">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between text-left"
         aria-expanded={isOpen}
       >
-        <span className="text-sm font-semibold text-gray-800">{title}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-semibold text-surface-800">{title}</span>
+          {count > 0 && (
+            <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-brand-accent px-1.5 text-[10px] font-bold text-brand">
+              {count}
+            </span>
+          )}
+        </div>
         <svg
-          className={`h-4 w-4 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`h-4 w-4 text-surface-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -45,7 +54,13 @@ function CollapsibleSection({ title, defaultOpen = false, children }: Collapsibl
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {isOpen && <div className="mt-3">{children}</div>}
+      <div
+        className={`overflow-hidden transition-all duration-200 ${
+          isOpen ? 'mt-4 max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        {children}
+      </div>
     </div>
   );
 }
@@ -55,13 +70,13 @@ export interface FilterPanelProps {
 }
 
 export function FilterPanel({ onResultsChange }: FilterPanelProps) {
+  const { t } = useLanguage();
   const {
     filters,
     validationErrors,
     isValid,
     filtersActive,
     filterResult,
-    isLoading,
     isFetching,
     updateRange,
     updateTransmission,
@@ -79,37 +94,47 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
     }
   }
 
+  // Count active filters per section
+  const priceCount = (filters.priceMin !== undefined ? 1 : 0) + (filters.priceMax !== undefined ? 1 : 0);
+  const yearCount = (filters.yearMin !== undefined ? 1 : 0) + (filters.yearMax !== undefined ? 1 : 0);
+  const hpCount = (filters.horsepowerMin !== undefined ? 1 : 0) + (filters.horsepowerMax !== undefined ? 1 : 0);
+  const displacementCount = (filters.engineDisplacementMin !== undefined ? 1 : 0) + (filters.engineDisplacementMax !== undefined ? 1 : 0);
+  const transmissionCount = filters.transmissionType.length;
+  const fuelCount = filters.fuelType.length;
+  const soundCount = Object.values(filters.soundProfile).filter((v) => Array.isArray(v) && v.length > 0).length;
+
   return (
-    <div className="space-y-1">
-      <div className="flex items-center justify-between pb-2">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600">
-          Filters
+    <div>
+      {/* Header */}
+      <div className="flex items-center justify-between pb-4">
+        <h2 className="text-base font-bold text-surface-900">
+          {t.filters}
         </h2>
         {filtersActive && (
           <button
             type="button"
             onClick={resetFilters}
-            className="text-xs text-primary-600 hover:text-primary-800"
+            className="text-xs font-medium text-brand-accent transition-colors hover:text-primary-600"
           >
-            Reset all
+            {t.resetAll}
           </button>
         )}
       </div>
 
       {/* Loading indicator */}
       {isFetching && (
-        <div className="flex items-center gap-2 rounded bg-blue-50 px-2 py-1.5 text-xs text-blue-700">
-          <svg className="h-3 w-3 animate-spin" viewBox="0 0 24 24" fill="none">
+        <div className="mb-4 flex items-center gap-2 rounded-lg bg-primary-50 px-3 py-2 text-xs font-medium text-primary-700">
+          <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
-          Filtering...
+          {t.filtering}
         </div>
       )}
 
       {/* Validation errors */}
       {validationErrors.length > 0 && (
-        <div className="rounded bg-red-50 px-2 py-1.5 text-xs text-red-700" role="alert">
+        <div className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700" role="alert">
           {validationErrors.map((err) => (
             <p key={err.field}>{err.message}</p>
           ))}
@@ -118,15 +143,16 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
 
       {/* Result count */}
       {filtersActive && isValid && filterResult && !isFetching && (
-        <div className="rounded bg-gray-50 px-2 py-1.5 text-xs text-gray-600">
-          {filterResult.totalCount} {filterResult.totalCount === 1 ? 'car' : 'cars'} found
+        <div className="mb-4 rounded-lg bg-surface-100 px-3 py-2 text-xs font-medium text-surface-700">
+          <span className="font-bold text-brand-accent">{filterResult.totalCount}</span>{' '}
+          {filterResult.totalCount === 1 ? t.carFound : t.carsFound}
         </div>
       )}
 
-      {/* Price Range */}
-      <CollapsibleSection title="Price" defaultOpen>
+      {/* Filter sections */}
+      <CollapsibleSection title={t.price} defaultOpen count={priceCount}>
         <RangeFilter
-          label="Price (€)"
+          label={`${t.price} (€)`}
           min={0}
           max={50_000_000}
           step={1000}
@@ -137,10 +163,9 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
         />
       </CollapsibleSection>
 
-      {/* Year Range */}
-      <CollapsibleSection title="Year" defaultOpen>
+      <CollapsibleSection title={t.year} defaultOpen count={yearCount}>
         <RangeFilter
-          label="Year"
+          label={t.year}
           min={1950}
           max={CURRENT_YEAR}
           step={1}
@@ -150,10 +175,9 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
         />
       </CollapsibleSection>
 
-      {/* Horsepower Range */}
-      <CollapsibleSection title="Horsepower" defaultOpen>
+      <CollapsibleSection title={t.horsepower} defaultOpen count={hpCount}>
         <RangeFilter
-          label="Horsepower (HP)"
+          label={`${t.horsepower} (HP)`}
           min={0}
           max={2000}
           step={10}
@@ -164,10 +188,9 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
         />
       </CollapsibleSection>
 
-      {/* Engine Displacement Range */}
-      <CollapsibleSection title="Engine Displacement">
+      <CollapsibleSection title={t.engineDisplacement} count={displacementCount}>
         <RangeFilter
-          label="Displacement (cc)"
+          label={`${t.engineDisplacement} (cc)`}
           min={0}
           max={10_000}
           step={100}
@@ -178,28 +201,25 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
         />
       </CollapsibleSection>
 
-      {/* Transmission Type */}
-      <CollapsibleSection title="Transmission">
+      <CollapsibleSection title={t.transmission} count={transmissionCount}>
         <MultiSelect
-          label="Transmission Type"
+          label={t.transmission}
           options={TRANSMISSION_OPTIONS}
           selected={filters.transmissionType}
           onChange={updateTransmission}
         />
       </CollapsibleSection>
 
-      {/* Fuel Type */}
-      <CollapsibleSection title="Fuel Type">
+      <CollapsibleSection title={t.fuelType} count={fuelCount}>
         <MultiSelect
-          label="Fuel Type"
+          label={t.fuelType}
           options={FUEL_TYPE_OPTIONS}
           selected={filters.fuelType}
           onChange={updateFuelType}
         />
       </CollapsibleSection>
 
-      {/* Sound Profile */}
-      <CollapsibleSection title="Sound Profile">
+      <CollapsibleSection title={t.soundProfile} count={soundCount}>
         <SoundFilters
           value={filters.soundProfile}
           onChange={updateSoundProfile}

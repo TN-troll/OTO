@@ -51,7 +51,7 @@ export function RangeFilter({
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
+      <label className="block text-xs font-medium text-surface-500">{label}</label>
       <div className="flex items-center gap-2">
         <input
           type="number"
@@ -62,9 +62,9 @@ export function RangeFilter({
           value={valueMin ?? ''}
           onChange={(e) => handleMinChange(e.target.value)}
           aria-label={`${label} minimum`}
-          className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          className="w-full rounded-lg border border-surface-200 bg-white px-3 py-2 text-sm text-surface-800 placeholder-surface-400 transition-all duration-200 focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
         />
-        <span className="text-xs text-gray-400">–</span>
+        <span className="text-xs font-medium text-surface-300">–</span>
         <input
           type="number"
           min={min}
@@ -74,7 +74,7 @@ export function RangeFilter({
           value={valueMax ?? ''}
           onChange={(e) => handleMaxChange(e.target.value)}
           aria-label={`${label} maximum`}
-          className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          className="w-full rounded-lg border border-surface-200 bg-white px-3 py-2 text-sm text-surface-800 placeholder-surface-400 transition-all duration-200 focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
         />
       </div>
       {error && (

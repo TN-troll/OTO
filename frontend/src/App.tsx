@@ -11,27 +11,35 @@ function Header() {
   const { t } = useLanguage();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
-      {/* Top bar */}
-      <div className="bg-brand text-white">
-        <div className="mx-auto flex h-10 max-w-7xl items-center justify-between px-4 sm:px-6">
-          <a href="/" className="flex items-center gap-2">
-            <span className="text-lg font-extrabold tracking-tight">OTO</span>
-            <span className="hidden text-xs font-light opacity-75 sm:inline">
+    <header className="sticky top-0 z-50">
+      {/* Main navigation bar */}
+      <div className="bg-gradient-brand shadow-premium">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          {/* Logo */}
+          <a href="/" className="flex items-center gap-3">
+            <span className="text-2xl font-extrabold tracking-tight text-white">
+              OTO
+            </span>
+            <span className="hidden text-xs font-light tracking-wide text-surface-400 md:inline">
               {t.tagline}
             </span>
           </a>
-          <LanguageSwitcher />
+
+          {/* Search - center */}
+          <div className="hidden max-w-lg flex-1 px-8 md:block">
+            <SearchBar />
+          </div>
+
+          {/* Right side */}
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+          </div>
         </div>
       </div>
 
-      {/* Search bar row */}
-      <div className="border-b border-gray-100 bg-white py-3">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="mx-auto max-w-2xl">
-            <SearchBar />
-          </div>
-        </div>
+      {/* Mobile search */}
+      <div className="border-b border-surface-200 bg-white px-4 py-3 md:hidden">
+        <SearchBar />
       </div>
     </header>
   );
@@ -39,15 +47,35 @@ function Header() {
 
 function FilterSidebar() {
   return (
-    <aside className="hidden w-72 shrink-0 overflow-y-auto border-r border-gray-200 bg-white px-5 py-6 lg:block">
+    <aside className="hidden w-80 shrink-0 overflow-y-auto border-r border-surface-200 bg-white p-6 lg:block">
       <FilterPanel />
     </aside>
   );
 }
 
+function Footer() {
+  const { t } = useLanguage();
+
+  return (
+    <footer className="border-t border-surface-200 bg-brand">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <div className="flex items-center gap-3">
+            <span className="text-lg font-extrabold tracking-tight text-white">OTO</span>
+            <span className="text-xs text-surface-400">{t.tagline}</span>
+          </div>
+          <p className="text-xs text-surface-500">
+            © {new Date().getFullYear()} OTO. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
 export function App() {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-surface-50">
       <MarketplaceHealthBanner />
       <Header />
       <div className="flex flex-1">
@@ -58,7 +86,7 @@ export function App() {
               <>
                 <FilterSidebar />
                 <main className="flex-1 overflow-auto">
-                  <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+                  <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
                     <BrowsePage />
                   </div>
                 </main>
@@ -69,7 +97,7 @@ export function App() {
             path="/listing/:id"
             element={
               <main className="flex-1 overflow-auto">
-                <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6">
+                <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
                   <ListingDetailPage />
                 </div>
               </main>
@@ -77,6 +105,7 @@ export function App() {
           />
         </Routes>
       </div>
+      <Footer />
     </div>
   );
 }

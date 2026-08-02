@@ -1,8 +1,8 @@
 [build]
 builder = "nixpacks"
-buildCommand = "cd backend && npm install && npx tsc"
+buildCommand = "npm ci"
 
 [deploy]
-startCommand = "cd backend && node dist/index.js"
+startCommand = "cd backend && npx tsx src/index.ts"
 healthcheckPath = "/api/marketplace-health"
 restartPolicyType = "ON_FAILURE"
