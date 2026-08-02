@@ -1,37 +1,40 @@
-import { createClient, RedisClientType } from 'redis';
 import { env } from '../config/env.js';
 
-export type RedisClient = RedisClientType;
+export type RedisClient = any;
 
-let client: RedisClient | null = null;
+let client: any = null;
 
 /**
  * Create and connect the Redis client.
- * Re-uses an existing connection if already connected.
+ * Returns null if REDIS_URL is not configured.
  */
-export async function connectRedis(): Promise<RedisClient> {
-  if (client) {
-    return client;
+export async function connectRedis(): Promise<RedisClient | null> {
+  if (!env.REDIS_URL || env.REDIS_URL === 'redis://localhost:6379') {
+    // Skip Redis in environments where it's not available
+    return null;
   }
 
-  client = createClient({ url: env.REDIS_URL }) as RedisClient;
+  if (client) return client;
 
-  client.on('error', (err) => {
-    console.error('Redis client error:', err);
-  });
-
-  await client.connect();
-  return client;
+  try {
+    const { createClient } = await import('redis');
+    client = createClient({ url: env.REDIS_URL });
+    client.on('error', (err: Error) => {
+      console.error('Redis client error:', err.message);
+    });
+    await client.connect();
+    return client;
+  } catch (err) {
+    console.warn('[OTO] Redis not available, running without cache');
+    return null;
+  }
 }
 
 /**
  * Get the current Redis client instance.
- * Throws if connect has not been called yet.
+ * Returns null if Redis is not connected (graceful degradation).
  */
-export function getRedisClient(): RedisClient {
-  if (!client) {
-    throw new Error('Redis client not connected. Call connectRedis() first.');
-  }
+export function getRedisClient(): RedisClient | null {
   return client;
 }
 

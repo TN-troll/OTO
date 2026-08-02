@@ -329,6 +329,7 @@ export class FilterEngine {
   private async getFromCache(key: string): Promise<FilterResult | null> {
     try {
       const redis = getRedisClient();
+      if (!redis) return null;
       const cached = await redis.get(key);
       if (cached) {
         return JSON.parse(cached) as FilterResult;
@@ -342,6 +343,7 @@ export class FilterEngine {
   private async setInCache(key: string, result: FilterResult): Promise<void> {
     try {
       const redis = getRedisClient();
+      if (!redis) return;
       await redis.set(key, JSON.stringify(result), { EX: CACHE_TTL_SECONDS });
     } catch {
       // Cache write failure — non-critical, proceed silently
