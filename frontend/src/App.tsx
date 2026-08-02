@@ -40,7 +40,7 @@ function Header() {
       </div>
 
       {/* Mobile search */}
-      <div className="border-b border-surface-200 bg-white px-4 py-3 md:hidden">
+      <div className="border-b border-surface-200 bg-white px-4 py-3 md:hidden dark:bg-surface-800 dark:border-surface-700">
         <SearchBar />
       </div>
     </header>
@@ -49,7 +49,7 @@ function Header() {
 
 function FilterSidebar() {
   return (
-    <aside className="hidden w-80 shrink-0 overflow-y-auto border-r border-surface-200 bg-white p-6 lg:block">
+    <aside className="hidden w-80 shrink-0 overflow-y-auto border-r border-surface-200 bg-white p-6 lg:block dark:bg-surface-800 dark:border-surface-700">
       <FilterPanel />
     </aside>
   );
@@ -59,7 +59,7 @@ function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="border-t border-surface-200 bg-brand">
+    <footer className="border-t border-surface-200 bg-brand dark:border-surface-700">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-3">

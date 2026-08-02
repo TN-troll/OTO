@@ -9,7 +9,7 @@ export function ListingCard({ listing, featured = false }: ListingCardProps) {
   return (
     <a
       href={`/listing/${listing.id}`}
-      className={`group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover ${
+      className={`group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover dark:bg-surface-800 dark:border dark:border-surface-700 ${
         featured ? 'md:col-span-2 md:row-span-2' : ''
       }`}
       aria-label={`${listing.make} ${listing.model} ${listing.year}`}
@@ -40,8 +40,8 @@ export function ListingCard({ listing, featured = false }: ListingCardProps) {
         </div>
 
         {/* Price badge */}
-        <div className="absolute bottom-3 right-3 rounded-lg bg-white/95 px-3 py-1.5 shadow-premium backdrop-blur-sm">
-          <span className="text-base font-bold text-brand">
+        <div className="absolute bottom-3 right-3 rounded-lg bg-white/95 px-3 py-1.5 shadow-premium backdrop-blur-sm dark:bg-surface-800">
+          <span className="text-base font-bold text-brand dark:text-brand-accent">
             €{listing.price.toLocaleString('nl-NL')}
           </span>
         </div>
@@ -50,15 +50,15 @@ export function ListingCard({ listing, featured = false }: ListingCardProps) {
       {/* Content */}
       <div className="flex flex-1 flex-col p-4">
         {/* Make & Model */}
-        <h3 className="text-base font-bold text-surface-900 transition-colors duration-200 group-hover:text-brand-accent">
+        <h3 className="text-base font-bold text-surface-900 transition-colors duration-200 group-hover:text-brand-accent dark:text-white">
           {listing.make}{' '}
-          <span className="font-medium text-surface-600">{listing.model}</span>
+          <span className="font-medium text-surface-600 dark:text-surface-300">{listing.model}</span>
         </h3>
 
         {/* Specs tags */}
         <div className="mt-3 flex flex-wrap gap-2">
           {listing.horsepower != null && (
-            <span className="inline-flex items-center gap-1 rounded-md bg-surface-100 px-2 py-1 text-xs font-medium text-surface-700">
+            <span className="inline-flex items-center gap-1 rounded-md bg-surface-100 px-2 py-1 text-xs font-medium text-surface-700 dark:bg-surface-700 dark:text-surface-300">
               <svg className="h-3 w-3 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
@@ -66,7 +66,7 @@ export function ListingCard({ listing, featured = false }: ListingCardProps) {
             </span>
           )}
           {listing.engineDisplacementCc != null && (
-            <span className="inline-flex items-center rounded-md bg-surface-100 px-2 py-1 text-xs font-medium text-surface-700">
+            <span className="inline-flex items-center rounded-md bg-surface-100 px-2 py-1 text-xs font-medium text-surface-700 dark:bg-surface-700 dark:text-surface-300">
               {(listing.engineDisplacementCc / 1000).toFixed(1)}L
             </span>
           )}

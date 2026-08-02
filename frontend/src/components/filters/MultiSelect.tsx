@@ -21,15 +21,15 @@ export function MultiSelect({ label, options, selected, onChange }: MultiSelectP
 
   return (
     <fieldset className="space-y-2">
-      <legend className="block text-xs font-medium text-surface-500">{label}</legend>
+      <legend className="block text-xs font-medium text-surface-500 dark:text-surface-400">{label}</legend>
       <div className="space-y-1">
         {options.map((option) => (
           <label
             key={option.value}
             className={`flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-all duration-150 ${
               selected.includes(option.value)
-                ? 'bg-primary-50 text-surface-900'
-                : 'text-surface-700 hover:bg-surface-50'
+                ? 'bg-primary-50 text-surface-900 dark:bg-surface-700 dark:text-white'
+                : 'text-surface-700 hover:bg-surface-50 dark:text-surface-300 dark:hover:bg-surface-700'
             }`}
           >
             <input

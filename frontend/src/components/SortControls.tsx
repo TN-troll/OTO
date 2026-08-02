@@ -20,11 +20,11 @@ export function SortControls({ sortBy, sortOrder, onSortChange }: SortControlsPr
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs font-medium text-surface-500">{t.sortBy}</span>
+      <span className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.sortBy}</span>
       <select
         value={sortBy}
         onChange={(e) => onSortChange(e.target.value as SortField, sortOrder)}
-        className="rounded-lg border border-surface-200 bg-white px-3 py-2 text-xs font-medium text-surface-700 transition-all duration-200 focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
+        className="rounded-lg border border-surface-200 bg-white px-3 py-2 text-xs font-medium text-surface-700 transition-all duration-200 focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20 dark:bg-surface-700 dark:border-surface-600 dark:text-surface-200"
       >
         {SORT_FIELDS.map((field) => (
           <option key={field.value} value={field.value}>{field.label}</option>
@@ -32,7 +32,7 @@ export function SortControls({ sortBy, sortOrder, onSortChange }: SortControlsPr
       </select>
       <button
         onClick={() => onSortChange(sortBy, sortOrder === 'asc' ? 'desc' : 'asc')}
-        className="rounded-lg border border-surface-200 bg-white px-3 py-2 text-xs font-medium text-surface-700 transition-all duration-200 hover:border-brand-accent hover:text-brand-accent focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
+        className="rounded-lg border border-surface-200 bg-white px-3 py-2 text-xs font-medium text-surface-700 transition-all duration-200 hover:border-brand-accent hover:text-brand-accent focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20 dark:bg-surface-700 dark:border-surface-600 dark:text-surface-200"
         title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
       >
         {sortOrder === 'asc' ? t.ascending : t.descending}

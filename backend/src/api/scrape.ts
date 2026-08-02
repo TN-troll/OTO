@@ -13,6 +13,15 @@ export const scrapeRouter = Router();
  * fetch-based scrape of AutoTrack's public search API.
  */
 scrapeRouter.post('/autotrack', async (_req: Request, res: Response): Promise<void> => {
+  await handleScrape(res);
+});
+
+// Also support GET for easy browser trigger
+scrapeRouter.get('/autotrack', async (_req: Request, res: Response): Promise<void> => {
+  await handleScrape(res);
+});
+
+async function handleScrape(res: Response): Promise<void> {
   try {
     console.log('[OTO] Starting AutoTrack scrape...');
 
@@ -75,7 +84,7 @@ scrapeRouter.post('/autotrack', async (_req: Request, res: Response): Promise<vo
     console.error('[OTO] Scrape failed:', err);
     res.status(500).json({ error: 'Scrape failed', details: String(err) });
   }
-});
+}
 
 /**
  * GET /api/scrape/status

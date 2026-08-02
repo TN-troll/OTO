@@ -47,7 +47,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
-        className="rounded-lg px-4 py-2 text-sm font-medium text-surface-600 transition-all duration-200 hover:bg-surface-100 disabled:cursor-not-allowed disabled:opacity-40"
+        className="rounded-lg px-4 py-2 text-sm font-medium text-surface-600 transition-all duration-200 hover:bg-surface-100 disabled:cursor-not-allowed disabled:opacity-40 dark:text-surface-300 dark:hover:bg-surface-700"
         aria-label="Previous page"
       >
         ← Previous
@@ -58,7 +58,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
           page === 'ellipsis' ? (
             <span
               key={`ellipsis-${index}`}
-              className="px-2 py-2 text-sm text-surface-400"
+              className="px-2 py-2 text-sm text-surface-400 dark:text-surface-500"
               aria-hidden="true"
             >
               …
@@ -70,7 +70,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
               className={`min-w-[2.5rem] rounded-full px-3 py-2 text-sm font-medium transition-all duration-200 ${
                 page === currentPage
                   ? 'bg-brand text-white shadow-sm'
-                  : 'text-surface-600 hover:bg-surface-100'
+                  : 'text-surface-600 hover:bg-surface-100 dark:text-surface-300 dark:hover:bg-surface-700'
               }`}
               aria-label={`Page ${page}`}
               aria-current={page === currentPage ? 'page' : undefined}
@@ -84,7 +84,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
-        className="rounded-lg px-4 py-2 text-sm font-medium text-surface-600 transition-all duration-200 hover:bg-surface-100 disabled:cursor-not-allowed disabled:opacity-40"
+        className="rounded-lg px-4 py-2 text-sm font-medium text-surface-600 transition-all duration-200 hover:bg-surface-100 disabled:cursor-not-allowed disabled:opacity-40 dark:text-surface-300 dark:hover:bg-surface-700"
         aria-label="Next page"
       >
         Next →

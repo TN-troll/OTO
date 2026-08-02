@@ -30,7 +30,7 @@ function CollapsibleSection({ title, defaultOpen = false, count = 0, children }:
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-surface-100 py-4 last:border-b-0">
+    <div className="border-b border-surface-100 py-4 last:border-b-0 dark:border-surface-700">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -38,7 +38,7 @@ function CollapsibleSection({ title, defaultOpen = false, count = 0, children }:
         aria-expanded={isOpen}
       >
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-surface-800">{title}</span>
+          <span className="text-sm font-semibold text-surface-800 dark:text-surface-200">{title}</span>
           {count > 0 && (
             <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-brand-accent px-1.5 text-[10px] font-bold text-brand">
               {count}
@@ -46,7 +46,7 @@ function CollapsibleSection({ title, defaultOpen = false, count = 0, children }:
           )}
         </div>
         <svg
-          className={`h-4 w-4 text-surface-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          className={`h-4 w-4 text-surface-400 transition-transform duration-200 dark:text-surface-500 ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -107,7 +107,7 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
     <div>
       {/* Header */}
       <div className="flex items-center justify-between pb-4">
-        <h2 className="text-base font-bold text-surface-900">
+        <h2 className="text-base font-bold text-surface-900 dark:text-white">
           {t.filters}
         </h2>
         {filtersActive && (
@@ -123,7 +123,7 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
 
       {/* Loading indicator */}
       {isFetching && (
-        <div className="mb-4 flex items-center gap-2 rounded-lg bg-primary-50 px-3 py-2 text-xs font-medium text-primary-700">
+        <div className="mb-4 flex items-center gap-2 rounded-lg bg-primary-50 px-3 py-2 text-xs font-medium text-primary-700 dark:bg-surface-700 dark:text-surface-200">
           <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -134,7 +134,7 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
 
       {/* Validation errors */}
       {validationErrors.length > 0 && (
-        <div className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700" role="alert">
+        <div className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700 dark:bg-red-900/30 dark:text-red-300" role="alert">
           {validationErrors.map((err) => (
             <p key={err.field}>{err.message}</p>
           ))}
@@ -143,7 +143,7 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
 
       {/* Result count */}
       {filtersActive && isValid && filterResult && !isFetching && (
-        <div className="mb-4 rounded-lg bg-surface-100 px-3 py-2 text-xs font-medium text-surface-700">
+        <div className="mb-4 rounded-lg bg-surface-100 px-3 py-2 text-xs font-medium text-surface-700 dark:bg-surface-700 dark:text-surface-200">
           <span className="font-bold text-brand-accent">{filterResult.totalCount}</span>{' '}
           {filterResult.totalCount === 1 ? t.carFound : t.carsFound}
         </div>
