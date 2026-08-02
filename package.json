@@ -1,0 +1,19 @@
+{
+  "name": "exclusive-car-ads-aggregator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aggregates exclusive, luxury, and high-performance car ads from Dutch marketplaces",
+  "workspaces": [
+    "backend",
+    "frontend",
+    "shared"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

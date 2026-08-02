@@ -1,0 +1,214 @@
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { api, SearchResult } from '../api/client';
+
+interface SearchBarProps {
+  /** Called when search results change (including empty query reset) */
+  onSearchResults?: (results: SearchResult | null) => void;
+  /** Active filter criteria to combine with search */
+  activeFilters?: Record<string, unknown>;
+  /** Placeholder text */
+  placeholder?: string;
+}
+
+const DEBOUNCE_MS = 300;
+const MIN_QUERY_LENGTH = 2;
+const MAX_QUERY_LENGTH = 100;
+
+/**
+ * Known abbreviation expansions displayed to the user.
+ * The actual expansion logic is handled server-side.
+ */
+const KNOWN_ABBREVIATIONS: Record<string, string> = {
+  merc: 'Mercedes-Benz',
+  mercedes: 'Mercedes-Benz',
+  chevy: 'Chevrolet',
+  lambo: 'Lamborghini',
+  beemer: 'BMW',
+  bimmer: 'BMW',
+  vette: 'Corvette',
+  aston: 'Aston Martin',
+  astonmartin: 'Aston Martin',
+  porsche: 'Porsche',
+};
+
+export function SearchBar({ onSearchResults, placeholder = 'Search by make or model...' }: SearchBarProps) {
+  const [inputValue, setInputValue] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Debounce the input value
+  useEffect(() => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      const trimmed = inputValue.trim();
+      if (trimmed.length >= MIN_QUERY_LENGTH) {
+        setDebouncedQuery(trimmed);
+      } else {
+        setDebouncedQuery('');
+      }
+    }, DEBOUNCE_MS);
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [inputValue]);
+
+  // Only search when we have a valid debounced query
+  const isQueryValid = debouncedQuery.length >= MIN_QUERY_LENGTH;
+
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ['search', debouncedQuery],
+    queryFn: () => api.searchListings({ q: debouncedQuery }),
+    enabled: isQueryValid,
+    staleTime: 30_000,
+  });
+
+  // Notify parent of search results
+  useEffect(() => {
+    if (!isQueryValid) {
+      onSearchResults?.(null);
+    } else if (data) {
+      onSearchResults?.(data);
+    }
+  }, [data, isQueryValid, onSearchResults]);
+
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Enforce max length
+    if (value.length <= MAX_QUERY_LENGTH) {
+      setInputValue(value);
+    }
+  }, []);
+
+  const handleClear = useCallback(() => {
+    setInputValue('');
+    setDebouncedQuery('');
+    onSearchResults?.(null);
+  }, [onSearchResults]);
+
+  // Check if the current query matches a known abbreviation
+  const expandedName = KNOWN_ABBREVIATIONS[debouncedQuery.toLowerCase()];
+
+  const charsRemaining = MAX_QUERY_LENGTH - inputValue.length;
+  const showCharWarning = charsRemaining <= 15 && inputValue.length > 0;
+
+  return (
+    <div className="w-full">
+      <div className="relative">
+        {/* Search icon */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+          <svg
+            className="h-5 w-5 text-gray-400"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              fillRule="evenodd"
+              d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
+
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          placeholder={placeholder}
+          maxLength={MAX_QUERY_LENGTH}
+          className="block w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-10 text-sm text-gray-900 placeholder-gray-400 shadow-sm transition focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          aria-label="Search cars by make or model"
+          role="searchbox"
+        />
+
+        {/* Loading spinner or clear button */}
+        <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+          {(isLoading || isFetching) && isQueryValid ? (
+            <svg
+              className="h-4 w-4 animate-spin text-gray-400"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+          ) : inputValue.length > 0 ? (
+            <button
+              onClick={handleClear}
+              className="rounded p-0.5 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              aria-label="Clear search"
+            >
+              <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          ) : null}
+        </div>
+      </div>
+
+      {/* Hint and status messages */}
+      <div className="mt-1 min-h-[1.25rem] text-xs">
+        {/* Character count warning */}
+        {showCharWarning && (
+          <span className="text-amber-600">
+            {charsRemaining} character{charsRemaining !== 1 ? 's' : ''} remaining
+          </span>
+        )}
+
+        {/* Minimum characters hint */}
+        {inputValue.length > 0 && inputValue.trim().length < MIN_QUERY_LENGTH && !showCharWarning && (
+          <span className="text-gray-400">Type at least {MIN_QUERY_LENGTH} characters to search</span>
+        )}
+
+        {/* Abbreviation expansion notice */}
+        {expandedName && isQueryValid && (
+          <span className="text-primary-600">
+            Showing results for: <strong>{expandedName}</strong>
+          </span>
+        )}
+      </div>
+
+      {/* No results message with suggestions */}
+      {isQueryValid && data && data.totalCount === 0 && !isFetching && (
+        <div className="mt-2 rounded-md border border-gray-200 bg-gray-50 p-3">
+          <p className="text-sm text-gray-600">
+            No listings found for &quot;<span className="font-medium">{debouncedQuery}</span>&quot;
+          </p>
+          {data.suggestions && data.suggestions.length > 0 && (
+            <div className="mt-2">
+              <p className="text-xs text-gray-500">Try searching for:</p>
+              <div className="mt-1 flex flex-wrap gap-1">
+                {data.suggestions.map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    onClick={() => {
+                      setInputValue(suggestion);
+                      setDebouncedQuery(suggestion);
+                    }}
+                    className="rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-primary-700 shadow-sm ring-1 ring-inset ring-gray-300 transition hover:bg-primary-50"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
