@@ -21,6 +21,7 @@ async function start() {
     app = createMockApp();
   } else {
     console.log('[OTO] Starting with database connection');
+    console.log(`[OTO] DATABASE_URL found: ${env.DATABASE_URL.replace(/:[^:@]+@/, ':***@').substring(0, 80)}`);
     console.log('[OTO] Running database migrations...');
 
     // Auto-run migrations on startup

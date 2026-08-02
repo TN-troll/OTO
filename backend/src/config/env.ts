@@ -12,7 +12,7 @@ export interface EnvConfig {
 
 export function loadEnvConfig(): EnvConfig {
   return {
-    DATABASE_URL: process.env.DATABASE_URL ?? 'postgresql://localhost:5432/car_ads',
+    DATABASE_URL: process.env.DATABASE_PUBLIC_URL || process.env.DATABASE_URL || '',
     REDIS_URL: process.env.REDIS_URL ?? '',
     PORT: parseInt(process.env.PORT ?? '4000', 10),
     NODE_ENV: (process.env.NODE_ENV as EnvConfig['NODE_ENV']) ?? 'development',
