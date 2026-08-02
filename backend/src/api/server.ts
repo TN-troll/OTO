@@ -4,6 +4,7 @@ import { searchRouter } from './search.js';
 import { soundProfilesRouter } from './sound-profiles.js';
 import { healthRouter } from './health.js';
 import { filterOptionsRouter } from './filter-options.js';
+import { scrapeRouter } from './scrape.js';
 import { env } from '../config/env.js';
 
 /**
@@ -12,6 +13,15 @@ import { env } from '../config/env.js';
  */
 export function createApp(): express.Application {
   const app = express();
+
+  // CORS
+  app.use((_req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    if (_req.method === 'OPTIONS') { res.sendStatus(204); return; }
+    next();
+  });
 
   // Middleware
   app.use(express.json());
@@ -22,6 +32,7 @@ export function createApp(): express.Application {
   app.use('/api/sound-profiles', soundProfilesRouter);
   app.use('/api/marketplace-health', healthRouter);
   app.use('/api/filter-options', filterOptionsRouter);
+  app.use('/api/scrape', scrapeRouter);
 
   return app;
 }
