@@ -30,3 +30,17 @@ npm-debug.log*
 
 # Test coverage
 coverage/
+
+# Temp files & system junk
+*.tmp
+*.tmp.ico
+*.dat
+*.cache
+*.cpuprofile
+*.ses
+qtsingleapp*
+systray_temp_icon*
+ExchangePerflog*
+NotifyIconGenerated*
+OProcSessId*
+{*} - OProcSessId.dat
