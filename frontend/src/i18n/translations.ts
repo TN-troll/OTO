@@ -19,6 +19,7 @@ export interface Translations {
   filtering: string;
   carsFound: string;
   carFound: string;
+  make: string;
   price: string;
   year: string;
   horsepower: string;
@@ -114,6 +115,7 @@ export const translations: Record<Locale, Translations> = {
     filtering: 'Filtering...',
     carsFound: 'cars found',
     carFound: 'car found',
+    make: 'Make',
     price: 'Price',
     year: 'Year',
     horsepower: 'Horsepower',
@@ -199,6 +201,7 @@ export const translations: Record<Locale, Translations> = {
     filtering: 'Filteren...',
     carsFound: 'auto\'s gevonden',
     carFound: 'auto gevonden',
+    make: 'Merk',
     price: 'Prijs',
     year: 'Bouwjaar',
     horsepower: 'Vermogen',

@@ -13,6 +13,7 @@ export interface FilterState {
   yearMax?: number;
   priceMin?: number;
   priceMax?: number;
+  makes: string[];
   transmissionType: TransmissionType[];
   fuelType: FuelType[];
   soundProfile: SoundFilterCriteria;
@@ -27,6 +28,7 @@ const INITIAL_FILTER_STATE: FilterState = {
   yearMax: undefined,
   priceMin: undefined,
   priceMax: undefined,
+  makes: [],
   transmissionType: [],
   fuelType: [],
   soundProfile: {},
@@ -93,6 +95,7 @@ function buildCriteria(state: FilterState): FilterCriteria {
   if (state.yearMax !== undefined) criteria.yearMax = state.yearMax;
   if (state.priceMin !== undefined) criteria.priceMin = state.priceMin;
   if (state.priceMax !== undefined) criteria.priceMax = state.priceMax;
+  if (state.makes.length > 0) criteria.makes = state.makes;
   if (state.transmissionType.length > 0) criteria.transmissionType = state.transmissionType;
   if (state.fuelType.length > 0) criteria.fuelType = state.fuelType;
 
@@ -120,6 +123,7 @@ function hasActiveFilters(state: FilterState): boolean {
     state.yearMax !== undefined ||
     state.priceMin !== undefined ||
     state.priceMax !== undefined ||
+    state.makes.length > 0 ||
     state.transmissionType.length > 0 ||
     state.fuelType.length > 0 ||
     Object.values(state.soundProfile).some((v) => Array.isArray(v) && v.length > 0)
@@ -165,6 +169,13 @@ export function useFilters() {
     }));
   }, []);
 
+  const updateMakes = useCallback((selected: string[]) => {
+    setFilters((prev) => ({
+      ...prev,
+      makes: selected,
+    }));
+  }, []);
+
   const updateFuelType = useCallback((selected: string[]) => {
     setFilters((prev) => ({
       ...prev,
@@ -193,6 +204,7 @@ export function useFilters() {
     isFetching,
     queryError,
     updateRange,
+    updateMakes,
     updateTransmission,
     updateFuelType,
     updateSoundProfile,

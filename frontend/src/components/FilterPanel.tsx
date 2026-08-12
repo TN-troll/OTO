@@ -7,16 +7,15 @@ import { useLanguage } from '../i18n';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-const TRANSMISSION_OPTIONS = [
-  { value: 'manual', label: 'Manual' },
-  { value: 'automatic', label: 'Automatic' },
-];
-
-const FUEL_TYPE_OPTIONS = [
-  { value: 'petrol', label: 'Petrol' },
-  { value: 'diesel', label: 'Diesel' },
-  { value: 'hybrid', label: 'Hybrid' },
-  { value: 'electric', label: 'Electric' },
+const MAKE_OPTIONS = [
+  { value: 'Ferrari', label: 'Ferrari' },
+  { value: 'Lamborghini', label: 'Lamborghini' },
+  { value: 'Porsche', label: 'Porsche' },
+  { value: 'McLaren', label: 'McLaren' },
+  { value: 'Bentley', label: 'Bentley' },
+  { value: 'Aston Martin', label: 'Aston Martin' },
+  { value: 'Mercedes-Benz', label: 'Mercedes-Benz' },
+  { value: 'BMW', label: 'BMW' },
 ];
 
 interface CollapsibleSectionProps {
@@ -79,11 +78,24 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
     filterResult,
     isFetching,
     updateRange,
+    updateMakes,
     updateTransmission,
     updateFuelType,
     updateSoundProfile,
     resetFilters,
   } = useFilters();
+
+  const TRANSMISSION_OPTIONS = [
+    { value: 'manual', label: t.manual },
+    { value: 'automatic', label: t.automatic },
+  ];
+
+  const FUEL_TYPE_OPTIONS = [
+    { value: 'petrol', label: t.petrol },
+    { value: 'diesel', label: t.diesel },
+    { value: 'hybrid', label: t.hybrid },
+    { value: 'electric', label: t.electric },
+  ];
 
   // Notify parent of result changes
   if (onResultsChange) {
@@ -95,6 +107,7 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
   }
 
   // Count active filters per section
+  const makesCount = filters.makes.length;
   const priceCount = (filters.priceMin !== undefined ? 1 : 0) + (filters.priceMax !== undefined ? 1 : 0);
   const yearCount = (filters.yearMin !== undefined ? 1 : 0) + (filters.yearMax !== undefined ? 1 : 0);
   const hpCount = (filters.horsepowerMin !== undefined ? 1 : 0) + (filters.horsepowerMax !== undefined ? 1 : 0);
@@ -150,6 +163,15 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
       )}
 
       {/* Filter sections */}
+      <CollapsibleSection title={t.make} defaultOpen count={makesCount}>
+        <MultiSelect
+          label={t.make}
+          options={MAKE_OPTIONS}
+          selected={filters.makes}
+          onChange={updateMakes}
+        />
+      </CollapsibleSection>
+
       <CollapsibleSection title={t.price} defaultOpen count={priceCount}>
         <RangeFilter
           label={`${t.price} (€)`}

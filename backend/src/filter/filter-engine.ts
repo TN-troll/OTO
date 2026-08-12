@@ -187,7 +187,7 @@ export class FilterEngine {
       make: string;
       model: string;
       year: number;
-      price: number;
+      price: string | number;
       horsepower: number | null;
       engine_displacement_cc: number | null;
       date_added: Date;
@@ -200,7 +200,7 @@ export class FilterEngine {
       make: row.make,
       model: row.model,
       year: row.year,
-      price: parseFloat(row.price),
+      price: typeof row.price === 'string' ? parseFloat(row.price) : row.price,
       horsepower: row.horsepower,
       engineDisplacementCc: row.engine_displacement_cc,
       dateAdded: row.date_added,
@@ -275,6 +275,12 @@ export class FilterEngine {
     if (criteria.priceMax !== undefined) {
       params.push(criteria.priceMax);
       conditions.push(`l.price <= $${params.length}`);
+    }
+
+    // Makes (array of allowed values)
+    if (criteria.makes?.length) {
+      params.push(criteria.makes);
+      conditions.push(`l.make = ANY($${params.length})`);
     }
 
     // Transmission type (array of allowed values)

@@ -91,6 +91,7 @@ export interface FilterCriteria {
   yearMax?: number;
   priceMin?: number;
   priceMax?: number;
+  makes?: string[];
   transmissionType?: TransmissionType[];
   fuelType?: FuelType[];
   soundProfile?: SoundFilterCriteria;
