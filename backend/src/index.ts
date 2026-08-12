@@ -144,7 +144,7 @@ async function start() {
       setInterval(async () => {
         try {
           console.log('[OTO] Running daily auto-scrape...');
-          const response = await fetch(`http://localhost:${port}/api/scrape-real/autotrack`);
+          const response = await fetch(`http://localhost:${port}/api/scrape-autoscout/run`);
           const result = await response.json();
           console.log('[OTO] Daily scrape result:', result);
         } catch (err) {
