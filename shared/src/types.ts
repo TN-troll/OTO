@@ -92,6 +92,7 @@ export interface FilterCriteria {
   priceMin?: number;
   priceMax?: number;
   makes?: string[];
+  models?: string[];
   transmissionType?: TransmissionType[];
   fuelType?: FuelType[];
   soundProfile?: SoundFilterCriteria;

@@ -69,3 +69,34 @@ filterOptionsRouter.get('/', async (_req: Request, res: Response): Promise<void>
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+/**
+ * GET /api/filter-options/models?make=Ferrari&make=Porsche
+ *
+ * Returns models for the specified make(s).
+ */
+filterOptionsRouter.get('/models', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const makesParam = req.query.make;
+    const makes: string[] = Array.isArray(makesParam)
+      ? makesParam.map(String)
+      : makesParam
+        ? [String(makesParam)]
+        : [];
+
+    if (makes.length === 0) {
+      res.json({ models: [] });
+      return;
+    }
+
+    const result = await query<{ model: string }>(
+      `SELECT DISTINCT model FROM listings WHERE status = 'active' AND make = ANY($1) ORDER BY model`,
+      [makes],
+    );
+
+    res.json({ models: result.rows.map((r) => r.model) });
+  } catch (err) {
+    console.error('Error fetching models for make:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});

@@ -6,7 +6,9 @@ import { FilterPanel } from './components/FilterPanel';
 import { MarketplaceHealthBanner } from './components/MarketplaceHealthBanner';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { ThemeToggle } from './components/ThemeToggle';
+import { FilterProvider, useFilterContext } from './hooks/FilterContext';
 import { useLanguage } from './i18n';
+import { useEffect } from 'react';
 
 function Header() {
   const { t } = useLanguage();
@@ -55,6 +57,75 @@ function FilterSidebar() {
   );
 }
 
+/** Mobile slide-over drawer containing the FilterPanel */
+function MobileFilterDrawer() {
+  const { t } = useLanguage();
+  const { mobileFilterOpen, setMobileFilterOpen } = useFilterContext();
+
+  // Lock body scroll when open
+  useEffect(() => {
+    if (mobileFilterOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileFilterOpen]);
+
+  // Close on Escape
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape' && mobileFilterOpen) {
+        setMobileFilterOpen(false);
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [mobileFilterOpen, setMobileFilterOpen]);
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
+          mobileFilterOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+        onClick={() => setMobileFilterOpen(false)}
+        aria-hidden="true"
+      />
+
+      {/* Drawer */}
+      <div
+        className={`fixed inset-y-0 left-0 z-[70] w-80 max-w-[85vw] transform overflow-y-auto bg-white p-6 shadow-2xl transition-transform duration-300 ease-in-out lg:hidden dark:bg-surface-800 ${
+          mobileFilterOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+        role="dialog"
+        aria-modal="true"
+        aria-label={t.filters}
+      >
+        {/* Close button */}
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-base font-bold text-surface-900 dark:text-white">{t.filters}</h2>
+          <button
+            type="button"
+            onClick={() => setMobileFilterOpen(false)}
+            className="rounded-lg p-2 text-surface-500 transition-colors hover:bg-surface-100 hover:text-surface-900 dark:text-surface-400 dark:hover:bg-surface-700 dark:hover:text-white"
+            aria-label="Close filters"
+          >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <FilterPanel />
+      </div>
+    </>
+  );
+}
+
 function Footer() {
   const { t } = useLanguage();
 
@@ -85,14 +156,15 @@ export function App() {
           <Route
             path="/"
             element={
-              <>
+              <FilterProvider>
                 <FilterSidebar />
+                <MobileFilterDrawer />
                 <main className="flex-1 overflow-auto">
                   <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
                     <BrowsePage />
                   </div>
                 </main>
-              </>
+              </FilterProvider>
             }
           />
           <Route

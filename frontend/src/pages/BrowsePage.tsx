@@ -6,6 +6,7 @@ import { ListingGrid } from '../components/ListingGrid';
 import { Pagination } from '../components/Pagination';
 import { SortControls } from '../components/SortControls';
 import { ViewToggle } from '../components/ViewToggle';
+import { useFilterContext } from '../hooks/FilterContext';
 import { useLanguage } from '../i18n';
 
 const DEFAULT_PAGE_SIZE = 50;
@@ -38,22 +39,54 @@ function SkeletonGrid() {
 
 export function BrowsePage() {
   const { t } = useLanguage();
-  const [page, setPage] = useState(1);
-  const [sortBy, setSortBy] = useState<SortField>('dateAdded');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const {
+    filtersActive,
+    filterResult,
+    isLoading: filterLoading,
+    isFetching: filterFetching,
+    queryError: filterError,
+    sortBy,
+    sortOrder,
+    page,
+    setSortBy,
+    setSortOrder,
+    setPage,
+    searchQuery,
+    searchResult,
+    isSearching,
+    clearSearch,
+    setMobileFilterOpen,
+  } = useFilterContext();
+
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showLoading, setShowLoading] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
   const loadingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const timeoutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const queryKey = ['listings', { page, pageSize: DEFAULT_PAGE_SIZE, sortBy, sortOrder }];
+  // Determine if search is active
+  const isSearchActive = searchQuery.length >= 2 && searchResult !== null;
 
-  const { data, isLoading, isFetching, error, refetch } = useQuery({
-    queryKey,
-    queryFn: () =>
-      api.getListings({ page, pageSize: DEFAULT_PAGE_SIZE, sortBy, sortOrder }),
+  // Unfiltered listings query — only enabled when NO filters and NO search are active
+  const unfilteredQueryKey = ['listings', { page, pageSize: DEFAULT_PAGE_SIZE, sortBy, sortOrder }];
+  const {
+    data: unfilteredData,
+    isLoading: unfilteredLoading,
+    isFetching: unfilteredFetching,
+    error: unfilteredError,
+    refetch: unfilteredRefetch,
+  } = useQuery({
+    queryKey: unfilteredQueryKey,
+    queryFn: () => api.getListings({ page, pageSize: DEFAULT_PAGE_SIZE, sortBy, sortOrder }),
+    enabled: !filtersActive && !isSearchActive,
   });
+
+  // Determine which data source to use: search > filter > unfiltered
+  const data = isSearchActive ? searchResult : filtersActive ? filterResult : unfilteredData;
+  const isLoading = isSearchActive ? isSearching : filtersActive ? filterLoading : unfilteredLoading;
+  const isFetching = isSearchActive ? isSearching : filtersActive ? filterFetching : unfilteredFetching;
+  const error = isSearchActive ? null : filtersActive ? filterError : unfilteredError;
+  const refetch = filtersActive || isSearchActive ? undefined : unfilteredRefetch;
 
   useEffect(() => {
     if (isFetching) {
@@ -94,7 +127,7 @@ export function BrowsePage() {
           <p className="text-base font-semibold text-surface-900 dark:text-white">{t.takingLonger}</p>
           <p className="mt-2 text-sm text-surface-500 dark:text-surface-400">{t.takingLongerHint}</p>
           <div className="mt-6 flex justify-center gap-3">
-            <button onClick={() => { setTimedOut(false); refetch(); }} className="btn-primary">{t.retry}</button>
+            <button onClick={() => { setTimedOut(false); refetch?.(); }} className="btn-primary">{t.retry}</button>
             <button onClick={() => setTimedOut(false)} className="btn-ghost">{t.cancel}</button>
           </div>
         </div>
@@ -127,7 +160,7 @@ export function BrowsePage() {
           </div>
           <p className="text-base font-semibold text-surface-900 dark:text-white">{t.failedToLoad}</p>
           <p className="mt-2 text-sm text-surface-500 dark:text-surface-400">{t.failedToLoadHint}</p>
-          <button onClick={() => refetch()} className="btn-primary mt-6">{t.retry}</button>
+          <button onClick={() => refetch?.()} className="btn-primary mt-6">{t.retry}</button>
         </div>
       </div>
     );
@@ -137,6 +170,40 @@ export function BrowsePage() {
 
   return (
     <div className="relative">
+      {/* Mobile filter button */}
+      <div className="mb-4 lg:hidden">
+        <button
+          type="button"
+          onClick={() => setMobileFilterOpen(true)}
+          className="inline-flex items-center gap-2 rounded-lg border border-surface-200 bg-white px-4 py-2.5 text-sm font-medium text-surface-700 shadow-sm transition-colors hover:bg-surface-50 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-200 dark:hover:bg-surface-700"
+        >
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          {t.filters}
+          {filtersActive && (
+            <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-brand-accent px-1.5 text-[10px] font-bold text-brand">
+              !
+            </span>
+          )}
+        </button>
+      </div>
+
+      {/* Search active banner */}
+      {isSearchActive && (
+        <div className="mb-4 flex items-center gap-3 rounded-lg bg-primary-50 px-4 py-2.5 dark:bg-surface-700">
+          <span className="text-sm font-medium text-primary-700 dark:text-surface-200">
+            {t.searchShowingResultsFor} &quot;{searchQuery}&quot;
+          </span>
+          <button
+            onClick={clearSearch}
+            className="ml-auto text-xs font-medium text-primary-600 hover:text-primary-800 dark:text-brand-accent dark:hover:text-white"
+          >
+            ✕ Clear
+          </button>
+        </div>
+      )}
+
       {/* Updating overlay */}
       {isFetching && showLoading && (
         <div className="absolute inset-0 z-10 flex items-start justify-center bg-surface-50/80 pt-16 backdrop-blur-[1px] dark:bg-surface-900/80">
@@ -175,7 +242,6 @@ export function BrowsePage() {
         </>
       ) : (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-surface-300 bg-white py-20 dark:bg-surface-800 dark:border-surface-700">
-          {/* Car illustration placeholder */}
           <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-surface-100 dark:bg-surface-700">
             <svg className="h-10 w-10 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125v-2.688M5.857 6.143l2.25-2.25m0 0l2.25 2.25M8.107 3.893v6.214M20.625 14.25h-3.375m0 0v-2.688c0-.621-.504-1.125-1.125-1.125H12.89m-7.515 3.813h7.515m0 0v-2.688" />

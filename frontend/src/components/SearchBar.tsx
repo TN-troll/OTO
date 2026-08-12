@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api, SearchResult } from '../api/client';
 import { useLanguage } from '../i18n';
+import { useFilterContext } from '../hooks/FilterContext';
 
 interface SearchBarProps {
   /** Called when search results change (including empty query reset) */
@@ -31,8 +32,17 @@ const KNOWN_ABBREVIATIONS: Record<string, string> = {
 
 export function SearchBar({ onSearchResults }: SearchBarProps) {
   const { t } = useLanguage();
-  const [inputValue, setInputValue] = useState('');
-  const [debouncedQuery, setDebouncedQuery] = useState('');
+
+  // Try to use FilterContext (available on BrowsePage route)
+  let filterContext: ReturnType<typeof useFilterContext> | null = null;
+  try {
+    filterContext = useFilterContext();
+  } catch {
+    // Not within FilterProvider — standalone mode
+  }
+
+  const [inputValue, setInputValue] = useState(filterContext?.searchQuery ?? '');
+  const [debouncedQuery, setDebouncedQuery] = useState(filterContext?.searchQuery ?? '');
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Debounce the input value
@@ -57,24 +67,32 @@ export function SearchBar({ onSearchResults }: SearchBarProps) {
     };
   }, [inputValue]);
 
-  // Only search when we have a valid debounced query
+  // Push debounced query to FilterContext
+  useEffect(() => {
+    if (filterContext) {
+      filterContext.setSearchQuery(debouncedQuery);
+    }
+  }, [debouncedQuery]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Only search when we have a valid debounced query (standalone mode without context)
   const isQueryValid = debouncedQuery.length >= MIN_QUERY_LENGTH;
 
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ['search', debouncedQuery],
     queryFn: () => api.searchListings({ q: debouncedQuery }),
-    enabled: isQueryValid,
+    enabled: isQueryValid && !filterContext,
     staleTime: 30_000,
   });
 
-  // Notify parent of search results
+  // Notify parent of search results (standalone mode)
   useEffect(() => {
+    if (filterContext) return; // context handles it
     if (!isQueryValid) {
       onSearchResults?.(null);
     } else if (data) {
       onSearchResults?.(data);
     }
-  }, [data, isQueryValid, onSearchResults]);
+  }, [data, isQueryValid, onSearchResults, filterContext]);
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -87,14 +105,25 @@ export function SearchBar({ onSearchResults }: SearchBarProps) {
   const handleClear = useCallback(() => {
     setInputValue('');
     setDebouncedQuery('');
+    if (filterContext) {
+      filterContext.clearSearch();
+    }
     onSearchResults?.(null);
-  }, [onSearchResults]);
+  }, [onSearchResults, filterContext]);
 
   // Check if the current query matches a known abbreviation
   const expandedName = KNOWN_ABBREVIATIONS[debouncedQuery.toLowerCase()];
 
   const charsRemaining = MAX_QUERY_LENGTH - inputValue.length;
   const showCharWarning = charsRemaining <= 15 && inputValue.length > 0;
+
+  // Use context fetching state if available
+  const showSpinner = filterContext
+    ? filterContext.isSearching && isQueryValid
+    : (isLoading || isFetching) && isQueryValid;
+
+  // Use context search result for no-results display
+  const searchResultData = filterContext ? filterContext.searchResult : data;
 
   return (
     <div className="w-full">
@@ -129,7 +158,7 @@ export function SearchBar({ onSearchResults }: SearchBarProps) {
 
         {/* Loading spinner or clear button */}
         <div className="absolute inset-y-0 right-0 flex items-center pr-4">
-          {(isLoading || isFetching) && isQueryValid ? (
+          {showSpinner ? (
             <svg
               className="h-4 w-4 animate-spin text-brand-accent"
               xmlns="http://www.w3.org/2000/svg"
@@ -181,16 +210,16 @@ export function SearchBar({ onSearchResults }: SearchBarProps) {
       </div>
 
       {/* No results message with suggestions */}
-      {isQueryValid && data && data.totalCount === 0 && !isFetching && (
+      {isQueryValid && searchResultData && searchResultData.totalCount === 0 && !showSpinner && (
         <div className="mt-2 rounded-xl border border-surface-200/20 bg-white/10 p-4 backdrop-blur-sm">
           <p className="text-sm text-surface-300">
             No listings found for &quot;<span className="font-medium text-white">{debouncedQuery}</span>&quot;
           </p>
-          {data.suggestions && data.suggestions.length > 0 && (
+          {searchResultData.suggestions && searchResultData.suggestions.length > 0 && (
             <div className="mt-3">
               <p className="text-xs text-surface-400">Try searching for:</p>
               <div className="mt-2 flex flex-wrap gap-2">
-                {data.suggestions.map((suggestion) => (
+                {searchResultData.suggestions.map((suggestion) => (
                   <button
                     key={suggestion}
                     onClick={() => {

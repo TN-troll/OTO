@@ -283,6 +283,12 @@ export class FilterEngine {
       conditions.push(`l.make = ANY($${params.length})`);
     }
 
+    // Models (array of allowed values)
+    if (criteria.models?.length) {
+      params.push(criteria.models);
+      conditions.push(`l.model = ANY($${params.length})`);
+    }
+
     // Transmission type (array of allowed values)
     if (criteria.transmissionType?.length) {
       params.push(criteria.transmissionType);

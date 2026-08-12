@@ -126,6 +126,16 @@ export const api = {
   },
 
   /**
+   * Get models for selected make(s)
+   */
+  async getModelsForMake(makes: string[]): Promise<string[]> {
+    const params = new URLSearchParams();
+    makes.forEach((m) => params.append('make', m));
+    const data = await fetchJson<{ models: string[] }>(`${API_BASE}/filter-options/models?${params.toString()}`);
+    return data.models;
+  },
+
+  /**
    * Get audio clip URL for a sound profile
    */
   getAudioClipUrl(soundProfileId: string): string {

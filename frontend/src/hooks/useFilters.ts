@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import type { FilterCriteria, SoundFilterCriteria, FilterResult, ValidationError } from '@car-ads/shared';
-import type { TransmissionType, FuelType } from '@car-ads/shared';
+import type { TransmissionType, FuelType, SortField, SortOrder } from '@car-ads/shared';
 
 export interface FilterState {
   engineDisplacementMin?: number;
@@ -14,6 +14,7 @@ export interface FilterState {
   priceMin?: number;
   priceMax?: number;
   makes: string[];
+  models: string[];
   transmissionType: TransmissionType[];
   fuelType: FuelType[];
   soundProfile: SoundFilterCriteria;
@@ -29,6 +30,7 @@ const INITIAL_FILTER_STATE: FilterState = {
   priceMin: undefined,
   priceMax: undefined,
   makes: [],
+  models: [],
   transmissionType: [],
   fuelType: [],
   soundProfile: {},
@@ -84,7 +86,7 @@ function validateFilters(state: FilterState): ValidationError[] {
   return errors;
 }
 
-function buildCriteria(state: FilterState): FilterCriteria {
+function buildCriteria(state: FilterState, sorting?: { sortBy: SortField; sortOrder: SortOrder; page: number; pageSize: number }): FilterCriteria {
   const criteria: FilterCriteria = {};
 
   if (state.engineDisplacementMin !== undefined) criteria.engineDisplacementMin = state.engineDisplacementMin;
@@ -96,6 +98,7 @@ function buildCriteria(state: FilterState): FilterCriteria {
   if (state.priceMin !== undefined) criteria.priceMin = state.priceMin;
   if (state.priceMax !== undefined) criteria.priceMax = state.priceMax;
   if (state.makes.length > 0) criteria.makes = state.makes;
+  if (state.models.length > 0) criteria.models = state.models;
   if (state.transmissionType.length > 0) criteria.transmissionType = state.transmissionType;
   if (state.fuelType.length > 0) criteria.fuelType = state.fuelType;
 
@@ -108,6 +111,13 @@ function buildCriteria(state: FilterState): FilterCriteria {
 
   if (hasSoundFilters) {
     criteria.soundProfile = sp;
+  }
+
+  if (sorting) {
+    criteria.sortBy = sorting.sortBy;
+    criteria.sortOrder = sorting.sortOrder;
+    criteria.page = sorting.page;
+    criteria.pageSize = sorting.pageSize;
   }
 
   return criteria;
@@ -124,20 +134,61 @@ function hasActiveFilters(state: FilterState): boolean {
     state.priceMin !== undefined ||
     state.priceMax !== undefined ||
     state.makes.length > 0 ||
+    state.models.length > 0 ||
     state.transmissionType.length > 0 ||
     state.fuelType.length > 0 ||
     Object.values(state.soundProfile).some((v) => Array.isArray(v) && v.length > 0)
   );
 }
 
-export function useFilters() {
-  const [filters, setFilters] = useState<FilterState>(INITIAL_FILTER_STATE);
+export interface UseFiltersOptions {
+  sortBy?: SortField;
+  sortOrder?: SortOrder;
+  page?: number;
+  pageSize?: number;
+  initialFiltersFromParams?: {
+    makes?: string[];
+    models?: string[];
+    priceMin?: number;
+    priceMax?: number;
+    yearMin?: number;
+    yearMax?: number;
+    horsepowerMin?: number;
+    horsepowerMax?: number;
+    transmissionType?: string[];
+    fuelType?: string[];
+  };
+}
+
+export function useFilters(options: UseFiltersOptions = {}) {
+  const [filters, setFilters] = useState<FilterState>(() => {
+    const init = options.initialFiltersFromParams;
+    if (!init) return INITIAL_FILTER_STATE;
+    return {
+      ...INITIAL_FILTER_STATE,
+      makes: init.makes ?? [],
+      models: init.models ?? [],
+      priceMin: init.priceMin,
+      priceMax: init.priceMax,
+      yearMin: init.yearMin,
+      yearMax: init.yearMax,
+      horsepowerMin: init.horsepowerMin,
+      horsepowerMax: init.horsepowerMax,
+      transmissionType: (init.transmissionType ?? []) as TransmissionType[],
+      fuelType: (init.fuelType ?? []) as FuelType[],
+    };
+  });
+
+  const { sortBy = 'dateAdded', sortOrder = 'desc', page = 1, pageSize = 50 } = options;
 
   const validationErrors = useMemo(() => validateFilters(filters), [filters]);
   const isValid = validationErrors.length === 0;
   const filtersActive = hasActiveFilters(filters);
 
-  const criteria = useMemo(() => buildCriteria(filters), [filters]);
+  const criteria = useMemo(
+    () => buildCriteria(filters, { sortBy, sortOrder, page, pageSize }),
+    [filters, sortBy, sortOrder, page, pageSize]
+  );
 
   const {
     data: filterResult,
@@ -173,6 +224,15 @@ export function useFilters() {
     setFilters((prev) => ({
       ...prev,
       makes: selected,
+      // Clear models when make changes
+      models: [],
+    }));
+  }, []);
+
+  const updateModels = useCallback((selected: string[]) => {
+    setFilters((prev) => ({
+      ...prev,
+      models: selected,
     }));
   }, []);
 
@@ -205,6 +265,7 @@ export function useFilters() {
     queryError,
     updateRange,
     updateMakes,
+    updateModels,
     updateTransmission,
     updateFuelType,
     updateSoundProfile,

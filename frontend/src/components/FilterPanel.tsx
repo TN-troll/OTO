@@ -2,21 +2,11 @@ import { useState } from 'react';
 import { RangeFilter } from './filters/RangeFilter';
 import { MultiSelect } from './filters/MultiSelect';
 import { SoundFilters } from './filters/SoundFilters';
-import { useFilters } from '../hooks/useFilters';
+import { MakeModelSelector } from './filters/MakeModelSelector';
+import { useFilterContext } from '../hooks/FilterContext';
 import { useLanguage } from '../i18n';
 
 const CURRENT_YEAR = new Date().getFullYear();
-
-const MAKE_OPTIONS = [
-  { value: 'Ferrari', label: 'Ferrari' },
-  { value: 'Lamborghini', label: 'Lamborghini' },
-  { value: 'Porsche', label: 'Porsche' },
-  { value: 'McLaren', label: 'McLaren' },
-  { value: 'Bentley', label: 'Bentley' },
-  { value: 'Aston Martin', label: 'Aston Martin' },
-  { value: 'Mercedes-Benz', label: 'Mercedes-Benz' },
-  { value: 'BMW', label: 'BMW' },
-];
 
 interface CollapsibleSectionProps {
   title: string;
@@ -64,11 +54,7 @@ function CollapsibleSection({ title, defaultOpen = false, count = 0, children }:
   );
 }
 
-export interface FilterPanelProps {
-  onResultsChange?: (totalCount: number | null) => void;
-}
-
-export function FilterPanel({ onResultsChange }: FilterPanelProps) {
+export function FilterPanel() {
   const { t } = useLanguage();
   const {
     filters,
@@ -79,11 +65,12 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
     isFetching,
     updateRange,
     updateMakes,
+    updateModels,
     updateTransmission,
     updateFuelType,
     updateSoundProfile,
     resetFilters,
-  } = useFilters();
+  } = useFilterContext();
 
   const TRANSMISSION_OPTIONS = [
     { value: 'manual', label: t.manual },
@@ -97,17 +84,8 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
     { value: 'electric', label: t.electric },
   ];
 
-  // Notify parent of result changes
-  if (onResultsChange) {
-    if (filterResult) {
-      onResultsChange(filterResult.totalCount);
-    } else if (!filtersActive) {
-      onResultsChange(null);
-    }
-  }
-
   // Count active filters per section
-  const makesCount = filters.makes.length;
+  const makesCount = filters.makes.length + filters.models.length;
   const priceCount = (filters.priceMin !== undefined ? 1 : 0) + (filters.priceMax !== undefined ? 1 : 0);
   const yearCount = (filters.yearMin !== undefined ? 1 : 0) + (filters.yearMax !== undefined ? 1 : 0);
   const hpCount = (filters.horsepowerMin !== undefined ? 1 : 0) + (filters.horsepowerMax !== undefined ? 1 : 0);
@@ -164,11 +142,11 @@ export function FilterPanel({ onResultsChange }: FilterPanelProps) {
 
       {/* Filter sections */}
       <CollapsibleSection title={t.make} defaultOpen count={makesCount}>
-        <MultiSelect
-          label={t.make}
-          options={MAKE_OPTIONS}
-          selected={filters.makes}
-          onChange={updateMakes}
+        <MakeModelSelector
+          selectedMakes={filters.makes}
+          selectedModels={filters.models}
+          onMakesChange={updateMakes}
+          onModelsChange={updateModels}
         />
       </CollapsibleSection>
 
