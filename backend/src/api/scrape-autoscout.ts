@@ -270,9 +270,17 @@ function parseListing(raw: any): ParsedListing | null {
     if (luxuryBrands.some(b => make.toLowerCase().includes(b))) criteria.push('luxury_brand_match');
     if (criteria.length === 0) criteria.push('hp_above_300');
 
+    // Build a description from available data points
+    const descParts: string[] = [];
+    if (raw.vehicle?.modelVersionInput) descParts.push(raw.vehicle.modelVersionInput);
+    const details = (raw.vehicleDetails || []).map((d: any) => d.data).filter(Boolean);
+    if (details.length > 0) descParts.push(details.join(' • '));
+    if (raw.subtitle) descParts.push(raw.subtitle);
+    const description = descParts.length > 0 ? descParts.join('\n') : null;
+
     return {
       title: `${make} ${model}${raw.vehicle?.modelVersionInput ? ' ' + raw.vehicle.modelVersionInput : ''}`.trim().substring(0, 200),
-      description: raw.vehicle?.description || raw.sellerNotes || raw.description || null,
+      description,
       price: typeof price === 'string' ? parseInt(price, 10) : price,
       mileage,
       year,
