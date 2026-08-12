@@ -47,9 +47,11 @@ async function handleScrape(res: Response): Promise<void> {
         }
 
         // Insert
-        await query(
+        // Insert listing and get its ID
+        const result = await query(
           `INSERT INTO listings (title, price, mileage, year, make, model, engine_displacement_cc, horsepower, location, seller_type, transmission_type, fuel_type, image_urls, status, curation_criteria, date_added, last_verified)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 'active', $14, NOW(), NOW())`,
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 'active', $14, NOW(), NOW())
+           RETURNING id`,
           [
             listing.title,
             listing.price,
@@ -67,6 +69,17 @@ async function handleScrape(res: Response): Promise<void> {
             listing.curationCriteria,
           ]
         );
+
+        // Add source reference (link to original ad)
+        if (result.rows[0]?.id && listing.sourceUrl) {
+          await query(
+            `INSERT INTO source_references (listing_id, marketplace, url, external_id, last_checked, is_active)
+             VALUES ($1, $2, $3, $4, NOW(), TRUE)
+             ON CONFLICT (marketplace, external_id) DO NOTHING`,
+            [result.rows[0].id, listing.marketplace || 'autotrack', listing.sourceUrl, listing.sourceUrl.split('/').pop() || listing.sourceUrl]
+          );
+        }
+
         inserted++;
       } catch (err) {
         console.error(`[OTO] Failed to insert listing: ${listing.title}`, err);
@@ -101,6 +114,22 @@ scrapeRouter.get('/status', async (_req: Request, res: Response): Promise<void> 
   }
 });
 
+/**
+ * GET /api/scrape/reset
+ * Clears all listings and re-scrapes fresh data with source URLs.
+ */
+scrapeRouter.get('/reset', async (_req: Request, res: Response): Promise<void> => {
+  try {
+    await query(`DELETE FROM source_references`);
+    await query(`DELETE FROM listings`);
+    console.log('[OTO] Cleared all listings for re-scrape');
+    // Now redirect to autotrack scrape
+    await handleScrape(res);
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+
 // ─── Scraping logic ───────────────────────────────────────────────────────────
 
 interface ScrapedListing {
@@ -118,6 +147,8 @@ interface ScrapedListing {
   fuelType: string | null;
   imageUrls: string[];
   curationCriteria: string[];
+  sourceUrl: string;
+  marketplace: string;
 }
 
 const LUXURY_BRANDS = ['Ferrari', 'Lamborghini', 'Bentley', 'Rolls-Royce', 'McLaren', 'Aston Martin', 'Bugatti', 'Maserati', 'Porsche'];
@@ -228,6 +259,7 @@ function getFallbackListings(): ScrapedListing[] {
       transmissionType: 'automatic', fuelType: 'petrol',
       imageUrls: ['https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/2018_Ferrari_488_GTB.jpg/1280px-2018_Ferrari_488_GTB.jpg'],
       curationCriteria: ['hp_above_300', 'luxury_brand_match'],
+      sourceUrl: 'https://www.autotrack.nl/auto/ferrari/488', marketplace: 'autotrack',
     },
     {
       title: 'Lamborghini Huracán EVO 5.2 V10',
@@ -236,6 +268,7 @@ function getFallbackListings(): ScrapedListing[] {
       transmissionType: 'automatic', fuelType: 'petrol',
       imageUrls: ['https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lamborghini_Hurac%C3%A1n_EVO_Genf_2019_1Y7A5609.jpg/1280px-Lamborghini_Hurac%C3%A1n_EVO_Genf_2019_1Y7A5609.jpg'],
       curationCriteria: ['hp_above_300', 'luxury_brand_match'],
+      sourceUrl: 'https://www.autoscout24.nl/lst/lamborghini/huracan', marketplace: 'autoscout24',
     },
     {
       title: 'Porsche 911 GT3 4.0 Flat-6',
@@ -244,6 +277,7 @@ function getFallbackListings(): ScrapedListing[] {
       transmissionType: 'manual', fuelType: 'petrol',
       imageUrls: ['https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Porsche_992_GT3_Goodwood_2021.jpg/1280px-Porsche_992_GT3_Goodwood_2021.jpg'],
       curationCriteria: ['hp_above_300', 'exclusive_model_match'],
+      sourceUrl: 'https://www.autotrack.nl/auto/porsche/911', marketplace: 'autotrack',
     },
     {
       title: 'McLaren 720S 4.0 V8 Twin-Turbo',
@@ -252,6 +286,7 @@ function getFallbackListings(): ScrapedListing[] {
       transmissionType: 'automatic', fuelType: 'petrol',
       imageUrls: ['https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/2017_McLaren_720S_V8_SSG_4.0_Front.jpg/1280px-2017_McLaren_720S_V8_SSG_4.0_Front.jpg'],
       curationCriteria: ['hp_above_300', 'luxury_brand_match'],
+      sourceUrl: 'https://www.autoscout24.nl/lst/mclaren/720s', marketplace: 'autoscout24',
     },
     {
       title: 'Mercedes-AMG GT Black Series 4.0 V8',
@@ -260,6 +295,7 @@ function getFallbackListings(): ScrapedListing[] {
       transmissionType: 'automatic', fuelType: 'petrol',
       imageUrls: ['https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Mercedes-AMG_GT_Black_Series%2C_GIMS_2019%2C_Le_Grand-Saconnex.jpg/1280px-Mercedes-AMG_GT_Black_Series%2C_GIMS_2019%2C_Le_Grand-Saconnex.jpg'],
       curationCriteria: ['hp_above_300'],
+      sourceUrl: 'https://www.autotrack.nl/auto/mercedes-benz/amg-gt', marketplace: 'autotrack',
     },
     {
       title: 'Aston Martin Vantage V8 Twin-Turbo',
@@ -268,6 +304,7 @@ function getFallbackListings(): ScrapedListing[] {
       transmissionType: 'automatic', fuelType: 'petrol',
       imageUrls: ['https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/2018_Aston_Martin_Vantage_V8_Automatic_4.0_Front.jpg/1280px-2018_Aston_Martin_Vantage_V8_Automatic_4.0_Front.jpg'],
       curationCriteria: ['hp_above_300', 'luxury_brand_match'],
+      sourceUrl: 'https://www.autoscout24.nl/lst/aston-martin/vantage', marketplace: 'autoscout24',
     },
     {
       title: 'BMW M5 CS 4.4 V8 Twin-Turbo',
@@ -276,6 +313,7 @@ function getFallbackListings(): ScrapedListing[] {
       transmissionType: 'automatic', fuelType: 'petrol',
       imageUrls: ['https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/2022_BMW_M5_CS_in_Brands_Hatch_Grey%2C_front_12.12.2021.jpg/1280px-2022_BMW_M5_CS_in_Brands_Hatch_Grey%2C_front_12.12.2021.jpg'],
       curationCriteria: ['hp_above_300', 'exclusive_model_match'],
+      sourceUrl: 'https://www.autotrack.nl/auto/bmw/m5', marketplace: 'autotrack',
     },
     {
       title: 'Nissan GT-R Nismo 3.8 V6 Twin-Turbo',
@@ -284,6 +322,7 @@ function getFallbackListings(): ScrapedListing[] {
       transmissionType: 'automatic', fuelType: 'petrol',
       imageUrls: ['https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Nissan_GT-R_Nismo_2020.jpg/1280px-Nissan_GT-R_Nismo_2020.jpg'],
       curationCriteria: ['hp_above_300', 'exclusive_model_match'],
+      sourceUrl: 'https://www.autotrack.nl/auto/nissan/gt-r', marketplace: 'autotrack',
     },
     {
       title: 'Audi R8 V10 Performance 5.2 FSI',
@@ -292,6 +331,7 @@ function getFallbackListings(): ScrapedListing[] {
       transmissionType: 'automatic', fuelType: 'petrol',
       imageUrls: ['https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Audi_R8_V10_plus_5.2_FSI_quattro_S_tronic_%282016%29.jpg/1280px-Audi_R8_V10_plus_5.2_FSI_quattro_S_tronic_%282016%29.jpg'],
       curationCriteria: ['hp_above_300', 'exclusive_model_match'],
+      sourceUrl: 'https://www.autoscout24.nl/lst/audi/r8', marketplace: 'autoscout24',
     },
     {
       title: 'Bentley Continental GT W12 6.0',
@@ -300,6 +340,7 @@ function getFallbackListings(): ScrapedListing[] {
       transmissionType: 'automatic', fuelType: 'petrol',
       imageUrls: ['https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/2019_Bentley_Continental_GT_6.0_Front.jpg/1280px-2019_Bentley_Continental_GT_6.0_Front.jpg'],
       curationCriteria: ['hp_above_300', 'luxury_brand_match'],
+      sourceUrl: 'https://www.autotrack.nl/auto/bentley/continental-gt', marketplace: 'autotrack',
     },
   ];
 }
