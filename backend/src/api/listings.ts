@@ -61,6 +61,7 @@ listingsRouter.get('/:id', async (req: Request, res: Response): Promise<void> =>
     const listing = await queryOne<{
       id: string;
       title: string;
+      description: string | null;
       price: number;
       mileage: number | null;
       year: number;
@@ -81,7 +82,7 @@ listingsRouter.get('/:id', async (req: Request, res: Response): Promise<void> =>
       created_at: Date;
       updated_at: Date;
     }>(
-      `SELECT id, title, price, mileage, year, make, model,
+      `SELECT id, title, description, price, mileage, year, make, model,
               engine_displacement_cc, horsepower, location, seller_type,
               transmission_type, fuel_type, image_urls, sound_profile_id,
               status, curation_criteria, date_added, last_verified,
@@ -153,6 +154,7 @@ listingsRouter.get('/:id', async (req: Request, res: Response): Promise<void> =>
     const response = {
       id: listing.id,
       title: listing.title,
+      description: listing.description,
       price: listing.price,
       mileage: listing.mileage,
       year: listing.year,

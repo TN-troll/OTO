@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api, SearchResult } from '../api/client';
 import { useLanguage } from '../i18n';
-import { useFilterContext } from '../hooks/FilterContext';
+import { useOptionalFilterContext } from '../hooks/FilterContext';
 
 interface SearchBarProps {
   /** Called when search results change (including empty query reset) */
@@ -33,13 +33,8 @@ const KNOWN_ABBREVIATIONS: Record<string, string> = {
 export function SearchBar({ onSearchResults }: SearchBarProps) {
   const { t } = useLanguage();
 
-  // Try to use FilterContext (available on BrowsePage route)
-  let filterContext: ReturnType<typeof useFilterContext> | null = null;
-  try {
-    filterContext = useFilterContext();
-  } catch {
-    // Not within FilterProvider — standalone mode
-  }
+  // Use FilterContext if available (on BrowsePage route), null otherwise
+  const filterContext = useOptionalFilterContext();
 
   const [inputValue, setInputValue] = useState(filterContext?.searchQuery ?? '');
   const [debouncedQuery, setDebouncedQuery] = useState(filterContext?.searchQuery ?? '');

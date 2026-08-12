@@ -101,11 +101,11 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
     for (const listing of unique) {
       try {
         const result = await query(
-          `INSERT INTO listings (title, price, mileage, year, make, model, engine_displacement_cc, horsepower, location, seller_type, transmission_type, fuel_type, image_urls, status, curation_criteria, date_added, last_verified)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 'active', $14, NOW(), NOW())
+          `INSERT INTO listings (title, description, price, mileage, year, make, model, engine_displacement_cc, horsepower, location, seller_type, transmission_type, fuel_type, image_urls, status, curation_criteria, date_added, last_verified)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'active', $15, NOW(), NOW())
            RETURNING id`,
           [
-            listing.title, listing.price, listing.mileage, listing.year,
+            listing.title, listing.description, listing.price, listing.mileage, listing.year,
             listing.make, listing.model, listing.engineDisplacementCc,
             listing.horsepower, listing.location, listing.sellerType,
             listing.transmissionType, listing.fuelType,
@@ -145,6 +145,7 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
 
 interface ParsedListing {
   title: string;
+  description: string | null;
   price: number;
   mileage: number | null;
   year: number;
@@ -271,6 +272,7 @@ function parseListing(raw: any): ParsedListing | null {
 
     return {
       title: `${make} ${model}${raw.vehicle?.modelVersionInput ? ' ' + raw.vehicle.modelVersionInput : ''}`.trim().substring(0, 200),
+      description: raw.vehicle?.description || raw.sellerNotes || raw.description || null,
       price: typeof price === 'string' ? parseInt(price, 10) : price,
       mileage,
       year,

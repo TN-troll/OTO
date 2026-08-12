@@ -8,6 +8,7 @@ import type { SoundProfile } from '@car-ads/shared';
 interface ListingDetail {
   id: string;
   title: string;
+  description: string | null;
   price: number;
   mileage: number | null;
   year: number;
@@ -100,6 +101,16 @@ export function ListingDetailPage() {
 
           {/* Specifications Grid */}
           <SpecificationsSection listing={listing} />
+
+          {/* Description */}
+          {listing.description && (
+            <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
+              <h2 className="text-lg font-bold text-surface-900 dark:text-white">Advertentietekst</h2>
+              <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-surface-700 dark:text-surface-300">
+                {listing.description}
+              </p>
+            </div>
+          )}
 
           {/* Sound Profile Section */}
           <SoundProfileSection soundProfile={listing.soundProfile} />

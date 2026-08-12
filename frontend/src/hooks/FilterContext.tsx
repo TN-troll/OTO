@@ -178,3 +178,8 @@ export function useFilterContext() {
   if (!ctx) throw new Error('useFilterContext must be used within FilterProvider');
   return ctx;
 }
+
+/** Returns null if not inside a FilterProvider — safe to use in components that may or may not be wrapped */
+export function useOptionalFilterContext() {
+  return useContext(FilterContext);
+}
