@@ -5,6 +5,7 @@ import { soundProfilesRouter } from './sound-profiles.js';
 import { healthRouter } from './health.js';
 import { filterOptionsRouter } from './filter-options.js';
 import { scrapeRouter } from './scrape.js';
+import { scrapeRealRouter } from './scrape-real.js';
 import { env } from '../config/env.js';
 
 /**
@@ -33,6 +34,7 @@ export function createApp(): express.Application {
   app.use('/api/marketplace-health', healthRouter);
   app.use('/api/filter-options', filterOptionsRouter);
   app.use('/api/scrape', scrapeRouter);
+  app.use('/api/scrape-real', scrapeRealRouter);
 
   return app;
 }

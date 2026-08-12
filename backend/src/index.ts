@@ -136,6 +136,22 @@ async function start() {
     console.log(`[OTO] Server running at http://${host}:${port}`);
     console.log(`[OTO] Mode: ${useMock ? 'MOCK' : 'DATABASE'}`);
     console.log(`[OTO] Frontend: serving from ${frontendDist}`);
+
+    // Daily auto-scrape (every 24 hours) — only in database mode
+    if (!useMock) {
+      const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+      console.log('[OTO] Daily auto-scrape scheduled (every 24h)');
+      setInterval(async () => {
+        try {
+          console.log('[OTO] Running daily auto-scrape...');
+          const response = await fetch(`http://localhost:${port}/api/scrape-real/autotrack`);
+          const result = await response.json();
+          console.log('[OTO] Daily scrape result:', result);
+        } catch (err) {
+          console.error('[OTO] Daily scrape failed:', err);
+        }
+      }, TWENTY_FOUR_HOURS);
+    }
   });
 }
 
