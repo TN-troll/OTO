@@ -6,10 +6,7 @@ const poolConfig: PoolConfig = {
   max: 20,
   idleTimeoutMillis: 30_000,
   connectionTimeoutMillis: 10_000,
-  // Railway PostgreSQL requires SSL in public mode
-  ssl: env.DATABASE_URL.includes('proxy.rlwy.net') || env.DATABASE_URL.includes('railway.app')
-    ? { rejectUnauthorized: false }
-    : undefined,
+  ssl: { rejectUnauthorized: false },
 };
 
 console.log(`[OTO] DB connecting to: ${env.DATABASE_URL.replace(/:[^:@]+@/, ':***@')}`);
