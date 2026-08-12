@@ -5,6 +5,7 @@ import { api } from '../api/client';
 import { ListingGrid } from '../components/ListingGrid';
 import { Pagination } from '../components/Pagination';
 import { SortControls } from '../components/SortControls';
+import { ViewToggle } from '../components/ViewToggle';
 import { useLanguage } from '../i18n';
 
 const DEFAULT_PAGE_SIZE = 50;
@@ -40,6 +41,7 @@ export function BrowsePage() {
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState<SortField>('dateAdded');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showLoading, setShowLoading] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
   const loadingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -155,12 +157,15 @@ export function BrowsePage() {
             </h1>
           )}
         </div>
-        <SortControls sortBy={sortBy} sortOrder={sortOrder} onSortChange={handleSortChange} />
+        <div className="flex items-center gap-3">
+          <ViewToggle view={viewMode} onChange={setViewMode} />
+          <SortControls sortBy={sortBy} sortOrder={sortOrder} onSortChange={handleSortChange} />
+        </div>
       </div>
 
       {hasListings ? (
         <>
-          <ListingGrid listings={data.listings} />
+          <ListingGrid listings={data.listings} view={viewMode} />
           <div className="mt-10">
             <Pagination currentPage={data.page} totalPages={data.totalPages} onPageChange={handlePageChange} />
           </div>
