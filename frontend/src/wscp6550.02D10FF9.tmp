@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session xmlns="http://winscp.net/schema/session/1.0" name="tristan.niel@sftp.xximo.com" start="2026-08-10T07:40:36.874Z">
+  <group name="open sftp://tristan.niel:***@sftp.xximo.com:22 -hostkey=&quot;*&quot; -timeout=15" start="2026-08-10T07:40:37.407Z">
+  </group>
+  <group name="pwd" start="2026-08-10T07:40:37.705Z">
+    <cwd>
+      <cwd value="/" />
+      <result success="true" />
+    </cwd>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599816_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599816_2026_06.pdf&quot;" start="2026-08-10T07:40:37.786Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599816_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599816_2026_06.pdf" />
+      <size value="165778" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599817_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599817_2026_06.pdf&quot;" start="2026-08-10T07:40:38.472Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599817_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599817_2026_06.pdf" />
+      <size value="260986" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599818_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599818_2026_06.pdf&quot;" start="2026-08-10T07:40:39.166Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599818_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599818_2026_06.pdf" />
+      <size value="163861" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599819_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599819_2026_06.pdf&quot;" start="2026-08-10T07:40:39.802Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599819_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599819_2026_06.pdf" />
+      <size value="250226" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599820_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599820_2026_06.pdf&quot;" start="2026-08-10T07:40:40.461Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599820_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599820_2026_06.pdf" />
+      <size value="167443" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599821_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599821_2026_06.pdf&quot;" start="2026-08-10T07:40:42.354Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599821_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599821_2026_06.pdf" />
+      <size value="248623" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599822_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599822_2026_06.pdf&quot;" start="2026-08-10T07:40:44.235Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599822_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599822_2026_06.pdf" />
+      <size value="169583" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599823_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599823_2026_06.pdf&quot;" start="2026-08-10T07:40:44.896Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599823_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599823_2026_06.pdf" />
+      <size value="249071" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599824_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599824_2026_06.pdf&quot;" start="2026-08-10T07:40:45.572Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599824_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599824_2026_06.pdf" />
+      <size value="245803" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599825_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599825_2026_06.pdf&quot;" start="2026-08-10T07:40:46.209Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599825_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599825_2026_06.pdf" />
+      <size value="164279" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599826_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599826_2026_06.pdf&quot;" start="2026-08-10T07:40:46.888Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599826_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599826_2026_06.pdf" />
+      <size value="163854" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599827_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599827_2026_06.pdf&quot;" start="2026-08-10T07:40:47.545Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599827_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599827_2026_06.pdf" />
+      <size value="164263" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599828_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599828_2026_06.pdf&quot;" start="2026-08-10T07:40:48.193Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599828_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599828_2026_06.pdf" />
+      <size value="246695" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599829_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599829_2026_06.pdf&quot;" start="2026-08-10T07:40:48.862Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599829_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599829_2026_06.pdf" />
+      <size value="169161" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599830_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599830_2026_06.pdf&quot;" start="2026-08-10T07:40:50.830Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599830_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599830_2026_06.pdf" />
+      <size value="165727" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599831_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599831_2026_06.pdf&quot;" start="2026-08-10T07:40:52.699Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599831_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599831_2026_06.pdf" />
+      <size value="169923" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599832_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599832_2026_06.pdf&quot;" start="2026-08-10T07:40:53.368Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599832_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599832_2026_06.pdf" />
+      <size value="168251" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599833_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599833_2026_06.pdf&quot;" start="2026-08-10T07:40:54.022Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599833_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599833_2026_06.pdf" />
+      <size value="245785" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599834_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599834_2026_06.pdf&quot;" start="2026-08-10T07:40:54.711Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599834_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599834_2026_06.pdf" />
+      <size value="243668" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599835_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599835_2026_06.pdf&quot;" start="2026-08-10T07:40:55.377Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599835_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599835_2026_06.pdf" />
+      <size value="164211" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599836_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599836_2026_06.pdf&quot;" start="2026-08-10T07:40:56.042Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599836_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599836_2026_06.pdf" />
+      <size value="166206" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599837_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599837_2026_06.pdf&quot;" start="2026-08-10T07:40:56.728Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599837_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599837_2026_06.pdf" />
+      <size value="164261" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599838_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599838_2026_06.pdf&quot;" start="2026-08-10T07:40:57.401Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599838_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599838_2026_06.pdf" />
+      <size value="163839" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599839_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599839_2026_06.pdf&quot;" start="2026-08-10T07:40:59.286Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599839_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599839_2026_06.pdf" />
+      <size value="244341" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599840_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599840_2026_06.pdf&quot;" start="2026-08-10T07:41:01.198Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599840_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599840_2026_06.pdf" />
+      <size value="242911" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599841_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599841_2026_06.pdf&quot;" start="2026-08-10T07:41:01.838Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599841_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599841_2026_06.pdf" />
+      <size value="242874" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599842_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599842_2026_06.pdf&quot;" start="2026-08-10T07:41:02.585Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599842_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599842_2026_06.pdf" />
+      <size value="163837" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599843_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599843_2026_06.pdf&quot;" start="2026-08-10T07:41:03.253Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599843_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599843_2026_06.pdf" />
+      <size value="242943" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599844_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599844_2026_06.pdf&quot;" start="2026-08-10T07:41:03.935Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599844_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599844_2026_06.pdf" />
+      <size value="163866" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599845_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599845_2026_06.pdf&quot;" start="2026-08-10T07:41:04.610Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599845_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599845_2026_06.pdf" />
+      <size value="164268" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599846_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599846_2026_06.pdf&quot;" start="2026-08-10T07:41:05.305Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599846_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599846_2026_06.pdf" />
+      <size value="166172" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599847_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599847_2026_06.pdf&quot;" start="2026-08-10T07:41:05.972Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599847_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599847_2026_06.pdf" />
+      <size value="242935" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599848_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599848_2026_06.pdf&quot;" start="2026-08-10T07:41:07.852Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599848_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599848_2026_06.pdf" />
+      <size value="164319" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599849_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599849_2026_06.pdf&quot;" start="2026-08-10T07:41:08.504Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599849_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599849_2026_06.pdf" />
+      <size value="163861" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599850_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599850_2026_06.pdf&quot;" start="2026-08-10T07:41:09.184Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599850_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599850_2026_06.pdf" />
+      <size value="169084" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599851_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599851_2026_06.pdf&quot;" start="2026-08-10T07:41:09.833Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599851_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599851_2026_06.pdf" />
+      <size value="163861" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599852_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599852_2026_06.pdf&quot;" start="2026-08-10T07:41:10.518Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599852_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599852_2026_06.pdf" />
+      <size value="248265" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599853_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599853_2026_06.pdf&quot;" start="2026-08-10T07:41:11.203Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599853_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599853_2026_06.pdf" />
+      <size value="163836" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599854_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599854_2026_06.pdf&quot;" start="2026-08-10T07:41:11.878Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599854_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599854_2026_06.pdf" />
+      <size value="163843" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599855_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599855_2026_06.pdf&quot;" start="2026-08-10T07:41:12.547Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599855_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599855_2026_06.pdf" />
+      <size value="163823" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599856_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599856_2026_06.pdf&quot;" start="2026-08-10T07:41:13.252Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599856_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599856_2026_06.pdf" />
+      <size value="167498" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599857_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599857_2026_06.pdf&quot;" start="2026-08-10T07:41:13.936Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599857_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599857_2026_06.pdf" />
+      <size value="163827" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599858_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599858_2026_06.pdf&quot;" start="2026-08-10T07:41:14.619Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599858_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599858_2026_06.pdf" />
+      <size value="242895" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599859_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599859_2026_06.pdf&quot;" start="2026-08-10T07:41:16.514Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599859_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599859_2026_06.pdf" />
+      <size value="248565" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599860_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599860_2026_06.pdf&quot;" start="2026-08-10T07:41:17.168Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599860_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599860_2026_06.pdf" />
+      <size value="255971" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599861_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599861_2026_06.pdf&quot;" start="2026-08-10T07:41:17.850Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599861_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599861_2026_06.pdf" />
+      <size value="252162" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599862_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599862_2026_06.pdf&quot;" start="2026-08-10T07:41:18.530Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599862_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599862_2026_06.pdf" />
+      <size value="169925" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599863_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599863_2026_06.pdf&quot;" start="2026-08-10T07:41:19.202Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599863_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599863_2026_06.pdf" />
+      <size value="242856" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599864_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599864_2026_06.pdf&quot;" start="2026-08-10T07:41:19.853Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599864_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599864_2026_06.pdf" />
+      <size value="165841" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599865_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599865_2026_06.pdf&quot;" start="2026-08-10T07:41:20.789Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599865_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599865_2026_06.pdf" />
+      <size value="249570" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599866_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599866_2026_06.pdf&quot;" start="2026-08-10T07:41:21.439Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599866_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599866_2026_06.pdf" />
+      <size value="163827" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599867_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599867_2026_06.pdf&quot;" start="2026-08-10T07:41:22.103Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599867_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599867_2026_06.pdf" />
+      <size value="163841" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599868_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599868_2026_06.pdf&quot;" start="2026-08-10T07:41:22.765Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599868_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599868_2026_06.pdf" />
+      <size value="242865" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599869_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599869_2026_06.pdf&quot;" start="2026-08-10T07:41:23.835Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599869_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599869_2026_06.pdf" />
+      <size value="243674" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599870_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599870_2026_06.pdf&quot;" start="2026-08-10T07:41:24.772Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599870_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599870_2026_06.pdf" />
+      <size value="251612" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599871_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599871_2026_06.pdf&quot;" start="2026-08-10T07:41:25.434Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599871_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599871_2026_06.pdf" />
+      <size value="163864" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599872_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599872_2026_06.pdf&quot;" start="2026-08-10T07:41:26.107Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599872_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599872_2026_06.pdf" />
+      <size value="245795" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599873_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599873_2026_06.pdf&quot;" start="2026-08-10T07:41:26.772Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599873_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599873_2026_06.pdf" />
+      <size value="163858" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599874_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599874_2026_06.pdf&quot;" start="2026-08-10T07:41:27.436Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599874_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599874_2026_06.pdf" />
+      <size value="169099" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599875_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599875_2026_06.pdf&quot;" start="2026-08-10T07:41:28.090Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599875_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599875_2026_06.pdf" />
+      <size value="169837" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599876_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599876_2026_06.pdf&quot;" start="2026-08-10T07:41:28.754Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599876_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599876_2026_06.pdf" />
+      <size value="163871" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599877_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599877_2026_06.pdf&quot;" start="2026-08-10T07:41:29.397Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599877_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599877_2026_06.pdf" />
+      <size value="165792" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599878_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599878_2026_06.pdf&quot;" start="2026-08-10T07:41:30.083Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599878_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599878_2026_06.pdf" />
+      <size value="164267" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599879_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599879_2026_06.pdf&quot;" start="2026-08-10T07:41:30.748Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599879_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599879_2026_06.pdf" />
+      <size value="163859" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599880_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599880_2026_06.pdf&quot;" start="2026-08-10T07:41:32.622Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599880_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599880_2026_06.pdf" />
+      <size value="164637" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599881_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599881_2026_06.pdf&quot;" start="2026-08-10T07:41:33.339Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599881_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599881_2026_06.pdf" />
+      <size value="163845" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599882_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599882_2026_06.pdf&quot;" start="2026-08-10T07:41:33.997Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599882_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599882_2026_06.pdf" />
+      <size value="250388" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599883_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599883_2026_06.pdf&quot;" start="2026-08-10T07:41:34.705Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599883_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599883_2026_06.pdf" />
+      <size value="248201" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599884_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599884_2026_06.pdf&quot;" start="2026-08-10T07:41:35.365Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599884_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599884_2026_06.pdf" />
+      <size value="163912" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599885_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599885_2026_06.pdf&quot;" start="2026-08-10T07:41:36.018Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599885_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599885_2026_06.pdf" />
+      <size value="248251" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599886_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599886_2026_06.pdf&quot;" start="2026-08-10T07:41:36.708Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599886_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599886_2026_06.pdf" />
+      <size value="163851" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599887_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599887_2026_06.pdf&quot;" start="2026-08-10T07:41:37.379Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599887_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599887_2026_06.pdf" />
+      <size value="163862" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599888_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599888_2026_06.pdf&quot;" start="2026-08-10T07:41:38.039Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599888_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599888_2026_06.pdf" />
+      <size value="165746" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599889_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599889_2026_06.pdf&quot;" start="2026-08-10T07:41:38.719Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599889_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599889_2026_06.pdf" />
+      <size value="163854" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599890_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599890_2026_06.pdf&quot;" start="2026-08-10T07:41:39.390Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599890_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599890_2026_06.pdf" />
+      <size value="163890" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599891_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599891_2026_06.pdf&quot;" start="2026-08-10T07:41:40.040Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599891_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599891_2026_06.pdf" />
+      <size value="163867" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599892_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599892_2026_06.pdf&quot;" start="2026-08-10T07:41:40.713Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599892_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599892_2026_06.pdf" />
+      <size value="165804" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599893_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599893_2026_06.pdf&quot;" start="2026-08-10T07:41:41.392Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599893_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599893_2026_06.pdf" />
+      <size value="250459" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599894_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599894_2026_06.pdf&quot;" start="2026-08-10T07:41:42.053Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599894_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599894_2026_06.pdf" />
+      <size value="169197" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599895_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599895_2026_06.pdf&quot;" start="2026-08-10T07:41:42.706Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599895_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599895_2026_06.pdf" />
+      <size value="245734" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599896_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599896_2026_06.pdf&quot;" start="2026-08-10T07:41:43.389Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599896_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599896_2026_06.pdf" />
+      <size value="168399" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599897_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599897_2026_06.pdf&quot;" start="2026-08-10T07:41:44.456Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599897_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599897_2026_06.pdf" />
+      <size value="165739" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599898_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599898_2026_06.pdf&quot;" start="2026-08-10T07:41:45.119Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599898_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599898_2026_06.pdf" />
+      <size value="168284" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599899_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599899_2026_06.pdf&quot;" start="2026-08-10T07:41:45.787Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599899_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599899_2026_06.pdf" />
+      <size value="163839" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599900_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599900_2026_06.pdf&quot;" start="2026-08-10T07:41:46.468Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599900_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599900_2026_06.pdf" />
+      <size value="163838" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599901_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599901_2026_06.pdf&quot;" start="2026-08-10T07:41:47.124Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599901_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599901_2026_06.pdf" />
+      <size value="242914" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599902_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599902_2026_06.pdf&quot;" start="2026-08-10T07:41:47.786Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599902_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599902_2026_06.pdf" />
+      <size value="169088" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599903_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599903_2026_06.pdf&quot;" start="2026-08-10T07:41:48.441Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599903_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599903_2026_06.pdf" />
+      <size value="252747" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599904_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599904_2026_06.pdf&quot;" start="2026-08-10T07:41:50.308Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599904_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599904_2026_06.pdf" />
+      <size value="167073" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599905_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599905_2026_06.pdf&quot;" start="2026-08-10T07:41:52.189Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599905_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599905_2026_06.pdf" />
+      <size value="245718" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599906_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599906_2026_06.pdf&quot;" start="2026-08-10T07:41:52.848Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599906_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599906_2026_06.pdf" />
+      <size value="242908" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599907_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599907_2026_06.pdf&quot;" start="2026-08-10T07:41:53.506Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599907_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599907_2026_06.pdf" />
+      <size value="163880" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599908_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599908_2026_06.pdf&quot;" start="2026-08-10T07:41:54.181Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599908_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599908_2026_06.pdf" />
+      <size value="164314" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599909_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599909_2026_06.pdf&quot;" start="2026-08-10T07:41:54.823Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599909_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599909_2026_06.pdf" />
+      <size value="254741" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599910_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599910_2026_06.pdf&quot;" start="2026-08-10T07:41:55.506Z">
+    <download>
+      <filename value="/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599910_2026_06.pdf" />
+      <destination value="C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599910_2026_06.pdf" />
+      <size value="163871" />
+      <result success="true" />
+    </download>
+  </group>
+  <group name="get  -nopermissions -preservetime -transfer=&quot;binary&quot;  -- &quot;/XXImo Invoicing Belgium/202606/XXImo_Factuur_Merchant_INV00599911_2026_06.pdf&quot; &quot;C:\dev\repos\invoice-delivery\temp-sftp-download\XXImo_Factuur_Merchant_INV00599911_2026_06.pdf&quot;" start="2026-08-10T07:41:56.188Z">

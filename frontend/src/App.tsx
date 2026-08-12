@@ -10,6 +10,37 @@ import { FilterProvider, useFilterContext } from './hooks/FilterContext';
 import { useLanguage } from './i18n';
 import { useEffect } from 'react';
 
+/** OTO exhaust-pipe logo — uses currentColor so it adapts to dark/light mode */
+function OtoLogo({ className = '' }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 200 80"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="OTO logo"
+      role="img"
+    >
+      <defs>
+        <linearGradient id="oto-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#C9A84C" />
+          <stop offset="50%" stopColor="#F2D680" />
+          <stop offset="100%" stopColor="#C9A84C" />
+        </linearGradient>
+      </defs>
+      {/* Left exhaust pipe (O) */}
+      <ellipse cx="50" cy="40" rx="35" ry="28" stroke="url(#oto-gold)" strokeWidth="6" />
+      <ellipse cx="50" cy="40" rx="22" ry="17" stroke="url(#oto-gold)" strokeWidth="2.5" opacity="0.4" />
+      {/* Center bridge (T) */}
+      <rect x="85" y="28" width="30" height="6" rx="3" fill="url(#oto-gold)" />
+      <rect x="97" y="28" width="6" height="30" rx="3" fill="url(#oto-gold)" />
+      {/* Right exhaust pipe (O) */}
+      <ellipse cx="150" cy="40" rx="35" ry="28" stroke="url(#oto-gold)" strokeWidth="6" />
+      <ellipse cx="150" cy="40" rx="22" ry="17" stroke="url(#oto-gold)" strokeWidth="2.5" opacity="0.4" />
+    </svg>
+  );
+}
+
 function Header() {
   const { t } = useLanguage();
 
@@ -20,9 +51,7 @@ function Header() {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Logo */}
           <a href="/" className="flex items-center gap-3">
-            <span className="text-2xl font-extrabold tracking-tight text-white">
-              OTO
-            </span>
+            <OtoLogo className="h-8 w-auto" />
             <span className="hidden text-xs font-light tracking-wide text-surface-400 md:inline">
               {t.tagline}
             </span>
@@ -134,7 +163,7 @@ function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-3">
-            <span className="text-lg font-extrabold tracking-tight text-white">OTO</span>
+            <OtoLogo className="h-6 w-auto" />
             <span className="text-xs text-surface-400">{t.tagline}</span>
           </div>
           <p className="text-xs text-surface-500">

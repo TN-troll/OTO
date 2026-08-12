@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" fill="none">
+  <!-- Left exhaust pipe (O) -->
+  <ellipse cx="50" cy="40" rx="35" ry="28" stroke="currentColor" stroke-width="6" fill="none"/>
+  <ellipse cx="50" cy="40" rx="22" ry="17" stroke="currentColor" stroke-width="2.5" fill="none" opacity="0.5"/>
+  
+  <!-- Center bridge (T) -->
+  <rect x="85" y="28" width="30" height="6" rx="3" fill="currentColor"/>
+  <rect x="97" y="28" width="6" height="30" rx="3" fill="currentColor"/>
+  
+  <!-- Right exhaust pipe (O) -->
+  <ellipse cx="150" cy="40" rx="35" ry="28" stroke="currentColor" stroke-width="6" fill="none"/>
+  <ellipse cx="150" cy="40" rx="22" ry="17" stroke="currentColor" stroke-width="2.5" fill="none" opacity="0.5"/>
+</svg>
