@@ -90,43 +90,51 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
   });
 
   // Reset page to 1 when filter state changes
-  const prevFilters = useRef(filterHook.filters);
+  const prevFiltersJson = useRef(JSON.stringify(filterHook.filters));
   useEffect(() => {
-    if (prevFilters.current !== filterHook.filters) {
+    const currentJson = JSON.stringify(filterHook.filters);
+    if (prevFiltersJson.current !== currentJson) {
       setPageState(1);
-      prevFilters.current = filterHook.filters;
+      prevFiltersJson.current = currentJson;
     }
   }, [filterHook.filters]);
 
   // Sync state to URL params (using replaceState via setSearchParams with replace option)
   const isInitialMount = useRef(true);
+  const urlSyncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
       return;
     }
 
-    const params = new URLSearchParams();
+    // Debounce URL updates to avoid rapid re-renders
+    if (urlSyncTimer.current) clearTimeout(urlSyncTimer.current);
+    urlSyncTimer.current = setTimeout(() => {
+      const params = new URLSearchParams();
 
-    if (page > 1) params.set('page', String(page));
-    if (sortBy !== 'dateAdded') params.set('sortBy', sortBy);
-    if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
-    if (searchQuery) params.set('q', searchQuery);
+      if (page > 1) params.set('page', String(page));
+      if (sortBy !== 'dateAdded') params.set('sortBy', sortBy);
+      if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
+      if (searchQuery) params.set('q', searchQuery);
 
-    const { filters } = filterHook;
-    if (filters.makes.length > 0) params.set('makes', filters.makes.join(','));
-    if (filters.models.length > 0) params.set('models', filters.models.join(','));
-    if (filters.priceMin !== undefined) params.set('priceMin', String(filters.priceMin));
-    if (filters.priceMax !== undefined) params.set('priceMax', String(filters.priceMax));
-    if (filters.yearMin !== undefined) params.set('yearMin', String(filters.yearMin));
-    if (filters.yearMax !== undefined) params.set('yearMax', String(filters.yearMax));
-    if (filters.horsepowerMin !== undefined) params.set('horsepowerMin', String(filters.horsepowerMin));
-    if (filters.horsepowerMax !== undefined) params.set('horsepowerMax', String(filters.horsepowerMax));
-    if (filters.transmissionType.length > 0) params.set('transmissionType', filters.transmissionType.join(','));
-    if (filters.fuelType.length > 0) params.set('fuelType', filters.fuelType.join(','));
+      const { filters } = filterHook;
+      if (filters.makes.length > 0) params.set('makes', filters.makes.join(','));
+      if (filters.models.length > 0) params.set('models', filters.models.join(','));
+      if (filters.priceMin !== undefined) params.set('priceMin', String(filters.priceMin));
+      if (filters.priceMax !== undefined) params.set('priceMax', String(filters.priceMax));
+      if (filters.yearMin !== undefined) params.set('yearMin', String(filters.yearMin));
+      if (filters.yearMax !== undefined) params.set('yearMax', String(filters.yearMax));
+      if (filters.horsepowerMin !== undefined) params.set('horsepowerMin', String(filters.horsepowerMin));
+      if (filters.horsepowerMax !== undefined) params.set('horsepowerMax', String(filters.horsepowerMax));
+      if (filters.transmissionType.length > 0) params.set('transmissionType', filters.transmissionType.join(','));
+      if (filters.fuelType.length > 0) params.set('fuelType', filters.fuelType.join(','));
 
-    setSearchParams(params, { replace: true });
-  }, [page, sortBy, sortOrder, searchQuery, filterHook.filters, setSearchParams]);
+      setSearchParams(params, { replace: true });
+    }, 300);
+
+    return () => { if (urlSyncTimer.current) clearTimeout(urlSyncTimer.current); };
+  }, [page, sortBy, sortOrder, searchQuery, filterHook.filters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setSortBy = useCallback((s: SortField) => {
     setSortByState(s);
