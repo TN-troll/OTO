@@ -7,6 +7,7 @@ import { filterOptionsRouter } from './filter-options.js';
 import { scrapeRouter } from './scrape.js';
 import { scrapeRealRouter } from './scrape-real.js';
 import { scrapeAutoscoutRouter } from './scrape-autoscout.js';
+import { smartSearchRouter } from './smart-search.js';
 import { env } from '../config/env.js';
 
 /**
@@ -37,6 +38,7 @@ export function createApp(): express.Application {
   app.use('/api/scrape', scrapeRouter);
   app.use('/api/scrape-real', scrapeRealRouter);
   app.use('/api/scrape-autoscout', scrapeAutoscoutRouter);
+  app.use('/api/smart-search', smartSearchRouter);
 
   return app;
 }

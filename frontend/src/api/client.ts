@@ -107,7 +107,7 @@ export const api = {
     if (params.page) searchParams.set('page', String(params.page));
     if (params.pageSize) searchParams.set('pageSize', String(params.pageSize));
 
-    return fetchJson<SearchResult>(`${API_BASE}/search?${searchParams.toString()}`);
+    return fetchJson<SearchResult>(`${API_BASE}/smart-search?${searchParams.toString()}`);
   },
 
   /**
