@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import type { SortField, SortOrder } from '@car-ads/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useFilters } from './useFilters';
@@ -37,26 +36,30 @@ function parseNumberParam(value: string | null): number | undefined {
   return isNaN(n) ? undefined : n;
 }
 
-export function FilterProvider({ children }: { children: React.ReactNode }) {
-  const [searchParams, setSearchParams] = useSearchParams();
+function getInitialParams(): URLSearchParams {
+  return new URLSearchParams(window.location.search);
+}
 
-  // Initialize state from URL params
+export function FilterProvider({ children }: { children: React.ReactNode }) {
+  const initialParams = useRef(getInitialParams());
+
+  // Initialize state from URL params (read once on mount)
   const [sortBy, setSortByState] = useState<SortField>(() => {
-    const v = searchParams.get('sortBy');
+    const v = initialParams.current.get('sortBy');
     return v && VALID_SORT_FIELDS.includes(v as SortField) ? (v as SortField) : 'dateAdded';
   });
   const [sortOrder, setSortOrderState] = useState<SortOrder>(() => {
-    const v = searchParams.get('sortOrder');
+    const v = initialParams.current.get('sortOrder');
     return v && VALID_SORT_ORDERS.includes(v as SortOrder) ? (v as SortOrder) : 'desc';
   });
   const [page, setPageState] = useState(() => {
-    const v = parseNumberParam(searchParams.get('page'));
+    const v = parseNumberParam(initialParams.current.get('page'));
     return v && v >= 1 ? v : 1;
   });
   const pageSize = 50;
 
   // Search state
-  const [searchQuery, setSearchQueryState] = useState(() => searchParams.get('q') || '');
+  const [searchQuery, setSearchQueryState] = useState(() => initialParams.current.get('q') || '');
 
   // Mobile filter drawer state
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
@@ -67,16 +70,16 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
     page,
     pageSize,
     initialFiltersFromParams: {
-      makes: searchParams.get('makes')?.split(',').filter(Boolean) || [],
-      models: searchParams.get('models')?.split(',').filter(Boolean) || [],
-      priceMin: parseNumberParam(searchParams.get('priceMin')),
-      priceMax: parseNumberParam(searchParams.get('priceMax')),
-      yearMin: parseNumberParam(searchParams.get('yearMin')),
-      yearMax: parseNumberParam(searchParams.get('yearMax')),
-      horsepowerMin: parseNumberParam(searchParams.get('horsepowerMin')),
-      horsepowerMax: parseNumberParam(searchParams.get('horsepowerMax')),
-      transmissionType: searchParams.get('transmissionType')?.split(',').filter(Boolean) || [],
-      fuelType: searchParams.get('fuelType')?.split(',').filter(Boolean) || [],
+      makes: initialParams.current.get('makes')?.split(',').filter(Boolean) || [],
+      models: initialParams.current.get('models')?.split(',').filter(Boolean) || [],
+      priceMin: parseNumberParam(initialParams.current.get('priceMin')),
+      priceMax: parseNumberParam(initialParams.current.get('priceMax')),
+      yearMin: parseNumberParam(initialParams.current.get('yearMin')),
+      yearMax: parseNumberParam(initialParams.current.get('yearMax')),
+      horsepowerMin: parseNumberParam(initialParams.current.get('horsepowerMin')),
+      horsepowerMax: parseNumberParam(initialParams.current.get('horsepowerMax')),
+      transmissionType: initialParams.current.get('transmissionType')?.split(',').filter(Boolean) || [],
+      fuelType: initialParams.current.get('fuelType')?.split(',').filter(Boolean) || [],
     },
   });
 
@@ -99,42 +102,31 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
     }
   }, [filterHook.filters]);
 
-  // Sync state to URL params (using replaceState via setSearchParams with replace option)
-  const isInitialMount = useRef(true);
-  const urlSyncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Sync state to URL using history.replaceState (no React re-renders)
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
+    const params = new URLSearchParams();
 
-    // Debounce URL updates to avoid rapid re-renders
-    if (urlSyncTimer.current) clearTimeout(urlSyncTimer.current);
-    urlSyncTimer.current = setTimeout(() => {
-      const params = new URLSearchParams();
+    if (page > 1) params.set('page', String(page));
+    if (sortBy !== 'dateAdded') params.set('sortBy', sortBy);
+    if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
+    if (searchQuery) params.set('q', searchQuery);
 
-      if (page > 1) params.set('page', String(page));
-      if (sortBy !== 'dateAdded') params.set('sortBy', sortBy);
-      if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
-      if (searchQuery) params.set('q', searchQuery);
+    const { filters } = filterHook;
+    if (filters.makes.length > 0) params.set('makes', filters.makes.join(','));
+    if (filters.models.length > 0) params.set('models', filters.models.join(','));
+    if (filters.priceMin !== undefined) params.set('priceMin', String(filters.priceMin));
+    if (filters.priceMax !== undefined) params.set('priceMax', String(filters.priceMax));
+    if (filters.yearMin !== undefined) params.set('yearMin', String(filters.yearMin));
+    if (filters.yearMax !== undefined) params.set('yearMax', String(filters.yearMax));
+    if (filters.horsepowerMin !== undefined) params.set('horsepowerMin', String(filters.horsepowerMin));
+    if (filters.horsepowerMax !== undefined) params.set('horsepowerMax', String(filters.horsepowerMax));
+    if (filters.transmissionType.length > 0) params.set('transmissionType', filters.transmissionType.join(','));
+    if (filters.fuelType.length > 0) params.set('fuelType', filters.fuelType.join(','));
 
-      const { filters } = filterHook;
-      if (filters.makes.length > 0) params.set('makes', filters.makes.join(','));
-      if (filters.models.length > 0) params.set('models', filters.models.join(','));
-      if (filters.priceMin !== undefined) params.set('priceMin', String(filters.priceMin));
-      if (filters.priceMax !== undefined) params.set('priceMax', String(filters.priceMax));
-      if (filters.yearMin !== undefined) params.set('yearMin', String(filters.yearMin));
-      if (filters.yearMax !== undefined) params.set('yearMax', String(filters.yearMax));
-      if (filters.horsepowerMin !== undefined) params.set('horsepowerMin', String(filters.horsepowerMin));
-      if (filters.horsepowerMax !== undefined) params.set('horsepowerMax', String(filters.horsepowerMax));
-      if (filters.transmissionType.length > 0) params.set('transmissionType', filters.transmissionType.join(','));
-      if (filters.fuelType.length > 0) params.set('fuelType', filters.fuelType.join(','));
-
-      setSearchParams(params, { replace: true });
-    }, 300);
-
-    return () => { if (urlSyncTimer.current) clearTimeout(urlSyncTimer.current); };
-  }, [page, sortBy, sortOrder, searchQuery, filterHook.filters]); // eslint-disable-line react-hooks/exhaustive-deps
+    const search = params.toString();
+    const newUrl = search ? `${window.location.pathname}?${search}` : window.location.pathname;
+    window.history.replaceState(null, '', newUrl);
+  }, [page, sortBy, sortOrder, searchQuery, filterHook.filters]);
 
   const setSortBy = useCallback((s: SortField) => {
     setSortByState(s);
