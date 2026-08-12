@@ -102,6 +102,12 @@ async function start() {
           attempt_count INTEGER DEFAULT 1,
           created_at TIMESTAMPTZ DEFAULT NOW()
         );
+
+        -- Add description column if not exists
+        DO $$ BEGIN
+          ALTER TABLE listings ADD COLUMN IF NOT EXISTS description TEXT;
+        EXCEPTION WHEN duplicate_column THEN NULL;
+        END $$;
       `);
       console.log('[OTO] Database tables ready');
     } catch (err) {
