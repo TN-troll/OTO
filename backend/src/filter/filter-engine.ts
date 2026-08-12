@@ -200,7 +200,7 @@ export class FilterEngine {
       make: row.make,
       model: row.model,
       year: row.year,
-      price: row.price,
+      price: parseFloat(row.price),
       horsepower: row.horsepower,
       engineDisplacementCc: row.engine_displacement_cc,
       dateAdded: row.date_added,
