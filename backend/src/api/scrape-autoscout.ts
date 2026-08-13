@@ -141,6 +141,105 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
   }
 });
 
+/**
+ * GET /api/scrape-autoscout/enrich
+ * Enriches existing listings with description/options from individual detail pages.
+ * Processes in batches with delays to be respectful. Limit per run: 50 listings.
+ */
+scrapeAutoscoutRouter.get('/enrich', async (_req: Request, res: Response): Promise<void> => {
+  try {
+    console.log('[OTO] Starting listing enrichment...');
+
+    // Get listings that have no description yet
+    const toEnrich = await query<{ id: string; listing_id: string; url: string }>(
+      `SELECT sr.listing_id, sr.url, l.id
+       FROM source_references sr
+       JOIN listings l ON l.id = sr.listing_id
+       WHERE l.description IS NULL OR l.description = ''
+       LIMIT 50`
+    );
+
+    console.log(`[OTO] Found ${toEnrich.rows.length} listings to enrich`);
+
+    let enriched = 0;
+    for (const row of toEnrich.rows) {
+      try {
+        const html = await fetchPage(row.url);
+        if (!html) continue;
+
+        const details = parseDetailPage(html);
+        if (details.description || details.options) {
+          await query(
+            `UPDATE listings SET description = $1 WHERE id = $2`,
+            [
+              [details.description, details.options].filter(Boolean).join('\n\n'),
+              row.listing_id,
+            ]
+          );
+          enriched++;
+        }
+        await delay(2000);
+      } catch (err) {
+        console.error(`[OTO] Enrich failed for ${row.url}:`, err);
+      }
+    }
+
+    res.json({ success: true, checked: toEnrich.rows.length, enriched });
+  } catch (err) {
+    console.error('[OTO] Enrichment failed:', err);
+    res.status(500).json({ error: String(err) });
+  }
+});
+
+/**
+ * Parse an individual AutoScout24 listing detail page for description and options.
+ */
+function parseDetailPage(html: string): { description: string | null; options: string | null } {
+  let description: string | null = null;
+  let options: string | null = null;
+
+  // Try to extract from __NEXT_DATA__
+  const match = html.match(/<script id="__NEXT_DATA__" type="application\/json">(.+?)<\/script>/);
+  if (match) {
+    try {
+      const data = JSON.parse(match[1]);
+      const listing = data?.props?.pageProps?.listingDetails || data?.props?.pageProps?.listing;
+      
+      if (listing) {
+        // Description / seller notes
+        description = listing.description || listing.sellerNotes || listing.vehicle?.description || null;
+
+        // Equipment / options list
+        const equipment = listing.equipment || listing.features || listing.vehicle?.equipment;
+        if (Array.isArray(equipment)) {
+          const optionsList = equipment
+            .map((e: any) => typeof e === 'string' ? e : e?.name || e?.label || '')
+            .filter(Boolean);
+          if (optionsList.length > 0) {
+            options = 'Opties: ' + optionsList.join(', ');
+          }
+        } else if (typeof equipment === 'object' && equipment !== null) {
+          // Sometimes equipment is grouped by category
+          const allOptions: string[] = [];
+          for (const category of Object.values(equipment)) {
+            if (Array.isArray(category)) {
+              for (const item of category) {
+                const name = typeof item === 'string' ? item : item?.name || item?.label || '';
+                if (name) allOptions.push(name);
+              }
+            }
+          }
+          if (allOptions.length > 0) {
+            options = 'Opties: ' + allOptions.join(', ');
+          }
+        }
+      }
+    } catch { /* skip parse errors */ }
+  }
+
+  return { description, options };
+}
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface ParsedListing {
