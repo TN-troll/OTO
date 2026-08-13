@@ -656,21 +656,15 @@ function YouTubeSoundSection({ make, model }: { make: string; model: string }) {
 /* ─── Depreciation Section ─── */
 
 function DepreciationSection({ price, year, mileage, make }: { price: number; year: number; mileage: number | null; make: string }) {
-  // Luxury/exotic cars depreciate differently than normal cars
+  const { locale } = useLanguage();
   const luxuryBrands = ['Ferrari', 'Lamborghini', 'McLaren', 'Bugatti', 'Pagani', 'Koenigsegg', 'Rolls-Royce'];
   const isLuxury = luxuryBrands.includes(make);
   
   const currentYear = new Date().getFullYear();
   const age = currentYear - year;
-  
-  // Annual depreciation rates (simplified model)
-  // Luxury/exotic: 5-8% per year (often appreciates after 10+ years)
-  // Performance: 8-12% per year
   const annualRate = isLuxury ? 0.06 : 0.10;
   
-  // Project future values
   const projections = [1, 2, 3, 5].map(yearsAhead => {
-    // Classics (>15 years old luxury) may appreciate
     const appreciating = isLuxury && age > 15;
     const projectedPrice = appreciating 
       ? Math.round(price * Math.pow(1.03, yearsAhead)) 
@@ -680,17 +674,28 @@ function DepreciationSection({ price, year, mileage, make }: { price: number; ye
 
   const monthlyDepreciation = Math.round((price * annualRate) / 12);
 
+  const isNl = locale === 'nl';
+  const title = isNl ? 'Waardeverloop' : 'Depreciation Estimate';
+  const subtitle = isNl
+    ? `Gebaseerd op ${isLuxury ? 'luxe/exotisch' : 'performance'} afschrijvingspatronen (${age} jaar oud)`
+    : `Based on ${isLuxury ? 'luxury/exotic' : 'performance'} car depreciation patterns (${age} years old)`;
+  const inYears = (n: number) => isNl ? `Over ${n} ${n === 1 ? 'jaar' : 'jaar'}` : `In ${n} ${n === 1 ? 'year' : 'years'}`;
+  const monthlyLabel = isNl
+    ? 'Geschatte maandelijkse kosten (alleen afschrijving):'
+    : 'Estimated monthly cost of ownership (depreciation only):';
+  const disclaimer = isNl
+    ? '* Vereenvoudigde schatting op basis van historische afschrijvingspercentages. Werkelijke waarden kunnen aanzienlijk afwijken.'
+    : '* Simplified estimate based on historical depreciation rates. Actual values may differ significantly based on condition, mileage, and market demand.';
+
   return (
     <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
-      <h2 className="text-lg font-bold text-surface-900 dark:text-white">Depreciation Estimate</h2>
-      <p className="mt-1 text-xs text-surface-500 dark:text-surface-400">
-        Based on {isLuxury ? 'luxury/exotic' : 'performance'} car depreciation patterns ({age} years old)
-      </p>
+      <h2 className="text-lg font-bold text-surface-900 dark:text-white">{title}</h2>
+      <p className="mt-1 text-xs text-surface-500 dark:text-surface-400">{subtitle}</p>
       
       <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {projections.map(p => (
           <div key={p.years} className="rounded-lg bg-surface-50 p-3 text-center dark:bg-surface-700">
-            <p className="text-[10px] font-medium text-surface-500 dark:text-surface-400">In {p.years} {p.years === 1 ? 'year' : 'years'}</p>
+            <p className="text-[10px] font-medium text-surface-500 dark:text-surface-400">{inYears(p.years)}</p>
             <p className="mt-1 text-sm font-bold text-surface-900 dark:text-white">€{p.price.toLocaleString('nl-NL')}</p>
             <p className={`text-[10px] ${p.price < price ? 'text-red-500' : 'text-green-500'}`}>
               {p.price < price ? '▼' : '▲'} €{Math.abs(p.price - price).toLocaleString('nl-NL')}
@@ -700,13 +705,11 @@ function DepreciationSection({ price, year, mileage, make }: { price: number; ye
       </div>
 
       <div className="mt-3 flex items-center gap-2 rounded-lg bg-surface-50 px-4 py-2.5 dark:bg-surface-700">
-        <span className="text-xs text-surface-500 dark:text-surface-400">Estimated monthly cost of ownership (depreciation only):</span>
-        <span className="text-sm font-bold text-surface-900 dark:text-white">€{monthlyDepreciation.toLocaleString('nl-NL')}/mo</span>
+        <span className="text-xs text-surface-500 dark:text-surface-400">{monthlyLabel}</span>
+        <span className="text-sm font-bold text-surface-900 dark:text-white">€{monthlyDepreciation.toLocaleString('nl-NL')}/{isNl ? 'mnd' : 'mo'}</span>
       </div>
 
-      <p className="mt-2 text-[10px] text-surface-400 dark:text-surface-500 italic">
-        * Simplified estimate based on historical depreciation rates. Actual values may differ significantly based on condition, mileage, and market demand.
-      </p>
+      <p className="mt-2 text-[10px] text-surface-400 dark:text-surface-500 italic">{disclaimer}</p>
     </div>
   );
 }
