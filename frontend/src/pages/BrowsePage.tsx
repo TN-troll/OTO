@@ -61,6 +61,8 @@ export function BrowsePage() {
     clearSearch,
     setMobileFilterOpen,
     updateMakes,
+    updateModels,
+    setCategory,
   } = useFilterContext();
 
   const { compareIds, removeFromCompare, clearCompare } = useCompare();
@@ -254,10 +256,10 @@ export function BrowsePage() {
               onClick={() => {
                 if (isActive) {
                   setActiveCategory(null);
-                  updateMakes([]);
+                  setCategory([], []);
                 } else {
                   setActiveCategory(category.id);
-                  updateMakes(category.filter.makes || []);
+                  setCategory(category.filter.makes || [], category.filter.models || []);
                 }
               }}
               className={`group relative overflow-hidden rounded-xl px-3 py-4 text-left transition-all duration-200 ${

@@ -1,6 +1,6 @@
 /**
  * Vehicle categories for OTO — defines which makes/models belong to each segment.
- * Used for quick-filter buttons and for the scraper to know what to fetch.
+ * Models listed here must match EXACTLY what's stored in the database.
  */
 
 export interface CategoryFilter {
@@ -23,6 +23,7 @@ export const CATEGORIES: Category[] = [
     labelNl: 'Supercars',
     emoji: '🏎️',
     filter: {
+      // All models from these makes are supercars
       makes: ['Ferrari', 'Lamborghini', 'McLaren', 'Bugatti', 'Pagani', 'Koenigsegg'],
     },
   },
@@ -42,7 +43,7 @@ export const CATEGORIES: Category[] = [
     emoji: '💨',
     filter: {
       makes: ['BMW', 'Mercedes-Benz', 'Audi', 'Alfa Romeo'],
-      models: ['M3', 'M5', 'M8', 'AMG GT', 'RS6', 'RS7', 'Giulia', 'S 63 AMG', 'RS3', 'RS5'],
+      models: ['M3', 'M5', 'M8', 'AMG GT', 'AMG ONE', 'RS3', 'RS5', 'RS6', 'RS7', 'S 63 AMG', 'S 65 AMG', 'Giulia', 'Maybach S-Klasse', 'S 580', 'S 450', 'CLS', 'e-tron GT'],
     },
   },
   {
@@ -51,8 +52,8 @@ export const CATEGORIES: Category[] = [
     labelNl: 'Hot Hatches',
     emoji: '🔥',
     filter: {
-      makes: ['Volkswagen', 'Honda', 'Hyundai', 'Toyota', 'Ford', 'Mini', 'Renault', 'Peugeot', 'Audi', 'Mercedes-Benz', 'BMW'],
-      models: ['Golf GTI', 'Golf R', 'Civic Type R', 'i30 N', 'i20 N', 'Ioniq 5 N', 'Ioniq 6 N', 'GR Yaris', 'GR Corolla', 'Focus ST', 'Focus RS', 'Fiesta ST', 'Cooper S', 'JCW', 'Megane RS', 'Mégane RS', '308 GTi', 'A 45 AMG', 'A45', 'CLA 45', 'RS3', 'S3', 'M135i', 'M235i', '128ti'],
+      makes: ['Volkswagen', 'Honda', 'Hyundai', 'Toyota', 'Ford', 'MINI', 'Renault', 'Peugeot', 'CUPRA', 'SEAT'],
+      models: ['Golf', 'Civic', 'i30', 'i20', 'Yaris', 'Focus', 'Cooper', 'Megane', '308', 'Leon', 'Formentor', 'A 35 AMG', 'A 45 AMG', 'CLA 45 AMG', 'S3'],
     },
   },
   {
@@ -61,8 +62,8 @@ export const CATEGORIES: Category[] = [
     labelNl: 'Sportwagens',
     emoji: '🏁',
     filter: {
-      makes: ['Porsche', 'Lotus', 'Jaguar', 'Nissan', 'Toyota', 'Chevrolet', 'Dodge'],
-      models: ['911', 'Cayman', '718', 'Boxster', 'Emira', 'Evora', 'F-Type', 'GT-R', 'Supra', 'Corvette', 'Challenger'],
+      makes: ['Porsche', 'Lotus', 'Jaguar', 'Nissan', 'Toyota', 'Chevrolet', 'Dodge', 'Lexus'],
+      models: ['911', '991', '992', '997', '718', 'Carrera GT', 'Cayman', 'Boxster', 'Emira', 'Evora', 'Elise', 'Exige', 'F-Type', 'GT-R', 'Supra', 'Corvette', 'Challenger', 'LC 500', 'LC 500h', 'LFA', 'Z4', 'i4', 'M4'],
     },
   },
   {
@@ -72,7 +73,7 @@ export const CATEGORIES: Category[] = [
     emoji: '🏔️',
     filter: {
       makes: ['Porsche', 'Lamborghini', 'Bentley', 'Aston Martin', 'Maserati', 'BMW', 'Mercedes-Benz', 'Audi'],
-      models: ['Cayenne', 'Urus', 'Bentayga', 'DBX', 'Levante', 'Grecale', 'X5 M', 'X6 M', 'GLE', 'G 63 AMG', 'G 500', 'G 650', 'RSQ8'],
+      models: ['Cayenne', 'Macan', 'Urus', 'Bentayga', 'DBX', 'Levante', 'Grecale', 'X3 M', 'X4 M', 'X5 M', 'X6 M', 'GLE 53 AMG', 'GLE 63 AMG', 'GLE 450', 'G 63 AMG', 'G 500', 'G 650', 'SQ7', 'SQ8', 'RSQ8'],
     },
   },
   {
@@ -82,7 +83,7 @@ export const CATEGORIES: Category[] = [
     emoji: '⚡',
     filter: {
       makes: ['Porsche', 'Audi', 'Lotus', 'Mercedes-Benz', 'BMW', 'Hyundai'],
-      models: ['Taycan', 'e-tron GT', 'Eletre', 'Emeya', 'EQS', 'EQE', 'i4 M50', 'iX M60', 'Ioniq 5 N', 'Ioniq 6 N'],
+      models: ['Taycan', 'e-tron GT', 'Eletre', 'Emeya', 'EQS', 'i4', 'iX', 'IONIQ 5', 'Spectre'],
     },
   },
   {
@@ -91,7 +92,6 @@ export const CATEGORIES: Category[] = [
     labelNl: 'Klassiekers',
     emoji: '🕰️',
     filter: {
-      // Classics are filtered by year, not make/model
       makes: [],
     },
   },

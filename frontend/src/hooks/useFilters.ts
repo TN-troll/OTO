@@ -236,7 +236,6 @@ export function useFilters(options: UseFiltersOptions = {}) {
     setFilters((prev) => ({
       ...prev,
       makes: selected,
-      // Clear models when make changes
       models: [],
     }));
   }, []);
@@ -245,6 +244,14 @@ export function useFilters(options: UseFiltersOptions = {}) {
     setFilters((prev) => ({
       ...prev,
       models: selected,
+    }));
+  }, []);
+
+  const setCategory = useCallback((makes: string[], models: string[]) => {
+    setFilters((prev) => ({
+      ...prev,
+      makes,
+      models,
     }));
   }, []);
 
@@ -278,6 +285,7 @@ export function useFilters(options: UseFiltersOptions = {}) {
     updateRange,
     updateMakes,
     updateModels,
+    setCategory,
     updateTransmission,
     updateFuelType,
     updateSoundProfile,
