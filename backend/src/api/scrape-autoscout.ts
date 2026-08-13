@@ -150,12 +150,14 @@ scrapeAutoscoutRouter.get('/enrich', async (_req: Request, res: Response): Promi
   try {
     console.log('[OTO] Starting listing enrichment...');
 
-    // Get listings that have no description yet
+    // Get listings that have no enriched description (only the short vehicle details line)
     const toEnrich = await query<{ id: string; listing_id: string; url: string }>(
       `SELECT sr.listing_id, sr.url, l.id
        FROM source_references sr
        JOIN listings l ON l.id = sr.listing_id
-       WHERE l.description IS NULL OR l.description = ''
+       WHERE l.description IS NULL 
+          OR l.description = '' 
+          OR (l.description NOT LIKE '%Opties:%' AND LENGTH(l.description) < 200)
        LIMIT 50`
     );
 
