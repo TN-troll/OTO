@@ -9,6 +9,7 @@ import { ViewToggle } from '../components/ViewToggle';
 import { useFilterContext } from '../hooks/FilterContext';
 import { useLanguage } from '../i18n';
 import { CATEGORIES } from '../data/categories';
+import { CATEGORY_CONTENT } from '../data/category-content';
 import { useCompare } from '../hooks/useCompare';
 import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 
@@ -41,7 +42,7 @@ function SkeletonGrid() {
 }
 
 export function BrowsePage() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const {
     filtersActive,
     filters,
@@ -284,6 +285,29 @@ export function BrowsePage() {
           );
         })}
       </div>
+
+      {/* Category content (shown when a category is active) */}
+      {activeCategory && CATEGORY_CONTENT[activeCategory] && (
+        <div className="mb-6 rounded-xl bg-white p-5 shadow-sm dark:bg-surface-800">
+          <p className="text-sm leading-relaxed text-surface-600 dark:text-surface-300">
+            {locale === 'nl' ? CATEGORY_CONTENT[activeCategory].descriptionNl : CATEGORY_CONTENT[activeCategory].descriptionEn}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {CATEGORY_CONTENT[activeCategory].articles.map((article) => (
+              <a
+                key={article.url}
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 rounded-full bg-surface-50 px-3 py-1.5 text-[11px] font-medium text-surface-600 transition-colors hover:bg-brand-accent hover:text-brand dark:bg-surface-700 dark:text-surface-300 dark:hover:bg-brand-accent dark:hover:text-brand"
+              >
+                <span>{article.title}</span>
+                <span className="text-surface-400">— {article.source}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Quick links */}
       <div className="mb-4 flex gap-3">
