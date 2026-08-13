@@ -201,7 +201,7 @@ async function start() {
         }
       }, SIX_HOURS);
 
-      // Run initial scrape 30 seconds after startup
+      // Run initial scrape 5 minutes after startup (allow server to pass health check first)
       setTimeout(async () => {
         try {
           console.log('[OTO] [CRON] Running initial post-startup scrape...');
@@ -211,7 +211,7 @@ async function start() {
         } catch (err) {
           console.error('[OTO] [CRON] Initial scrape failed:', err);
         }
-      }, 30_000);
+      }, 300_000); // 5 minutes
     }
   });
 }
