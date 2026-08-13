@@ -180,7 +180,7 @@ async function start() {
         }
       }, ONE_HOUR);
 
-      // Translation batch every 6 hours (3 listings per run, ~2.4k chars)
+      // Translation batch every 6 hours (20 listings per run)
       setInterval(async () => {
         try {
           console.log('[OTO] [CRON] Running scheduled translation batch...');
