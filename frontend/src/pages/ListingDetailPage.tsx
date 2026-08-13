@@ -620,34 +620,33 @@ function MarketValueBadge({ price, marketAvgPrice }: { price: number; marketAvgP
 /* ─── YouTube Engine Sound Section ─── */
 
 function YouTubeSoundSection({ make, model }: { make: string; model: string }) {
-  // Construct a YouTube search URL for the engine sound
   const searchQuery = encodeURIComponent(`${make} ${model} engine sound exhaust`);
   const youtubeSearchUrl = `https://www.youtube.com/results?search_query=${searchQuery}`;
-  
-  // Embed a curated search result using YouTube's embed with search
-  const embedUrl = `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(`${make} ${model} engine sound`)}`;
 
   return (
     <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
       <h2 className="text-lg font-bold text-surface-900 dark:text-white">Engine Sound</h2>
       <p className="mt-1 text-xs text-surface-500 dark:text-surface-400">Listen to how this {make} {model} sounds</p>
-      <div className="mt-4 aspect-video overflow-hidden rounded-xl bg-surface-100 dark:bg-surface-700">
-        <iframe
-          src={embedUrl}
-          title={`${make} ${model} engine sound`}
-          className="h-full w-full"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          loading="lazy"
-        />
-      </div>
       <a
         href={youtubeSearchUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-brand-accent hover:underline"
+        className="mt-4 group flex items-center gap-4 rounded-xl bg-surface-50 p-4 transition-all hover:bg-surface-100 hover:shadow-md dark:bg-surface-700 dark:hover:bg-surface-600"
       >
-        More videos on YouTube →
+        {/* YouTube play icon */}
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-red-600 shadow-lg transition-transform group-hover:scale-110">
+          <svg className="h-6 w-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-surface-900 group-hover:text-brand-accent dark:text-white">
+            {make} {model} Engine Sound
+          </p>
+          <p className="text-xs text-surface-500 dark:text-surface-400">
+            Watch on YouTube →
+          </p>
+        </div>
       </a>
     </div>
   );
