@@ -90,6 +90,7 @@ export interface Translations {
   engineSoundClip: string;
   audioUnavailable: string;
   originalAdvertisements: string;
+  adDescription: string;
   viewOn: string;
   cylinders: string;
   induction: string;
@@ -180,6 +181,7 @@ export const translations: Record<Locale, Translations> = {
     engineSoundClip: 'Engine Sound Clip',
     audioUnavailable: 'Audio unavailable — the engine sound clip could not be loaded.',
     originalAdvertisements: 'Original Advertisements',
+    adDescription: 'Advertisement',
     viewOn: 'View on',
     cylinders: 'Cylinders',
     induction: 'Induction',
@@ -266,6 +268,7 @@ export const translations: Record<Locale, Translations> = {
     engineSoundClip: 'Motorgeluid',
     audioUnavailable: 'Audio niet beschikbaar — het motorgeluid kon niet worden geladen.',
     originalAdvertisements: 'Originele Advertenties',
+    adDescription: 'Advertentietekst',
     viewOn: 'Bekijk op',
     cylinders: 'Cilinders',
     induction: 'Aandrijving',

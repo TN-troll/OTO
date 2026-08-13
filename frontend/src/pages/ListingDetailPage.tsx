@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import type { SoundProfile } from '@car-ads/shared';
+import { useLanguage } from '../i18n';
 
 /** Extended listing type as returned by the detail API (includes nested soundProfile) */
 interface ListingDetail {
@@ -33,6 +34,7 @@ interface ListingDetail {
 
 export function ListingDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const { t } = useLanguage();
 
   const { data: listing, isLoading, error } = useQuery<ListingDetail>({
     queryKey: ['listing', id],
@@ -70,7 +72,7 @@ export function ListingDetailPage() {
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
-        Back to listings
+        {t.backToListings}
       </Link>
 
       {/* Image Gallery */}
@@ -89,7 +91,7 @@ export function ListingDetailPage() {
                 {listing.make} {listing.model}
               </h1>
               <p className="mt-1 text-sm text-surface-500 dark:text-surface-400">
-                {listing.year} • Last verified: {formatDateTime(listing.lastVerified)}
+                {listing.year} • {t.lastVerified} {formatDateTime(listing.lastVerified)}
               </p>
             </div>
             <div className="rounded-xl bg-surface-50 px-5 py-3 dark:bg-surface-700">
@@ -105,10 +107,11 @@ export function ListingDetailPage() {
           {/* Description */}
           {listing.description && (
             <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
-              <h2 className="text-lg font-bold text-surface-900 dark:text-white">Advertentietekst</h2>
-              <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-surface-700 dark:text-surface-300">
-                {listing.description}
-              </p>
+              <h2 className="text-lg font-bold text-surface-900 dark:text-white">{t.adDescription}</h2>
+              <div
+                className="mt-4 text-sm leading-relaxed text-surface-700 dark:text-surface-300 [&_br]:block [&_strong]:font-bold [&_strong]:text-surface-900 dark:[&_strong]:text-white [&_a]:text-brand-accent [&_a]:underline [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-2"
+                dangerouslySetInnerHTML={{ __html: listing.description }}
+              />
             </div>
           )}
 
@@ -215,23 +218,25 @@ function ImageGallery({ imageUrls, alt }: { imageUrls: string[]; alt: string }) 
 
 /** All specifications displayed in a structured grid */
 function SpecificationsSection({ listing }: { listing: ListingDetail }) {
+  const { t } = useLanguage();
+
   const specs = [
-    { label: 'Horsepower', value: listing.horsepower ? `${listing.horsepower} HP` : null },
-    { label: 'Engine Displacement', value: listing.engineDisplacementCc ? `${listing.engineDisplacementCc} cc` : null },
-    { label: 'Mileage', value: listing.mileage != null ? `${listing.mileage.toLocaleString('nl-NL')} km` : null },
-    { label: 'Transmission', value: listing.transmissionType ? capitalize(listing.transmissionType) : null },
-    { label: 'Fuel Type', value: listing.fuelType ? capitalize(listing.fuelType) : null },
-    { label: 'Location', value: listing.location },
-    { label: 'Seller Type', value: listing.sellerType ? capitalize(listing.sellerType) : null },
-    { label: 'Year', value: listing.year ? String(listing.year) : null },
-    { label: 'Date Added', value: listing.dateAdded ? formatDate(listing.dateAdded) : null },
+    { label: t.horsepower, value: listing.horsepower ? `${listing.horsepower} HP` : null },
+    { label: t.engineDisplacement, value: listing.engineDisplacementCc ? `${listing.engineDisplacementCc} cc` : null },
+    { label: t.mileage, value: listing.mileage != null ? `${listing.mileage.toLocaleString('nl-NL')} km` : null },
+    { label: t.transmission, value: listing.transmissionType ? capitalize(listing.transmissionType) : null },
+    { label: t.fuelType, value: listing.fuelType ? capitalize(listing.fuelType) : null },
+    { label: t.location, value: listing.location },
+    { label: t.sellerType, value: listing.sellerType ? (listing.sellerType === 'dealer' ? t.dealer : t.private) : null },
+    { label: t.year, value: listing.year ? String(listing.year) : null },
+    { label: t.dateAdded, value: listing.dateAdded ? formatDate(listing.dateAdded) : null },
   ];
 
   const displayedSpecs = specs.filter((s) => s.value != null);
 
   return (
     <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
-      <h2 className="text-lg font-bold text-surface-900 dark:text-white">Specifications</h2>
+      <h2 className="text-lg font-bold text-surface-900 dark:text-white">{t.specifications}</h2>
       <dl className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {displayedSpecs.map((spec) => (
           <div key={spec.label} className="rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
@@ -246,28 +251,30 @@ function SpecificationsSection({ listing }: { listing: ListingDetail }) {
 
 /** Sound profile section with audio player */
 function SoundProfileSection({ soundProfile }: { soundProfile: SoundProfile | null }) {
+  const { t } = useLanguage();
+
   return (
     <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
-      <h2 className="text-lg font-bold text-surface-900 dark:text-white">Sound Profile</h2>
+      <h2 className="text-lg font-bold text-surface-900 dark:text-white">{t.soundProfile}</h2>
 
       {soundProfile ? (
         <div className="mt-4 space-y-5">
           {/* Characteristics */}
           <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <div className="rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
-              <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">Engine Configuration</dt>
+              <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.engineConfiguration}</dt>
               <dd className="mt-1 text-sm font-bold text-surface-900 dark:text-white">{formatEnumLabel(soundProfile.engineConfiguration)}</dd>
             </div>
             <div className="rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
-              <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">Cylinders</dt>
+              <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.cylinders}</dt>
               <dd className="mt-1 text-sm font-bold text-surface-900 dark:text-white">{soundProfile.cylinderCount}</dd>
             </div>
             <div className="rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
-              <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">Induction</dt>
+              <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.induction}</dt>
               <dd className="mt-1 text-sm font-bold text-surface-900 dark:text-white">{formatEnumLabel(soundProfile.forcedInduction)}</dd>
             </div>
             <div className="rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
-              <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">Exhaust Note</dt>
+              <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.exhaustNote}</dt>
               <dd className="mt-1 text-sm font-bold text-surface-900 dark:text-white">{formatEnumLabel(soundProfile.exhaustNote)}</dd>
             </div>
           </dl>
@@ -278,10 +285,10 @@ function SoundProfileSection({ soundProfile }: { soundProfile: SoundProfile | nu
       ) : (
         <div className="mt-4 rounded-lg bg-surface-50 p-4 dark:bg-surface-700">
           <span className="inline-flex items-center rounded-full bg-surface-200 px-3 py-1 text-xs font-semibold text-surface-600 dark:bg-surface-600 dark:text-surface-300">
-            Unclassified
+            {t.unclassified}
           </span>
           <p className="mt-2 text-sm text-surface-500 dark:text-surface-400">
-            No sound profile data is available for this vehicle.
+            {t.unclassifiedHint}
           </p>
         </div>
       )}
@@ -293,13 +300,14 @@ function SoundProfileSection({ soundProfile }: { soundProfile: SoundProfile | nu
 function AudioPlayer({ soundProfileId }: { soundProfileId: string }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [audioError, setAudioError] = useState(false);
+  const { t } = useLanguage();
   const audioUrl = api.getAudioClipUrl(soundProfileId);
 
   if (audioError) {
     return (
       <div className="rounded-lg bg-amber-50 border border-amber-200 p-4 dark:bg-amber-900/20 dark:border-amber-700">
         <p className="text-sm text-amber-800 dark:text-amber-300">
-          Audio unavailable — the engine sound clip could not be loaded.
+          {t.audioUnavailable}
         </p>
       </div>
     );
@@ -307,7 +315,7 @@ function AudioPlayer({ soundProfileId }: { soundProfileId: string }) {
 
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium text-surface-500 dark:text-surface-400">Engine Sound Clip</p>
+      <p className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.engineSoundClip}</p>
       <audio
         ref={audioRef}
         controls
@@ -329,11 +337,13 @@ function SourceLinksSection({
 }: {
   sourceUrls: ListingDetail['sourceUrls'];
 }) {
+  const { t } = useLanguage();
+
   if (!sourceUrls || sourceUrls.length === 0) return null;
 
   return (
     <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
-      <h2 className="text-lg font-bold text-surface-900 dark:text-white">Original Advertisements</h2>
+      <h2 className="text-lg font-bold text-surface-900 dark:text-white">{t.originalAdvertisements}</h2>
       <div className="mt-4 flex flex-wrap gap-3">
         {sourceUrls.map((source) => (
           <a
@@ -343,7 +353,7 @@ function SourceLinksSection({
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-lg border border-surface-200 bg-white px-4 py-2.5 text-sm font-medium text-surface-700 shadow-sm transition-all duration-200 hover:border-brand-accent hover:text-brand-accent hover:shadow-md dark:border-surface-600 dark:bg-surface-700 dark:text-surface-300 dark:hover:border-brand-accent dark:hover:text-brand-accent"
           >
-            View on {capitalize(source.marketplace)}
+            {t.viewOn} {capitalize(source.marketplace)}
             <ExternalLinkIcon />
           </a>
         ))}
