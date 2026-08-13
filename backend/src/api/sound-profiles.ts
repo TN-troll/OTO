@@ -77,6 +77,36 @@ soundProfilesRouter.get('/assign', async (_req: Request, res: Response): Promise
 });
 
 /**
+ * GET /api/sound-profiles/fix
+ * Re-evaluates and updates existing sound profiles based on the latest engine data.
+ */
+soundProfilesRouter.get('/fix', async (_req: Request, res: Response): Promise<void> => {
+  try {
+    // Get all sound profiles
+    const profiles = await query<{ id: string; make: string; model: string }>(
+      `SELECT id, make, model FROM sound_profiles`
+    );
+
+    let updated = 0;
+    for (const sp of profiles.rows) {
+      const correctProfile = getEngineProfile(sp.make, sp.model);
+      if (!correctProfile) continue;
+
+      await query(
+        `UPDATE sound_profiles SET engine_configuration = $1, cylinder_count = $2, forced_induction = $3, exhaust_note = $4 WHERE id = $5`,
+        [correctProfile.engineConfiguration, correctProfile.cylinderCount, correctProfile.forcedInduction, correctProfile.exhaustNote, sp.id]
+      );
+      updated++;
+    }
+
+    res.json({ success: true, checked: profiles.rows.length, updated });
+  } catch (err) {
+    console.error('[OTO] Sound profile fix error:', err);
+    res.status(500).json({ error: String(err) });
+  }
+});
+
+/**
  * GET /api/sound-profiles/:id/audio
  *
  * Serve or redirect to the audio clip URL for a given sound profile.
