@@ -46,7 +46,7 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
   // Initialize state from URL params (read once on mount)
   const [sortBy, setSortByState] = useState<SortField>(() => {
     const v = initialParams.current.get('sortBy');
-    return v && VALID_SORT_FIELDS.includes(v as SortField) ? (v as SortField) : 'dateAdded';
+    return v && VALID_SORT_FIELDS.includes(v as SortField) ? (v as SortField) : 'price';
   });
   const [sortOrder, setSortOrderState] = useState<SortOrder>(() => {
     const v = initialParams.current.get('sortOrder');
@@ -109,7 +109,7 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
     const params = new URLSearchParams();
 
     if (page > 1) params.set('page', String(page));
-    if (sortBy !== 'dateAdded') params.set('sortBy', sortBy);
+    if (sortBy !== 'price') params.set('sortBy', sortBy);
     if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
     if (searchQuery) params.set('q', searchQuery);
 

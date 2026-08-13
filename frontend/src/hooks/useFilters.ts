@@ -191,7 +191,7 @@ export function useFilters(options: UseFiltersOptions = {}) {
     };
   });
 
-  const { sortBy = 'dateAdded', sortOrder = 'desc', page = 1, pageSize = 50 } = options;
+  const { sortBy = 'price', sortOrder = 'desc', page = 1, pageSize = 50 } = options;
 
   const validationErrors = useMemo(() => validateFilters(filters), [filters]);
   const isValid = validationErrors.length === 0;

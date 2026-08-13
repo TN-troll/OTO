@@ -94,7 +94,7 @@ export function ListingDetailPage() {
             </div>
             <div className="rounded-xl bg-surface-50 px-5 py-3 dark:bg-surface-700">
               <p className="text-3xl font-bold text-brand dark:text-brand-accent">
-                €{listing.price?.toLocaleString('nl-NL')}
+                €{Math.round(listing.price).toLocaleString('nl-NL')}
               </p>
             </div>
           </div>

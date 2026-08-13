@@ -41,6 +41,7 @@ export function BrowsePage() {
   const { t } = useLanguage();
   const {
     filtersActive,
+    filters,
     filterResult,
     isLoading: filterLoading,
     isFetching: filterFetching,
@@ -56,6 +57,7 @@ export function BrowsePage() {
     isSearching,
     clearSearch,
     setMobileFilterOpen,
+    updateMakes,
   } = useFilterContext();
 
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -192,6 +194,24 @@ export function BrowsePage() {
             </span>
           )}
         </button>
+      </div>
+
+      {/* Quick filter badges */}
+      <div className="mb-6 flex flex-wrap gap-2">
+        {['Ferrari', 'Porsche', 'Lamborghini', 'McLaren', 'Bentley'].map(make => (
+          <button
+            key={make}
+            type="button"
+            onClick={() => updateMakes(filters.makes.includes(make) ? filters.makes.filter(m => m !== make) : [...filters.makes, make])}
+            className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
+              filters.makes.includes(make)
+                ? 'bg-brand-accent text-brand shadow-sm'
+                : 'bg-white text-surface-600 shadow-sm hover:bg-surface-50 dark:bg-surface-800 dark:text-surface-300 dark:hover:bg-surface-700'
+            }`}
+          >
+            {make}
+          </button>
+        ))}
       </div>
 
       {/* Search active banner */}
