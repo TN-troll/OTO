@@ -38,6 +38,66 @@ function SkeletonGrid() {
   );
 }
 
+/** Car silhouettes for category buttons */
+function CategorySilhouette({ categoryId }: { categoryId: string }) {
+  const cls = "h-14 w-auto fill-current";
+  switch (categoryId) {
+    case 'supercar': // Lamborghini Countach silhouette
+      return (
+        <svg className={cls} viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 32 L18 32 A5 5 0 0 0 28 32 L82 32 A5 5 0 0 0 92 32 L110 32 L108 28 L95 24 L85 12 L75 8 L45 8 L30 12 L20 18 L12 24 L10 28 Z" />
+          <path d="M48 10 L72 10 L80 14 L48 14 Z" opacity="0.3" />
+        </svg>
+      );
+    case 'luxury': // Rolls-Royce Phantom silhouette
+      return (
+        <svg className={cls} viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 32 L18 32 A5 5 0 0 0 28 32 L85 32 A5 5 0 0 0 95 32 L112 32 L112 26 L108 22 L100 16 L90 12 L80 10 L40 10 L30 12 L20 16 L14 22 L10 26 L8 30 Z" />
+          <path d="M35 12 L80 12 L80 20 L35 20 Z" opacity="0.3" />
+          <rect x="28" y="8" width="2" height="4" opacity="0.5" />
+        </svg>
+      );
+    case 'performance-sedan': // Mercedes S-Class AMG silhouette
+      return (
+        <svg className={cls} viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 32 L16 32 A5 5 0 0 0 26 32 L84 32 A5 5 0 0 0 94 32 L112 32 L110 26 L104 22 L96 16 L88 12 L78 10 L42 10 L32 12 L24 16 L16 22 L10 26 L8 30 Z" />
+          <path d="M38 12 L82 12 L88 16 L86 22 L34 22 L32 16 Z" opacity="0.3" />
+        </svg>
+      );
+    case 'hot-hatch': // VW Golf GTI silhouette
+      return (
+        <svg className={cls} viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 32 L20 32 A5 5 0 0 0 30 32 L78 32 A5 5 0 0 0 88 32 L105 32 L105 26 L100 22 L95 16 L88 12 L78 10 L42 10 L32 12 L25 16 L18 22 L14 26 L12 30 Z" />
+          <path d="M36 12 L80 12 L86 16 L84 20 L95 20 L95 26 L34 26 L30 20 L28 16 Z" opacity="0.3" />
+        </svg>
+      );
+    case 'sports-car': // BMW M4 / Porsche 911 silhouette
+      return (
+        <svg className={cls} viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 32 L18 32 A5 5 0 0 0 28 32 L82 32 A5 5 0 0 0 92 32 L108 32 L106 28 L100 24 L92 16 L82 12 L72 10 L45 10 L35 12 L25 16 L18 22 L12 26 L10 30 Z" />
+          <path d="M40 12 L75 12 L84 16 L82 20 L38 20 L36 16 Z" opacity="0.3" />
+        </svg>
+      );
+    case 'suv': // Lamborghini Urus silhouette
+      return (
+        <svg className={cls} viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 34 L18 34 A6 6 0 0 0 30 34 L80 34 A6 6 0 0 0 92 34 L112 34 L112 26 L108 20 L100 14 L92 10 L80 8 L40 8 L28 10 L20 14 L14 20 L10 26 L8 32 Z" />
+          <path d="M34 10 L82 10 L90 14 L88 22 L32 22 L30 14 Z" opacity="0.3" />
+        </svg>
+      );
+    case 'electric': // Porsche Taycan silhouette
+      return (
+        <svg className={cls} viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 32 L18 32 A5 5 0 0 0 28 32 L82 32 A5 5 0 0 0 92 32 L110 32 L108 26 L102 22 L94 16 L84 12 L74 10 L44 10 L34 12 L24 16 L16 22 L12 26 L10 30 Z" />
+          <path d="M38 12 L78 12 L86 16 L84 22 L36 22 L34 16 Z" opacity="0.3" />
+          <path d="M50 14 L54 14 L52 18 L56 18 L50 24 L52 20 L48 20 Z" opacity="0.5" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
 export function BrowsePage() {
   const { t } = useLanguage();
   const {
@@ -62,6 +122,7 @@ export function BrowsePage() {
   } = useFilterContext();
 
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [showLoading, setShowLoading] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
   const loadingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -196,33 +257,36 @@ export function BrowsePage() {
       </div>
 
       {/* Category filter buttons */}
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
         {CATEGORIES.filter(c => c.id !== 'classic').map(category => {
-          // Check if this category is "active" (any of its makes are selected)
-          const isActive = category.filter.makes && category.filter.makes.length > 0 &&
-            category.filter.makes.some(m => filters.makes.includes(m));
+          const isActive = activeCategory === category.id;
           return (
             <button
               key={category.id}
               type="button"
               onClick={() => {
                 if (isActive) {
-                  // Remove all makes of this category
-                  const toRemove = new Set(category.filter.makes || []);
-                  updateMakes(filters.makes.filter(m => !toRemove.has(m)));
+                  setActiveCategory(null);
+                  updateMakes([]);
                 } else {
-                  // Set makes to this category's makes (replace current)
+                  setActiveCategory(category.id);
                   updateMakes(category.filter.makes || []);
                 }
               }}
-              className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
+              className={`group relative overflow-hidden rounded-xl px-3 py-3 text-xs font-semibold transition-all ${
                 isActive
-                  ? 'bg-brand-accent text-brand shadow-sm'
-                  : 'bg-white text-surface-600 shadow-sm hover:bg-surface-50 dark:bg-surface-800 dark:text-surface-300 dark:hover:bg-surface-700'
+                  ? 'bg-brand text-white shadow-lg ring-2 ring-brand-accent'
+                  : 'bg-white text-surface-700 shadow-sm hover:shadow-md hover:ring-1 hover:ring-surface-200 dark:bg-surface-800 dark:text-surface-200 dark:hover:ring-surface-600'
               }`}
             >
-              <span>{category.emoji}</span>
-              <span>{category.labelNl}</span>
+              {/* Silhouette background */}
+              <div className={`absolute inset-0 flex items-center justify-end pr-1 opacity-[0.08] ${isActive ? 'opacity-[0.15]' : 'group-hover:opacity-[0.12]'}`}>
+                <CategorySilhouette categoryId={category.id} />
+              </div>
+              <div className="relative flex flex-col items-start gap-0.5">
+                <span className="text-sm">{category.emoji}</span>
+                <span className="text-[11px] leading-tight">{category.labelNl}</span>
+              </div>
             </button>
           );
         })}
