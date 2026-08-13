@@ -114,9 +114,9 @@ export const ENGINE_PROFILES: Record<string, Record<string, EngineProfile>> = {
     'Spectre': { engineConfiguration: 'inline', cylinderCount: 0, forcedInduction: 'naturally_aspirated', exhaustNote: 'smooth_purr' },
   },
   Bentley: {
-    'Continental GT': { engineConfiguration: 'v-type', cylinderCount: 12, forcedInduction: 'turbocharged', exhaustNote: 'deep_rumble' },
-    'Continental GTC': { engineConfiguration: 'v-type', cylinderCount: 12, forcedInduction: 'turbocharged', exhaustNote: 'deep_rumble' },
-    'Flying Spur': { engineConfiguration: 'v-type', cylinderCount: 12, forcedInduction: 'turbocharged', exhaustNote: 'smooth_purr' },
+    'Continental GT': { engineConfiguration: 'v-type', cylinderCount: 8, forcedInduction: 'turbocharged', exhaustNote: 'deep_rumble' },
+    'Continental GTC': { engineConfiguration: 'v-type', cylinderCount: 8, forcedInduction: 'turbocharged', exhaustNote: 'deep_rumble' },
+    'Flying Spur': { engineConfiguration: 'v-type', cylinderCount: 8, forcedInduction: 'turbocharged', exhaustNote: 'smooth_purr' },
     'Bentayga': { engineConfiguration: 'v-type', cylinderCount: 8, forcedInduction: 'turbocharged', exhaustNote: 'deep_rumble' },
   },
   Maserati: {
@@ -157,7 +157,7 @@ export const ENGINE_PROFILES: Record<string, Record<string, EngineProfile>> = {
     'Chiron': { engineConfiguration: 'v-type', cylinderCount: 16, forcedInduction: 'turbocharged', exhaustNote: 'deep_rumble' },
   },
   'Alfa Romeo': {
-    'Giulia': { engineConfiguration: 'v-type', cylinderCount: 6, forcedInduction: 'turbocharged', exhaustNote: 'aggressive_bark' },
+    'Giulia': { engineConfiguration: 'v-type', cylinderCount: 6, forcedInduction: 'turbocharged', exhaustNote: 'aggressive_bark' }, // Quadrifoglio has 2.9 V6 biturbo
   },
   Jaguar: {
     'F-Type': { engineConfiguration: 'v-type', cylinderCount: 8, forcedInduction: 'supercharged', exhaustNote: 'deep_rumble' },
