@@ -123,6 +123,88 @@ async function start() {
           recorded_at TIMESTAMPTZ DEFAULT NOW()
         );
         CREATE INDEX IF NOT EXISTS idx_price_history_listing ON price_history(listing_id, recorded_at);
+
+        -- Platform Improvements: extend listings table
+        DO $$ BEGIN
+          ALTER TABLE listings ADD COLUMN IF NOT EXISTS sold_at TIMESTAMPTZ;
+          ALTER TABLE listings ADD COLUMN IF NOT EXISTS stale_check_count INTEGER DEFAULT 0;
+          ALTER TABLE listings ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE;
+          ALTER TABLE listings ADD COLUMN IF NOT EXISTS featured_sort_order INTEGER DEFAULT 0;
+          ALTER TABLE listings ADD COLUMN IF NOT EXISTS dealer_email VARCHAR(300);
+        EXCEPTION WHEN duplicate_column THEN NULL;
+        END $$;
+
+        -- Image cache metadata
+        CREATE TABLE IF NOT EXISTS image_cache (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          encoded_url TEXT UNIQUE NOT NULL,
+          original_url TEXT NOT NULL,
+          content_type VARCHAR(50) NOT NULL,
+          file_path TEXT NOT NULL,
+          file_size_bytes INTEGER NOT NULL,
+          cached_at TIMESTAMPTZ DEFAULT NOW(),
+          last_accessed TIMESTAMPTZ DEFAULT NOW()
+        );
+
+        -- Push notification subscriptions
+        CREATE TABLE IF NOT EXISTS push_subscriptions (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          endpoint TEXT UNIQUE NOT NULL,
+          p256dh_key TEXT NOT NULL,
+          auth_key TEXT NOT NULL,
+          makes TEXT[] DEFAULT '{}',
+          max_price DECIMAL(12,2),
+          frequency VARCHAR(20) NOT NULL DEFAULT 'immediate',
+          created_at TIMESTAMPTZ DEFAULT NOW(),
+          updated_at TIMESTAMPTZ DEFAULT NOW()
+        );
+
+        -- Click tracking
+        CREATE TABLE IF NOT EXISTS listing_clicks (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          listing_id UUID NOT NULL REFERENCES listings(id) ON DELETE CASCADE,
+          session_id VARCHAR(100) NOT NULL,
+          clicked_at TIMESTAMPTZ DEFAULT NOW()
+        );
+
+        CREATE TABLE IF NOT EXISTS listing_click_counts (
+          listing_id UUID PRIMARY KEY REFERENCES listings(id) ON DELETE CASCADE,
+          click_count INTEGER NOT NULL DEFAULT 0,
+          last_clicked_at TIMESTAMPTZ
+        );
+
+        -- Dealer contact inquiries
+        CREATE TABLE IF NOT EXISTS contact_inquiries (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          listing_id UUID NOT NULL REFERENCES listings(id) ON DELETE CASCADE,
+          sender_name VARCHAR(200) NOT NULL,
+          sender_email VARCHAR(300) NOT NULL,
+          message TEXT,
+          dealer_email VARCHAR(300),
+          fallback_used BOOLEAN DEFAULT FALSE,
+          created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+
+        -- Premium membership interest signups
+        CREATE TABLE IF NOT EXISTS premium_signups (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          email VARCHAR(300) NOT NULL UNIQUE,
+          feature_interests TEXT[] NOT NULL DEFAULT '{}',
+          created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+
+        -- Performance indexes
+        CREATE INDEX IF NOT EXISTS idx_listings_make_status ON listings(make, status);
+        CREATE INDEX IF NOT EXISTS idx_listings_price_status ON listings(price, status);
+        CREATE INDEX IF NOT EXISTS idx_listings_horsepower_status ON listings(horsepower, status);
+        CREATE INDEX IF NOT EXISTS idx_listings_year_status ON listings(year, status);
+        CREATE INDEX IF NOT EXISTS idx_listings_status_date_added ON listings(status, date_added DESC);
+        CREATE INDEX IF NOT EXISTS idx_listings_make_model_status ON listings(make, model, status);
+        CREATE INDEX IF NOT EXISTS idx_listings_featured ON listings(is_featured DESC, featured_sort_order ASC) WHERE status = 'active';
+        CREATE INDEX IF NOT EXISTS idx_listing_clicks_listing_id ON listing_clicks(listing_id);
+        CREATE INDEX IF NOT EXISTS idx_listing_clicks_clicked_at ON listing_clicks(clicked_at DESC);
+        CREATE INDEX IF NOT EXISTS idx_push_subscriptions_makes ON push_subscriptions USING gin(makes);
+        CREATE INDEX IF NOT EXISTS idx_image_cache_last_accessed ON image_cache(last_accessed);
       `);
       console.log('[OTO] Database tables ready');
     } catch (err) {
