@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueries } from '@tanstack/react-query';
 import type { SortField, SortOrder } from '@car-ads/shared';
 import { api } from '../api/client';
 import { ListingGrid } from '../components/ListingGrid';
@@ -9,6 +9,8 @@ import { ViewToggle } from '../components/ViewToggle';
 import { useFilterContext } from '../hooks/FilterContext';
 import { useLanguage } from '../i18n';
 import { CATEGORIES } from '../data/categories';
+import { useCompare } from '../hooks/useCompare';
+import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 
 const DEFAULT_PAGE_SIZE = 50;
 
@@ -136,12 +138,28 @@ export function BrowsePage() {
     updateMakes,
   } = useFilterContext();
 
+  const { compareIds, removeFromCompare, clearCompare } = useCompare();
+  const { recentIds } = useRecentlyViewed();
+
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [showLoading, setShowLoading] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
   const loadingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const timeoutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Fetch recently viewed listings (up to 5)
+  const recentIdsToShow = recentIds.slice(0, 5);
+  const recentQueries = useQueries({
+    queries: recentIdsToShow.map(rid => ({
+      queryKey: ['listing-summary', rid],
+      queryFn: () => api.getListing(rid),
+      enabled: recentIdsToShow.length > 0,
+    })),
+  });
+  const recentListings = recentQueries
+    .filter(q => q.data)
+    .map(q => q.data!);
 
   // Determine if search is active
   const isSearchActive = searchQuery.length >= 2 && searchResult !== null;
@@ -272,6 +290,34 @@ export function BrowsePage() {
         </button>
       </div>
 
+      {/* Recently Viewed */}
+      {recentListings.length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-sm font-bold text-surface-700 dark:text-surface-300">Recently Viewed</h2>
+          <div className="mt-2 flex gap-3 overflow-x-auto pb-2">
+            {recentListings.map(item => (
+              <a
+                key={item.id}
+                href={`/listing/${item.id}`}
+                className="flex w-44 flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-surface-800"
+              >
+                <div className="aspect-[3/2] overflow-hidden bg-surface-100 dark:bg-surface-700">
+                  {(item as any).imageUrls?.[0] ? (
+                    <img src={(item as any).imageUrls[0]} alt={`${item.make} ${item.model}`} className="h-full w-full object-cover" loading="lazy" />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-xs text-surface-400">No image</div>
+                  )}
+                </div>
+                <div className="p-2">
+                  <p className="truncate text-xs font-bold text-surface-900 dark:text-white">{item.make} {item.model}</p>
+                  <p className="text-xs font-semibold text-brand dark:text-brand-accent">€{Math.round(item.price).toLocaleString('nl-NL')}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Category filter buttons */}
       <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
         {CATEGORIES.filter(c => c.id !== 'classic').map(category => {
@@ -368,6 +414,46 @@ export function BrowsePage() {
           </div>
           <p className="text-lg font-semibold text-surface-800 dark:text-white">{t.noListingsFound}</p>
           <p className="mt-3 max-w-md text-center text-sm text-surface-500 dark:text-surface-300">{t.noListingsHint}</p>
+        </div>
+      )}
+
+      {/* Floating Compare Bar */}
+      {compareIds.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-surface-200 bg-white/95 px-4 py-3 shadow-premium backdrop-blur-sm dark:border-surface-700 dark:bg-surface-800/95">
+          <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              {compareIds.map(cid => (
+                <div key={cid} className="relative h-12 w-16 overflow-hidden rounded-md bg-surface-100 dark:bg-surface-700">
+                  <button
+                    type="button"
+                    onClick={() => removeFromCompare(cid)}
+                    className="absolute -right-1 -top-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white"
+                    aria-label="Remove from compare"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <span className="text-xs text-surface-500 dark:text-surface-400">{compareIds.length}/3 selected</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={clearCompare}
+                className="rounded-lg px-3 py-1.5 text-xs font-medium text-surface-500 transition-colors hover:text-surface-700 dark:text-surface-400 dark:hover:text-surface-200"
+              >
+                Clear
+              </button>
+              <a
+                href={`/compare?ids=${compareIds.join(',')}`}
+                className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white transition-all ${
+                  compareIds.length >= 2 ? 'bg-brand-accent hover:bg-brand-accent/90' : 'pointer-events-none bg-surface-300 dark:bg-surface-600'
+                }`}
+              >
+                Compare ({compareIds.length})
+              </a>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { ListingSummary } from '@car-ads/shared';
 import { useFavorites } from '../hooks/useFavorites';
+import { useCompare } from '../hooks/useCompare';
 
 interface ListingCardProps {
   listing: ListingSummary;
@@ -21,7 +22,9 @@ export function ListingCard({ listing, featured = false }: ListingCardProps) {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { addToCompare, removeFromCompare, isInCompare } = useCompare();
   const isNew = listing.dateAdded && (Date.now() - new Date(listing.dateAdded).getTime()) < 48 * 60 * 60 * 1000;
+  const pricePerHp = listing.horsepower ? Math.round(listing.price / listing.horsepower) : null;
 
   return (
     <a
@@ -81,6 +84,28 @@ export function ListingCard({ listing, featured = false }: ListingCardProps) {
           </svg>
         </button>
 
+        {/* Compare button */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (isInCompare(listing.id)) {
+              removeFromCompare(listing.id);
+            } else {
+              addToCompare(listing.id);
+            }
+          }}
+          className={`absolute right-3 top-14 z-10 rounded-full p-2 shadow-md backdrop-blur-sm transition-all hover:scale-110 ${
+            isInCompare(listing.id) ? 'bg-brand-accent/90 text-white' : 'bg-white/90 dark:bg-surface-800/90'
+          }`}
+          aria-label={isInCompare(listing.id) ? 'Remove from compare' : 'Add to compare'}
+        >
+          <svg className={`h-4 w-4 ${isInCompare(listing.id) ? 'text-white' : 'text-surface-600 dark:text-surface-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+          </svg>
+        </button>
+
         {/* Price badge */}
         <div className="absolute bottom-3 right-3 rounded-lg bg-white/95 px-3 py-1.5 shadow-premium backdrop-blur-sm dark:bg-surface-800">
           <span className="text-base font-bold text-brand dark:text-brand-accent">
@@ -110,6 +135,11 @@ export function ListingCard({ listing, featured = false }: ListingCardProps) {
           {listing.engineDisplacementCc != null && (
             <span className="inline-flex items-center rounded-md bg-surface-100 px-2 py-1 text-xs font-medium text-surface-700 dark:bg-surface-700 dark:text-surface-300">
               {(listing.engineDisplacementCc / 1000).toFixed(1)}L
+            </span>
+          )}
+          {pricePerHp != null && (
+            <span className="inline-flex items-center rounded-md bg-surface-100 px-2 py-1 text-xs font-medium text-surface-700 dark:bg-surface-700 dark:text-surface-300">
+              €{pricePerHp.toLocaleString('nl-NL')}/HP
             </span>
           )}
         </div>

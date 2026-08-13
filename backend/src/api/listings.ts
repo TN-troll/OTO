@@ -187,6 +187,100 @@ listingsRouter.get('/:id', async (req: Request, res: Response): Promise<void> =>
 });
 
 /**
+ * GET /api/listings/:id/similar
+ *
+ * Returns up to 6 similar listings based on make, price range (±30%), and horsepower range (±20%).
+ */
+listingsRouter.get('/:id/similar', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    // First fetch the listing to get its specs
+    const listing = await queryOne<{
+      id: string;
+      make: string;
+      price: number;
+      horsepower: number | null;
+    }>(
+      `SELECT id, make, price, horsepower FROM listings WHERE id = $1`,
+      [id],
+    );
+
+    if (!listing) {
+      res.status(404).json({ error: 'Listing not found' });
+      return;
+    }
+
+    const priceLow = Math.round(listing.price * 0.7);
+    const priceHigh = Math.round(listing.price * 1.3);
+
+    let similarQuery: string;
+    let params: unknown[];
+
+    if (listing.horsepower) {
+      const hpLow = Math.round(listing.horsepower * 0.8);
+      const hpHigh = Math.round(listing.horsepower * 1.2);
+      similarQuery = `
+        SELECT id, title, make, model, year, price, horsepower, engine_displacement_cc, image_urls, date_added
+        FROM listings
+        WHERE id != $1
+          AND status = 'active'
+          AND (make = $2 OR (price BETWEEN $3 AND $4 AND horsepower BETWEEN $5 AND $6))
+        ORDER BY
+          CASE WHEN make = $2 THEN 0 ELSE 1 END,
+          ABS(price - $7)
+        LIMIT 6
+      `;
+      params = [id, listing.make, priceLow, priceHigh, hpLow, hpHigh, listing.price];
+    } else {
+      similarQuery = `
+        SELECT id, title, make, model, year, price, horsepower, engine_displacement_cc, image_urls, date_added
+        FROM listings
+        WHERE id != $1
+          AND status = 'active'
+          AND (make = $2 OR price BETWEEN $3 AND $4)
+        ORDER BY
+          CASE WHEN make = $2 THEN 0 ELSE 1 END,
+          ABS(price - $5)
+        LIMIT 6
+      `;
+      params = [id, listing.make, priceLow, priceHigh, listing.price];
+    }
+
+    const result = await query<{
+      id: string;
+      title: string;
+      make: string;
+      model: string;
+      year: number;
+      price: number;
+      horsepower: number | null;
+      engine_displacement_cc: number | null;
+      image_urls: string[];
+      date_added: Date;
+    }>(similarQuery, params);
+
+    const similarListings = result.rows.map(row => ({
+      id: row.id,
+      title: row.title,
+      make: row.make,
+      model: row.model,
+      year: row.year,
+      price: row.price,
+      horsepower: row.horsepower,
+      engineDisplacementCc: row.engine_displacement_cc,
+      primaryImageUrl: row.image_urls?.[0] || null,
+      dateAdded: row.date_added,
+    }));
+
+    res.json(similarListings);
+  } catch (err) {
+    console.error('Error fetching similar listings:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
  * POST /api/listings/filter
  *
  * Filter listings with a FilterCriteria body.

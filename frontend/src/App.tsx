@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { BrowsePage } from './pages/BrowsePage';
 import { ListingDetailPage } from './pages/ListingDetailPage';
+import { ComparePage } from './pages/ComparePage';
 import { SearchBar } from './components/SearchBar';
 import { FilterPanel } from './components/FilterPanel';
 import { MarketplaceHealthBanner } from './components/MarketplaceHealthBanner';
@@ -208,6 +209,20 @@ export function App() {
                   <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
                     <ListingDetailPage />
                   </div>
+                </main>
+              </div>
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/compare"
+          element={
+            <>
+              <Header />
+              <div className="flex flex-1">
+                <main className="flex-1 overflow-auto">
+                  <ComparePage />
                 </main>
               </div>
               <Footer />

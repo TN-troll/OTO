@@ -141,4 +141,11 @@ export const api = {
   getAudioClipUrl(soundProfileId: string): string {
     return `${API_BASE}/sound-profiles/${soundProfileId}/audio`;
   },
+
+  /**
+   * Get similar listings for a given listing
+   */
+  async getSimilarListings(id: string): Promise<ListingSummary[]> {
+    return fetchJson<ListingSummary[]>(`${API_BASE}/listings/${id}/similar`);
+  },
 };
