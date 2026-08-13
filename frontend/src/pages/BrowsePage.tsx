@@ -142,7 +142,7 @@ export function BrowsePage() {
     );
   }
 
-  if (isLoading && showLoading) {
+  if (isLoading) {
     return (
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center justify-between">
@@ -153,8 +153,6 @@ export function BrowsePage() {
       </div>
     );
   }
-
-  if (isLoading) return null;
 
   if (error) {
     return (

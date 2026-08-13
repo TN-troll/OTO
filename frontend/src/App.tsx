@@ -179,13 +179,13 @@ export function App() {
   return (
     <div className="flex min-h-screen flex-col bg-surface-50 dark:bg-surface-900 transition-colors duration-300">
       <MarketplaceHealthBanner />
-      <Header />
-      <div className="flex flex-1">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <FilterProvider>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <FilterProvider>
+              <Header />
+              <div className="flex flex-1">
                 <FilterSidebar />
                 <MobileFilterDrawer />
                 <main className="flex-1 overflow-auto">
@@ -193,22 +193,28 @@ export function App() {
                     <BrowsePage />
                   </div>
                 </main>
-              </FilterProvider>
-            }
-          />
-          <Route
-            path="/listing/:id"
-            element={
-              <main className="flex-1 overflow-auto">
-                <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-                  <ListingDetailPage />
-                </div>
-              </main>
-            }
-          />
-        </Routes>
-      </div>
-      <Footer />
+              </div>
+              <Footer />
+            </FilterProvider>
+          }
+        />
+        <Route
+          path="/listing/:id"
+          element={
+            <>
+              <Header />
+              <div className="flex flex-1">
+                <main className="flex-1 overflow-auto">
+                  <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+                    <ListingDetailPage />
+                  </div>
+                </main>
+              </div>
+              <Footer />
+            </>
+          }
+        />
+      </Routes>
     </div>
   );
 }
