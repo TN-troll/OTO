@@ -69,6 +69,7 @@ export function FilterPanel() {
     updateTransmission,
     updateFuelType,
     updateSoundProfile,
+    updateShowSold,
     resetFilters,
   } = useFilterContext();
 
@@ -239,6 +240,25 @@ export function FilterPanel() {
           onChange={updateSoundProfile}
         />
       </CollapsibleSection>
+
+      {/* Show sold listings toggle */}
+      <div className="border-b border-surface-100 py-4 last:border-b-0 dark:border-surface-700">
+        <label className="flex cursor-pointer items-center justify-between">
+          <span className="text-sm font-semibold text-surface-800 dark:text-surface-200">
+            {t.showSoldListings}
+          </span>
+          <div className="relative">
+            <input
+              type="checkbox"
+              className="peer sr-only"
+              checked={filters.showSold}
+              onChange={(e) => updateShowSold(e.target.checked)}
+            />
+            <div className="h-5 w-9 rounded-full bg-surface-200 transition-colors peer-checked:bg-brand-accent peer-focus:ring-2 peer-focus:ring-brand-accent/50 dark:bg-surface-600" />
+            <div className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-4" />
+          </div>
+        </label>
+      </div>
     </div>
   );
 }

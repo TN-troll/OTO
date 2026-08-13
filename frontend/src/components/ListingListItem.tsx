@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { ListingSummary } from '@car-ads/shared';
 import { useFavorites } from '../hooks/useFavorites';
 import { useCompare } from '../hooks/useCompare';
+import { getProxyImageUrl } from '../utils/imageProxy';
 
 interface ListingListItemProps {
   listing: ListingSummary;
@@ -40,7 +41,7 @@ export function ListingListItem({ listing }: ListingListItemProps) {
               <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-surface-100 via-surface-200 to-surface-100 dark:from-surface-700 dark:via-surface-600 dark:to-surface-700" />
             )}
             <img
-              src={listing.primaryImageUrl}
+              src={getProxyImageUrl(listing.primaryImageUrl)}
               alt={`${listing.make} ${listing.model}`}
               className={`h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 ${
                 imageLoaded ? 'opacity-100' : 'opacity-0'
@@ -58,10 +59,34 @@ export function ListingListItem({ listing }: ListingListItemProps) {
           {listing.year}
         </div>
 
+        {/* Featured badge */}
+        {listing.isFeatured && (
+          <div className="absolute left-2 top-8 flex items-center gap-1 rounded-md bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
+            <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            FEATURED
+          </div>
+        )}
+
         {/* Nieuw badge */}
-        {isNew && (
+        {isNew && !listing.isFeatured && (
           <div className="absolute left-2 top-8 rounded-md bg-green-500 px-2 py-0.5 text-[10px] font-bold text-white">
             NIEUW
+          </div>
+        )}
+        {isNew && listing.isFeatured && (
+          <div className="absolute left-2 top-[34px] rounded-md bg-green-500 px-2 py-0.5 text-[10px] font-bold text-white">
+            NIEUW
+          </div>
+        )}
+
+        {/* Sold overlay badge */}
+        {listing.status === 'sold' && (
+          <div className="absolute inset-0 z-[5] flex items-center justify-center bg-black/40">
+            <span className="rounded-lg bg-red-600/90 px-3 py-1.5 text-sm font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
+              Sold
+            </span>
           </div>
         )}
 

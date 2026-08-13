@@ -279,7 +279,7 @@ describe('FilterEngine', () => {
       const dataCall = mockQuery.mock.calls.find(
         (call) => typeof call[0] === 'string' && !call[0].includes('COUNT(*)'),
       );
-      expect(dataCall?.[0]).toContain('ORDER BY l.date_added DESC');
+      expect(dataCall?.[0]).toContain('l.date_added DESC');
     });
 
     it('should apply sort by price ascending', async () => {
@@ -290,7 +290,7 @@ describe('FilterEngine', () => {
       const dataCall = mockQuery.mock.calls.find(
         (call) => typeof call[0] === 'string' && !call[0].includes('COUNT(*)'),
       );
-      expect(dataCall?.[0]).toContain('ORDER BY l.price ASC');
+      expect(dataCall?.[0]).toContain('l.price ASC');
     });
 
     it('should apply sort by horsepower descending', async () => {
@@ -301,7 +301,7 @@ describe('FilterEngine', () => {
       const dataCall = mockQuery.mock.calls.find(
         (call) => typeof call[0] === 'string' && !call[0].includes('COUNT(*)'),
       );
-      expect(dataCall?.[0]).toContain('ORDER BY l.horsepower DESC');
+      expect(dataCall?.[0]).toContain('l.horsepower DESC');
     });
 
     it('should apply sort by engineDisplacement', async () => {
@@ -312,7 +312,7 @@ describe('FilterEngine', () => {
       const dataCall = mockQuery.mock.calls.find(
         (call) => typeof call[0] === 'string' && !call[0].includes('COUNT(*)'),
       );
-      expect(dataCall?.[0]).toContain('ORDER BY l.engine_displacement_cc ASC');
+      expect(dataCall?.[0]).toContain('l.engine_displacement_cc ASC');
     });
 
     it('should build WHERE clause for engine displacement range', async () => {
@@ -462,6 +462,49 @@ describe('FilterEngine', () => {
       expect(countCall?.[0]).toContain("l.status = 'active'");
     });
 
+    it('should include sold listings when showSold is true', async () => {
+      mockDbResults(0, []);
+
+      await engine.query({ showSold: true });
+
+      const countCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && call[0].includes('COUNT(*)'),
+      );
+      expect(countCall?.[0]).toContain("l.status IN ('active', 'sold')");
+      expect(countCall?.[0]).not.toContain("l.status = 'active'");
+    });
+
+    it('should never include stale listings even when showSold is true', async () => {
+      mockDbResults(0, []);
+
+      await engine.query({ showSold: true });
+
+      const countCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && call[0].includes('COUNT(*)'),
+      );
+      expect(countCall?.[0]).not.toContain('stale');
+    });
+
+    it('should exclude sold listings when showSold is false', async () => {
+      mockDbResults(0, []);
+
+      await engine.query({ showSold: false });
+
+      const countCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && call[0].includes('COUNT(*)'),
+      );
+      expect(countCall?.[0]).toContain("l.status = 'active'");
+    });
+
+    it('should include status field in listing summary response', async () => {
+      const rowWithStatus = { ...sampleListingRow, status: 'sold' as const };
+      mockDbResults(1, [rowWithStatus]);
+
+      const result = await engine.query({ showSold: true });
+
+      expect(result.listings[0].status).toBe('sold');
+    });
+
     it('should throw on invalid criteria', async () => {
       await expect(
         engine.query({ horsepowerMin: 800, horsepowerMax: 200 }),
@@ -570,6 +613,288 @@ describe('FilterEngine', () => {
       const result = await engine.query({});
 
       expect(result.totalPages).toBe(0);
+    });
+  });
+
+  describe('queryCursor()', () => {
+    it('should return items with nextCursor when more results exist', async () => {
+      // Return 4 items (limit+1) to indicate more pages
+      const rows = [
+        { ...sampleListingRow, id: 'uuid-1' },
+        { ...sampleListingRow, id: 'uuid-2' },
+        { ...sampleListingRow, id: 'uuid-3' },
+        { ...sampleListingRow, id: 'uuid-4' },
+      ];
+      mockDbResults(10, rows);
+
+      const result = await engine.queryCursor({ limit: 3, filters: {} });
+
+      expect(result.items).toHaveLength(3);
+      expect(result.nextCursor).not.toBeNull();
+      expect(result.totalCount).toBe(10);
+    });
+
+    it('should return nextCursor as null when no more results', async () => {
+      const rows = [
+        { ...sampleListingRow, id: 'uuid-1' },
+        { ...sampleListingRow, id: 'uuid-2' },
+      ];
+      mockDbResults(2, rows);
+
+      const result = await engine.queryCursor({ limit: 3, filters: {} });
+
+      expect(result.items).toHaveLength(2);
+      expect(result.nextCursor).toBeNull();
+      expect(result.totalCount).toBe(2);
+    });
+
+    it('should start at offset 0 when no cursor is provided', async () => {
+      mockDbResults(0, []);
+
+      await engine.queryCursor({ limit: 10, filters: {} });
+
+      const dataCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && !call[0].includes('COUNT(*)'),
+      );
+      // Last param is offset, should be 0
+      const params = dataCall?.[1] as unknown[];
+      expect(params[params.length - 1]).toBe(0);
+    });
+
+    it('should decode cursor to get offset position', async () => {
+      mockDbResults(0, []);
+      const cursor = Buffer.from('20').toString('base64'); // offset 20
+
+      await engine.queryCursor({ cursor, limit: 10, filters: {} });
+
+      const dataCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && !call[0].includes('COUNT(*)'),
+      );
+      const params = dataCall?.[1] as unknown[];
+      expect(params[params.length - 1]).toBe(20);
+    });
+
+    it('should encode nextCursor as base64 of offset + limit', async () => {
+      // 4 rows returned means hasMore=true for limit=3
+      const rows = Array.from({ length: 4 }, (_, i) => ({
+        ...sampleListingRow,
+        id: `uuid-${i}`,
+      }));
+      mockDbResults(50, rows);
+
+      const result = await engine.queryCursor({ limit: 3, filters: {} });
+
+      // nextCursor should encode offset 0 + limit 3 = 3
+      const decoded = Buffer.from(result.nextCursor!, 'base64').toString('utf8');
+      expect(decoded).toBe('3');
+    });
+
+    it('should fetch limit+1 items to determine hasMore', async () => {
+      mockDbResults(10, []);
+
+      await engine.queryCursor({ limit: 5, filters: {} });
+
+      const dataCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && !call[0].includes('COUNT(*)'),
+      );
+      const params = dataCall?.[1] as unknown[];
+      // fetchCount should be limit+1 = 6
+      expect(params[params.length - 2]).toBe(6);
+    });
+
+    it('should throw on invalid cursor', async () => {
+      await expect(
+        engine.queryCursor({ cursor: '!!!invalid!!!', limit: 10, filters: {} }),
+      ).rejects.toThrow('Invalid cursor');
+    });
+
+    it('should throw on invalid filter criteria', async () => {
+      await expect(
+        engine.queryCursor({ limit: 10, filters: { horsepowerMin: 800, horsepowerMax: 200 } }),
+      ).rejects.toThrow('Invalid filter criteria');
+    });
+
+    it('should use default sort (dateAdded DESC) when no sort specified', async () => {
+      mockDbResults(0, []);
+
+      await engine.queryCursor({ limit: 10, filters: {} });
+
+      const dataCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && !call[0].includes('COUNT(*)'),
+      );
+      expect(dataCall?.[0]).toContain('l.date_added DESC');
+    });
+
+    it('should apply custom sort from params', async () => {
+      mockDbResults(0, []);
+
+      await engine.queryCursor({ limit: 10, filters: {}, sort: { field: 'price', order: 'asc' } });
+
+      const dataCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && !call[0].includes('COUNT(*)'),
+      );
+      expect(dataCall?.[0]).toContain('l.price ASC');
+    });
+
+    it('should apply filters from criteria', async () => {
+      mockDbResults(0, []);
+
+      await engine.queryCursor({ limit: 10, filters: { makes: ['Ferrari', 'Porsche'] } });
+
+      const countCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && call[0].includes('COUNT(*)'),
+      );
+      expect(countCall?.[0]).toContain('l.make = ANY($1)');
+    });
+
+    it('should include sold listings when showSold is true in cursor mode', async () => {
+      mockDbResults(0, []);
+
+      await engine.queryCursor({ limit: 10, filters: { showSold: true } });
+
+      const countCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && call[0].includes('COUNT(*)'),
+      );
+      expect(countCall?.[0]).toContain("l.status IN ('active', 'sold')");
+    });
+
+    it('should include status field in cursor mode response', async () => {
+      const rowWithStatus = { ...sampleListingRow, status: 'active' as const };
+      mockDbResults(1, [rowWithStatus]);
+
+      const result = await engine.queryCursor({ limit: 10, filters: {} });
+
+      expect(result.items[0].status).toBe('active');
+    });
+
+    it('should map listing rows to ListingSummary correctly', async () => {
+      mockDbResults(1, [{ ...sampleListingRow, status: 'active', is_featured: false }]);
+
+      const result = await engine.queryCursor({ limit: 10, filters: {} });
+
+      expect(result.items[0]).toEqual({
+        id: 'uuid-1',
+        title: 'Ferrari 488 GTB',
+        primaryImageUrl: 'https://example.com/img1.jpg',
+        make: 'Ferrari',
+        model: '488 GTB',
+        year: 2020,
+        price: 250000,
+        horsepower: 670,
+        engineDisplacementCc: 3902,
+        dateAdded: new Date('2024-01-15'),
+        status: 'active',
+        isFeatured: false,
+      });
+    });
+
+    it('should chain cursors correctly across pages', async () => {
+      // Page 1: returns 4 rows (limit+1), hasMore=true
+      const page1Rows = Array.from({ length: 4 }, (_, i) => ({
+        ...sampleListingRow,
+        id: `uuid-${i}`,
+      }));
+      mockDbResults(10, page1Rows);
+
+      const page1 = await engine.queryCursor({ limit: 3, filters: {} });
+      expect(page1.nextCursor).not.toBeNull();
+
+      // Decode cursor to verify offset
+      const decoded = Buffer.from(page1.nextCursor!, 'base64').toString('utf8');
+      expect(decoded).toBe('3');
+
+      // Page 2 with cursor
+      vi.clearAllMocks();
+      mockGetRedisClient.mockReturnValue(null as any);
+      const page2Rows = Array.from({ length: 2 }, (_, i) => ({
+        ...sampleListingRow,
+        id: `uuid-${i + 3}`,
+      }));
+      mockDbResults(10, page2Rows);
+
+      const page2 = await engine.queryCursor({ cursor: page1.nextCursor!, limit: 3, filters: {} });
+      expect(page2.items).toHaveLength(2);
+      expect(page2.nextCursor).toBeNull(); // no more pages
+    });
+  });
+
+  describe('Featured listing ordering', () => {
+    it('should ORDER BY featured flag DESC before user sort in query()', async () => {
+      mockDbResults(0, []);
+
+      await engine.query({});
+
+      const dataCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && !call[0].includes('COUNT(*)'),
+      );
+      const sql = dataCall?.[0] as string;
+      // Featured active listings should come first
+      expect(sql).toContain("(l.is_featured = TRUE AND l.status = 'active') DESC");
+      expect(sql).toContain('l.featured_sort_order ASC');
+      // Verify featured ordering comes before user sort
+      const featuredIdx = sql.indexOf("(l.is_featured = TRUE AND l.status = 'active') DESC");
+      const sortOrderIdx = sql.indexOf('l.featured_sort_order ASC');
+      const userSortIdx = sql.indexOf('l.date_added DESC');
+      expect(featuredIdx).toBeLessThan(sortOrderIdx);
+      expect(sortOrderIdx).toBeLessThan(userSortIdx);
+    });
+
+    it('should ORDER BY featured flag DESC before user sort in queryCursor()', async () => {
+      mockDbResults(0, []);
+
+      await engine.queryCursor({ limit: 10, filters: {}, sort: { field: 'price', order: 'asc' } });
+
+      const dataCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && !call[0].includes('COUNT(*)'),
+      );
+      const sql = dataCall?.[0] as string;
+      expect(sql).toContain("(l.is_featured = TRUE AND l.status = 'active') DESC");
+      expect(sql).toContain('l.featured_sort_order ASC');
+      // Featured ordering before user sort
+      const featuredIdx = sql.indexOf("(l.is_featured = TRUE AND l.status = 'active') DESC");
+      const userSortIdx = sql.indexOf('l.price ASC');
+      expect(featuredIdx).toBeLessThan(userSortIdx);
+    });
+
+    it('should exclude sold listings from featured position via ORDER BY expression', async () => {
+      mockDbResults(0, []);
+
+      await engine.query({ showSold: true });
+
+      const dataCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && !call[0].includes('COUNT(*)'),
+      );
+      const sql = dataCall?.[0] as string;
+      // The ORDER BY uses AND l.status = 'active' so sold listings won't be featured
+      expect(sql).toContain("(l.is_featured = TRUE AND l.status = 'active') DESC");
+    });
+
+    it('should include is_featured in SELECT columns', async () => {
+      mockDbResults(0, []);
+
+      await engine.query({});
+
+      const dataCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && !call[0].includes('COUNT(*)'),
+      );
+      const sql = dataCall?.[0] as string;
+      expect(sql).toContain('l.is_featured');
+    });
+
+    it('should map is_featured field to isFeatured in query() response', async () => {
+      mockDbResults(1, [{ ...sampleListingRow, status: 'active', is_featured: true }]);
+
+      const result = await engine.query({});
+
+      expect(result.listings[0].isFeatured).toBe(true);
+    });
+
+    it('should map is_featured field to isFeatured in queryCursor() response', async () => {
+      mockDbResults(1, [{ ...sampleListingRow, status: 'active', is_featured: true }]);
+
+      const result = await engine.queryCursor({ limit: 10, filters: {} });
+
+      expect(result.items[0].isFeatured).toBe(true);
     });
   });
 });

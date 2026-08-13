@@ -37,6 +37,12 @@ export interface PaginatedListings {
   totalPages: number;
 }
 
+export interface CursorPaginatedListings {
+  items: ListingSummary[];
+  nextCursor: string | null;
+  totalCount: number;
+}
+
 export interface SearchResult {
   listings: ListingSummary[];
   totalCount: number;
@@ -91,6 +97,27 @@ export const api = {
     return fetchJson<FilterResult>(`${API_BASE}/listings/filter`, {
       method: 'POST',
       body: JSON.stringify(criteria),
+    });
+  },
+
+  /**
+   * Cursor-based pagination for infinite scroll.
+   * Uses the /filter/cursor endpoint.
+   */
+  async filterListingsCursor(params: {
+    cursor?: string;
+    limit?: number;
+    filters?: Partial<FilterCriteria>;
+    sort?: { sortBy: string; sortOrder: 'asc' | 'desc' };
+  }): Promise<CursorPaginatedListings> {
+    return fetchJson<CursorPaginatedListings>(`${API_BASE}/listings/filter/cursor`, {
+      method: 'POST',
+      body: JSON.stringify({
+        cursor: params.cursor,
+        limit: params.limit ?? 20,
+        filters: params.filters ?? {},
+        sort: params.sort,
+      }),
     });
   },
 

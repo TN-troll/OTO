@@ -75,7 +75,10 @@ export class SearchService {
    */
   expandAbbreviation(queryText: string): string {
     const normalized = queryText.toLowerCase().trim();
-    return this.abbreviations[normalized] ?? queryText;
+    if (Object.hasOwn(this.abbreviations, normalized)) {
+      return this.abbreviations[normalized];
+    }
+    return queryText;
   }
 
   /**

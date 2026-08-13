@@ -9,6 +9,9 @@ export interface EnvConfig {
   DEEPL_API_KEY: string;
   PORT: number;
   NODE_ENV: 'development' | 'production' | 'test';
+  VAPID_PUBLIC_KEY: string;
+  VAPID_PRIVATE_KEY: string;
+  VAPID_SUBJECT: string;
 }
 
 export function loadEnvConfig(): EnvConfig {
@@ -18,6 +21,9 @@ export function loadEnvConfig(): EnvConfig {
     DEEPL_API_KEY: process.env.DEEPL_API_KEY ?? '',
     PORT: parseInt(process.env.PORT ?? '4000', 10),
     NODE_ENV: (process.env.NODE_ENV as EnvConfig['NODE_ENV']) ?? 'development',
+    VAPID_PUBLIC_KEY: process.env.VAPID_PUBLIC_KEY ?? '',
+    VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY ?? '',
+    VAPID_SUBJECT: process.env.VAPID_SUBJECT ?? 'mailto:admin@oto-occasions.nl',
   };
 }
 

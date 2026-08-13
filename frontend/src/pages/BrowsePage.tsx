@@ -1,19 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
-import { useQuery, useQueries } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import type { SortField, SortOrder } from '@car-ads/shared';
 import { api } from '../api/client';
 import { ListingGrid } from '../components/ListingGrid';
-import { Pagination } from '../components/Pagination';
+import { InfiniteScrollTrigger } from '../components/InfiniteScrollTrigger';
 import { SortControls } from '../components/SortControls';
 import { ViewToggle } from '../components/ViewToggle';
 import { useFilterContext } from '../hooks/FilterContext';
+import { useInfiniteListings } from '../hooks/useInfiniteListings';
 import { useLanguage } from '../i18n';
+import { getProxyImageUrl } from '../utils/imageProxy';
 import { CATEGORIES } from '../data/categories';
 import { CATEGORY_CONTENT } from '../data/category-content';
 import { useCompare } from '../hooks/useCompare';
 import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 
-const DEFAULT_PAGE_SIZE = 50;
+const DEFAULT_PAGE_SIZE = 20;
 
 /** Skeleton card placeholder for loading state */
 function SkeletonCard() {
@@ -92,32 +94,35 @@ export function BrowsePage() {
   // Determine if search is active
   const isSearchActive = searchQuery.length >= 2 && searchResult !== null;
 
-  // Unfiltered listings query — only enabled when NO filters and NO search are active
-  const unfilteredQueryKey = ['listings', { page, pageSize: DEFAULT_PAGE_SIZE, sortBy, sortOrder }];
+  // Build filter criteria for the infinite scroll hook
+  const infiniteFilters = filtersActive ? filters : {};
+
+  // Infinite scroll hook — main data source for unfiltered and filtered browse
   const {
-    data: unfilteredData,
-    isLoading: unfilteredLoading,
-    isFetching: unfilteredFetching,
-    error: unfilteredError,
-    refetch: unfilteredRefetch,
-  } = useQuery({
-    queryKey: unfilteredQueryKey,
-    queryFn: () => api.getListings({ page, pageSize: DEFAULT_PAGE_SIZE, sortBy, sortOrder }),
-    enabled: !filtersActive && !isSearchActive,
-    placeholderData: (prev: any) => prev, // keep showing old data while new loads
+    listings: infiniteListings,
+    totalCount: infiniteTotalCount,
+    isLoading: infiniteLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    isError: infiniteIsError,
+    error: infiniteError,
+    refetch: infiniteRefetch,
+  } = useInfiniteListings({
+    filters: infiniteFilters as any,
+    sortBy,
+    sortOrder,
+    pageSize: DEFAULT_PAGE_SIZE,
+    enabled: !isSearchActive,
   });
 
-  // Determine which data source to use: search > filter > unfiltered
-  // When filters just became active but result isn't ready yet, show loading
-  const data = isSearchActive ? searchResult : filtersActive ? filterResult : unfilteredData;
-  const isLoading = isSearchActive
-    ? isSearching && !searchResult
-    : filtersActive
-      ? !filterResult  // Show loading while we wait for first filter result
-      : unfilteredLoading;
-  const isFetching = isSearchActive ? isSearching : filtersActive ? filterFetching : unfilteredFetching;
-  const error = isSearchActive ? null : filtersActive ? filterError : unfilteredError;
-  const refetch = filtersActive || isSearchActive ? undefined : unfilteredRefetch;
+  // Determine which data source to use: search > infinite scroll
+  const listings = isSearchActive ? (searchResult?.listings ?? []) : infiniteListings;
+  const totalCount = isSearchActive ? (searchResult?.totalCount ?? 0) : infiniteTotalCount;
+  const isLoading = isSearchActive ? (isSearching && !searchResult) : infiniteLoading;
+  const isFetching = isSearchActive ? isSearching : isFetchingNextPage;
+  const error = isSearchActive ? null : infiniteIsError ? infiniteError : null;
+  const refetch = isSearchActive ? undefined : infiniteRefetch;
 
   useEffect(() => {
     if (isFetching) {
@@ -143,12 +148,7 @@ export function BrowsePage() {
   const handleSortChange = (newSortBy: SortField, newSortOrder: SortOrder) => {
     setSortBy(newSortBy);
     setSortOrder(newSortOrder);
-    setPage(1);
-  };
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Infinite scroll resets automatically when query key changes (sort params are part of the key)
   };
 
   if (timedOut && isFetching) {
@@ -195,7 +195,7 @@ export function BrowsePage() {
     );
   }
 
-  const hasListings = data && data.listings.length > 0;
+  const hasListings = listings.length > 0;
 
   return (
     <div className="relative">
@@ -231,7 +231,7 @@ export function BrowsePage() {
               >
                 <div className="aspect-[3/2] overflow-hidden bg-surface-100 dark:bg-surface-700">
                   {(item as any).imageUrls?.[0] ? (
-                    <img src={(item as any).imageUrls[0]} alt={`${item.make} ${item.model}`} className="h-full w-full object-cover" loading="lazy" />
+                    <img src={getProxyImageUrl((item as any).imageUrls[0])} alt={`${item.make} ${item.model}`} className="h-full w-full object-cover" loading="lazy" />
                   ) : (
                     <div className="flex h-full items-center justify-center text-xs text-surface-400">No image</div>
                   )}
@@ -347,9 +347,9 @@ export function BrowsePage() {
       {/* Results header */}
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          {data?.totalCount != null && (
+          {totalCount != null && totalCount > 0 && (
             <h1 className="text-2xl font-bold text-surface-900 dark:text-white">
-              <span className="text-brand-accent">{data.totalCount.toLocaleString('nl-NL')}</span>{' '}
+              <span className="text-brand-accent">{totalCount.toLocaleString('nl-NL')}</span>{' '}
               <span className="text-surface-600 font-normal text-lg dark:text-surface-300">{t.carsFound}</span>
             </h1>
           )}
@@ -362,13 +362,19 @@ export function BrowsePage() {
 
       {hasListings ? (
         <>
-          <ListingGrid listings={data.listings} view={viewMode} />
-          <div className="mt-10">
-            <Pagination currentPage={data.page} totalPages={data.totalPages} onPageChange={handlePageChange} />
-          </div>
-          <div className="mt-3 text-center text-xs text-surface-400 dark:text-surface-500">
-            {t.page} {data.page} {t.of} {data.totalPages}
-          </div>
+          <ListingGrid listings={listings} view={viewMode} />
+          {/* Infinite scroll trigger — replaces traditional pagination (Req 3.1, 3.2, 3.4, 3.5) */}
+          {!isSearchActive && (
+            <div className="mt-10">
+              <InfiniteScrollTrigger
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                fetchNextPage={fetchNextPage}
+                isError={infiniteIsError}
+                triggerDistance={300}
+              />
+            </div>
+          )}
         </>
       ) : (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-surface-300 bg-white py-20 dark:bg-surface-800 dark:border-surface-700">

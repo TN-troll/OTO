@@ -53,7 +53,7 @@ export interface Listing {
   imageUrls: string[];
   sourceUrls: SourceReference[];
   soundProfileId: string | null;
-  status: 'active' | 'inactive';
+  status: 'active' | 'sold' | 'stale' | 'inactive';
   curationCriteria: CurationCriterion[];
   dateAdded: Date;
   lastVerified: Date;
@@ -103,6 +103,8 @@ export interface FilterCriteria {
   sortOrder?: SortOrder;
   page?: number;
   pageSize?: number;
+  /** When true, include sold listings alongside active ones in results */
+  showSold?: boolean;
 }
 
 /** Sound-specific filter criteria */
@@ -150,6 +152,10 @@ export interface ListingSummary {
   horsepower: number | null;
   engineDisplacementCc: number | null;
   dateAdded: Date;
+  /** Listing status — present so the frontend can display badges (e.g. "Sold") */
+  status?: 'active' | 'sold' | 'stale';
+  /** Whether this listing is featured (pinned to top of browse results) */
+  isFeatured?: boolean;
 }
 
 /** Result of validating filter criteria or other input */

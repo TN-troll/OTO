@@ -82,6 +82,7 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
       horsepowerMax: parseNumberParam(initialParams.current.get('horsepowerMax')),
       transmissionType: initialParams.current.get('transmissionType')?.split(',').filter(Boolean) || [],
       fuelType: initialParams.current.get('fuelType')?.split(',').filter(Boolean) || [],
+      showSold: initialParams.current.get('showSold') === 'true',
     },
   });
 
@@ -126,6 +127,7 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
     if (filters.horsepowerMax !== undefined) params.set('horsepowerMax', String(filters.horsepowerMax));
     if (filters.transmissionType.length > 0) params.set('transmissionType', filters.transmissionType.join(','));
     if (filters.fuelType.length > 0) params.set('fuelType', filters.fuelType.join(','));
+    if (filters.showSold) params.set('showSold', 'true');
 
     const search = params.toString();
     const newUrl = search ? `${window.location.pathname}?${search}` : window.location.pathname;

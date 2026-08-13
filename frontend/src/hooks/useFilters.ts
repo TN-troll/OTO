@@ -20,6 +20,7 @@ export interface FilterState {
   transmissionType: TransmissionType[];
   fuelType: FuelType[];
   soundProfile: SoundFilterCriteria;
+  showSold: boolean;
 }
 
 const INITIAL_FILTER_STATE: FilterState = {
@@ -38,6 +39,7 @@ const INITIAL_FILTER_STATE: FilterState = {
   transmissionType: [],
   fuelType: [],
   soundProfile: {},
+  showSold: false,
 };
 
 function validateFilters(state: FilterState): ValidationError[] {
@@ -119,6 +121,10 @@ function buildCriteria(state: FilterState, sorting?: { sortBy: SortField; sortOr
     criteria.soundProfile = sp;
   }
 
+  if (state.showSold) {
+    criteria.showSold = true;
+  }
+
   if (sorting) {
     criteria.sortBy = sorting.sortBy;
     criteria.sortOrder = sorting.sortOrder;
@@ -145,6 +151,7 @@ function hasActiveFilters(state: FilterState): boolean {
     state.models.length > 0 ||
     state.transmissionType.length > 0 ||
     state.fuelType.length > 0 ||
+    state.showSold ||
     Object.values(state.soundProfile).some((v) => Array.isArray(v) && v.length > 0)
   );
 }
@@ -167,6 +174,7 @@ export interface UseFiltersOptions {
     horsepowerMax?: number;
     transmissionType?: string[];
     fuelType?: string[];
+    showSold?: boolean;
   };
 }
 
@@ -188,6 +196,7 @@ export function useFilters(options: UseFiltersOptions = {}) {
       horsepowerMax: init.horsepowerMax,
       transmissionType: (init.transmissionType ?? []) as TransmissionType[],
       fuelType: (init.fuelType ?? []) as FuelType[],
+      showSold: init.showSold ?? false,
     };
   });
 
@@ -269,6 +278,13 @@ export function useFilters(options: UseFiltersOptions = {}) {
     }));
   }, []);
 
+  const updateShowSold = useCallback((showSold: boolean) => {
+    setFilters((prev) => ({
+      ...prev,
+      showSold,
+    }));
+  }, []);
+
   const resetFilters = useCallback(() => {
     setFilters(INITIAL_FILTER_STATE);
   }, []);
@@ -289,6 +305,7 @@ export function useFilters(options: UseFiltersOptions = {}) {
     updateTransmission,
     updateFuelType,
     updateSoundProfile,
+    updateShowSold,
     resetFilters,
   };
 }

@@ -208,11 +208,12 @@ describe('Property 11: Sorting Correctness', () => {
         const dataSql = sqlStatements.find((s) => s.includes('ORDER BY'));
         expect(dataSql).toBeDefined();
 
-        // Verify the ORDER BY clause contains the correct column
+        // Verify the ORDER BY clause contains the correct column and direction
+        // Featured ordering is prepended, so the user sort appears after featured sort
         const expectedColumn = SORT_COLUMN_MAP[sortField];
         const expectedDirection = sortOrder.toUpperCase();
 
-        expect(dataSql!).toContain(`ORDER BY l.${expectedColumn} ${expectedDirection}`);
+        expect(dataSql!).toContain(`l.${expectedColumn} ${expectedDirection}`);
       }),
       { numRuns: 100 },
     );
@@ -311,7 +312,8 @@ describe('Property 11: Sorting Correctness', () => {
 
     const dataSql = sqlStatements.find((s) => s.includes('ORDER BY'));
     expect(dataSql).toBeDefined();
-    expect(dataSql!).toContain('ORDER BY l.date_added DESC');
+    // Featured ordering is prepended, but the default user sort should still be date_added DESC
+    expect(dataSql!).toContain('l.date_added DESC');
   });
 
   it('in-memory sort reference matches correctness check for all field/order combos', () => {

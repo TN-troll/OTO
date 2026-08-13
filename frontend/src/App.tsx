@@ -4,13 +4,18 @@ import { ListingDetailPage } from './pages/ListingDetailPage';
 import { ComparePage } from './pages/ComparePage';
 import { MapPage } from './pages/MapPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
+import { PremiumPage } from './pages/PremiumPage';
+import { NotificationsPage } from './pages/NotificationsPage';
 import { SearchBar } from './components/SearchBar';
 import { FilterPanel } from './components/FilterPanel';
 import { MarketplaceHealthBanner } from './components/MarketplaceHealthBanner';
+import { NotificationPromptBanner } from './components/NotificationPreferences';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { ThemeToggle } from './components/ThemeToggle';
+import { PremiumBadge } from './components/PremiumBadge';
 import { FilterProvider, useFilterContext } from './hooks/FilterContext';
 import { useLanguage } from './i18n';
+import { isPushSupported } from './hooks/usePushNotifications';
 import { useEffect } from 'react';
 
 /** OTO exhaust-pipe logo — uses currentColor so it adapts to dark/light mode */
@@ -67,6 +72,23 @@ function Header() {
 
           {/* Right side */}
           <div className="flex items-center gap-3">
+            {isPushSupported() && (
+              <a
+                href="/notifications"
+                className="hidden items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-surface-600 transition-colors hover:bg-surface-100 sm:inline-flex dark:text-surface-300 dark:hover:bg-surface-700"
+                aria-label="Notification settings"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+              </a>
+            )}
+            <a
+              href="/premium"
+              className="hidden items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-amber-600 transition-colors hover:bg-amber-50 sm:inline-flex dark:text-amber-400 dark:hover:bg-amber-900/20"
+            >
+              <PremiumBadge size="sm" />
+            </a>
             <ThemeToggle />
             <LanguageSwitcher />
           </div>
@@ -188,6 +210,7 @@ export function App() {
           element={
             <FilterProvider>
               <Header />
+              <NotificationPromptBanner />
               <div className="flex flex-1">
                 <FilterSidebar />
                 <MobileFilterDrawer />
@@ -253,6 +276,38 @@ export function App() {
               <div className="flex flex-1">
                 <main className="flex-1 overflow-auto">
                   <LeaderboardPage />
+                </main>
+              </div>
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/premium"
+          element={
+            <>
+              <Header />
+              <div className="flex flex-1">
+                <main className="flex-1 overflow-auto">
+                  <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+                    <PremiumPage />
+                  </div>
+                </main>
+              </div>
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <>
+              <Header />
+              <div className="flex flex-1">
+                <main className="flex-1 overflow-auto">
+                  <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+                    <NotificationsPage />
+                  </div>
                 </main>
               </div>
               <Footer />

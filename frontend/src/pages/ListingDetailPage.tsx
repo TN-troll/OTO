@@ -6,6 +6,10 @@ import type { SoundProfile } from '@car-ads/shared';
 import { useLanguage } from '../i18n';
 import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 import { ListingCard } from '../components/ListingCard';
+import { FinanceCalculator } from '../components/FinanceCalculator';
+import { DealerContactForm } from '../components/DealerContactForm';
+import { getProxyImageUrls } from '../utils/imageProxy';
+import { useClickTracker } from '../hooks/useClickTracker';
 
 /** Extended listing type as returned by the detail API (includes nested soundProfile) */
 interface ListingDetail {
@@ -40,6 +44,7 @@ export function ListingDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { t } = useLanguage();
   const { addViewed } = useRecentlyViewed();
+  const [showContactForm, setShowContactForm] = useState(false);
 
   const { data: listing, isLoading, error } = useQuery<ListingDetail>({
     queryKey: ['listing', id],
@@ -103,7 +108,7 @@ export function ListingDetailPage() {
 
       {/* Image Gallery */}
       <ImageGallery
-        imageUrls={listing.imageUrls}
+        imageUrls={getProxyImageUrls(listing.imageUrls)}
         alt={`${listing.make} ${listing.model}`}
       />
 
@@ -133,6 +138,33 @@ export function ListingDetailPage() {
           {/* Share Buttons */}
           <ShareButtons listing={listing} />
 
+          {/* Request Info Button */}
+          <div className="mt-4">
+            <button
+              onClick={() => setShowContactForm(true)}
+              className="inline-flex items-center gap-2 rounded-lg bg-brand px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-brand/90 hover:shadow-md"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              </svg>
+              Request Info
+            </button>
+          </div>
+
+          {/* Dealer Contact Form Modal */}
+          {showContactForm && (
+            <DealerContactForm
+              listingId={listing.id}
+              listingTitle={`${listing.make} ${listing.model}`}
+              listingPrice={listing.price}
+              sourceUrl={listing.sourceUrls?.[0]?.url || ''}
+              onClose={() => setShowContactForm(false)}
+            />
+          )}
+
+          {/* Finance Calculator */}
+          <FinanceCalculator listingPrice={listing.price} />
+
           {/* Specifications Grid */}
           <SpecificationsSection listing={listing} />
 
@@ -157,7 +189,7 @@ export function ListingDetailPage() {
           <YouTubeSoundSection make={listing.make} model={listing.model} />
 
           {/* Source Links */}
-          <SourceLinksSection sourceUrls={listing.sourceUrls} />
+          <SourceLinksSection sourceUrls={listing.sourceUrls} listingId={listing.id} />
         </div>
       </div>
 
@@ -427,13 +459,16 @@ function AudioPlayer({ soundProfileId }: { soundProfileId: string }) {
   );
 }
 
-/** Source marketplace links */
+/** Source marketplace links — routed through click tracker */
 function SourceLinksSection({
   sourceUrls,
+  listingId,
 }: {
   sourceUrls: ListingDetail['sourceUrls'];
+  listingId: string;
 }) {
   const { t } = useLanguage();
+  const { trackOutboundClick, isTracking } = useClickTracker(listingId);
 
   if (!sourceUrls || sourceUrls.length === 0) return null;
 
@@ -447,10 +482,15 @@ function SourceLinksSection({
             href={source.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg border border-surface-200 bg-white px-4 py-2.5 text-sm font-medium text-surface-700 shadow-sm transition-all duration-200 hover:border-brand-accent hover:text-brand-accent hover:shadow-md dark:border-surface-600 dark:bg-surface-700 dark:text-surface-300 dark:hover:border-brand-accent dark:hover:text-brand-accent"
+            onClick={(e) => trackOutboundClick(e, source.url)}
+            className={`inline-flex items-center gap-2 rounded-lg border border-surface-200 bg-white px-4 py-2.5 text-sm font-medium text-surface-700 shadow-sm transition-all duration-200 hover:border-brand-accent hover:text-brand-accent hover:shadow-md dark:border-surface-600 dark:bg-surface-700 dark:text-surface-300 dark:hover:border-brand-accent dark:hover:text-brand-accent ${isTracking ? 'opacity-70 pointer-events-none' : ''}`}
           >
+            {isTracking ? (
+              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-surface-300 border-t-brand-accent" />
+            ) : (
+              <ExternalLinkIcon />
+            )}
             {t.viewOn} {capitalize(source.marketplace)}
-            <ExternalLinkIcon />
           </a>
         ))}
       </div>

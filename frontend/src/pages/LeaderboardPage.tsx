@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client';
 import { getAcceleration } from '../data/performance';
+import { getProxyImageUrl } from '../utils/imageProxy';
 
 export function LeaderboardPage() {
   const { data, isLoading } = useQuery({
@@ -53,7 +54,7 @@ export function LeaderboardPage() {
               {/* Image */}
               <div className="h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-surface-100 dark:bg-surface-700">
                 {listing.primaryImageUrl ? (
-                  <img src={listing.primaryImageUrl} alt="" className="h-full w-full object-cover" />
+                  <img src={getProxyImageUrl(listing.primaryImageUrl)} alt="" className="h-full w-full object-cover" />
                 ) : null}
               </div>
 

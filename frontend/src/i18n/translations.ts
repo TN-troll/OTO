@@ -52,6 +52,9 @@ export interface Translations {
   aggressiveBark: string;
   smoothPurr: string;
 
+  // Status filters
+  showSoldListings: string;
+
   // Listings
   exclusiveCars: string;
   sortBy: string;
@@ -94,6 +97,12 @@ export interface Translations {
   viewOn: string;
   cylinders: string;
   induction: string;
+
+  // Infinite scroll
+  loadingMore: string;
+  noMoreListings: string;
+  retryLoadMore: string;
+  loadMoreError: string;
 
   // Health banner
   unreachableSingular: string;
@@ -146,6 +155,7 @@ export const translations: Record<Locale, Translations> = {
     highPitchedScream: 'High-Pitched Scream',
     aggressiveBark: 'Aggressive Bark',
     smoothPurr: 'Smooth Purr',
+    showSoldListings: 'Show sold listings',
     exclusiveCars: 'OTO',
     sortBy: 'Sort by:',
     dateAdded: 'Date Added',
@@ -185,6 +195,10 @@ export const translations: Record<Locale, Translations> = {
     viewOn: 'View on',
     cylinders: 'Cylinders',
     induction: 'Induction',
+    loadingMore: 'Loading more listings...',
+    noMoreListings: 'No more listings',
+    retryLoadMore: 'Retry',
+    loadMoreError: 'Failed to load more listings',
     unreachableSingular: 'is currently unreachable. Listings from this source may not be up to date.',
     unreachablePlural: 'are currently unreachable. Listings from these sources may not be up to date.',
     dismissNotification: 'Dismiss notification',
@@ -233,6 +247,7 @@ export const translations: Record<Locale, Translations> = {
     highPitchedScream: 'Hoge schreeuw',
     aggressiveBark: 'Agressief geblaf',
     smoothPurr: 'Zacht geronk',
+    showSoldListings: 'Toon verkochte auto\'s',
     exclusiveCars: 'OTO',
     sortBy: 'Sorteer op:',
     dateAdded: 'Datum toegevoegd',
@@ -272,6 +287,10 @@ export const translations: Record<Locale, Translations> = {
     viewOn: 'Bekijk op',
     cylinders: 'Cilinders',
     induction: 'Aandrijving',
+    loadingMore: 'Meer advertenties laden...',
+    noMoreListings: 'Geen advertenties meer',
+    retryLoadMore: 'Opnieuw',
+    loadMoreError: 'Kan meer advertenties niet laden',
     unreachableSingular: 'is momenteel onbereikbaar. Advertenties van deze bron zijn mogelijk niet actueel.',
     unreachablePlural: 'zijn momenteel onbereikbaar. Advertenties van deze bronnen zijn mogelijk niet actueel.',
     dismissNotification: 'Melding sluiten',

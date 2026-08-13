@@ -331,3 +331,32 @@ listingsRouter.post('/filter', async (req: Request, res: Response): Promise<void
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+/**
+ * POST /api/listings/filter/cursor
+ *
+ * Cursor-based pagination for infinite scroll.
+ * Body: { cursor?, limit, filters, sort? }
+ * Returns: { items, nextCursor, totalCount }
+ */
+listingsRouter.post('/filter/cursor', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { cursor, limit = 20, filters = {}, sort } = req.body;
+
+    const result = await filterEngine.queryCursor({
+      cursor,
+      limit: Math.max(1, Math.min(100, Number(limit))),
+      filters,
+      sort,
+    });
+
+    res.json(result);
+  } catch (err: any) {
+    if (err.message?.includes('Invalid cursor') || err.message?.includes('Invalid filter criteria')) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    console.error('Error in cursor pagination:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});

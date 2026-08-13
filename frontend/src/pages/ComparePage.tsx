@@ -1,6 +1,7 @@
 import { useSearchParams, Link } from 'react-router-dom';
 import { useQueries } from '@tanstack/react-query';
 import { api } from '../api/client';
+import { getProxyImageUrl } from '../utils/imageProxy';
 
 interface ListingDetail {
   id: string;
@@ -79,7 +80,7 @@ export function ComparePage() {
                   <a href={`/listing/${listing.id}`} className="group block">
                     <div className="mx-auto h-32 w-48 overflow-hidden rounded-lg bg-surface-100 dark:bg-surface-700">
                       {listing.imageUrls?.[0] ? (
-                        <img src={listing.imageUrls[0]} alt={`${listing.make} ${listing.model}`} className="h-full w-full object-cover" />
+                        <img src={getProxyImageUrl(listing.imageUrls[0])} alt={`${listing.make} ${listing.model}`} className="h-full w-full object-cover" />
                       ) : (
                         <div className="flex h-full items-center justify-center text-surface-300">No image</div>
                       )}

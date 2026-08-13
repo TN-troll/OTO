@@ -24,6 +24,21 @@ import { getRedisClient } from '../cache/redis.js';
 
 const CACHE_TTL_SECONDS = 300; // 5 minutes
 
+/** Parameters for cursor-based pagination */
+export interface CursorPaginationParams {
+  cursor?: string;                // opaque cursor from previous response
+  limit: number;
+  filters: FilterCriteria;
+  sort?: { field: SortField; order: SortOrder };
+}
+
+/** Response for cursor-based pagination */
+export interface CursorPaginatedResponse<T> {
+  items: T[];
+  nextCursor: string | null;      // null means no more pages
+  totalCount: number;
+}
+
 const SORT_COLUMN_MAP: Record<SortField, string> = {
   price: 'price',
   horsepower: 'horsepower',
@@ -178,7 +193,7 @@ export class FilterEngine {
     const sortColumn = SORT_COLUMN_MAP[sortBy];
     const orderDirection = sortOrder.toUpperCase();
 
-    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.date_added FROM listings l${this.needsSoundJoin(criteria) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY l.${sortColumn} ${orderDirection} LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.date_added, l.status, l.is_featured FROM listings l${this.needsSoundJoin(criteria) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
 
     const dataResult = await query<{
       id: string;
@@ -191,6 +206,8 @@ export class FilterEngine {
       horsepower: number | null;
       engine_displacement_cc: number | null;
       date_added: Date;
+      status: 'active' | 'sold' | 'stale';
+      is_featured: boolean;
     }>(dataSql, [...params, pageSize, offset]);
 
     const listings: ListingSummary[] = dataResult.rows.map((row) => ({
@@ -204,6 +221,8 @@ export class FilterEngine {
       horsepower: row.horsepower,
       engineDisplacementCc: row.engine_displacement_cc,
       dateAdded: row.date_added,
+      status: row.status,
+      isFeatured: row.is_featured,
     }));
 
     const totalPages = Math.ceil(totalCount / pageSize);
@@ -222,6 +241,103 @@ export class FilterEngine {
     return result;
   }
 
+  /**
+   * Execute a filtered query using cursor-based pagination.
+   * The cursor encodes the offset position as a base64 string.
+   * Fetches limit+1 items to determine if there's a next page.
+   */
+  async queryCursor(params: CursorPaginationParams): Promise<CursorPaginatedResponse<ListingSummary>> {
+    const { cursor, limit, filters, sort } = params;
+
+    const validation = this.validateCriteria(filters);
+    if (!validation.valid) {
+      throw new Error(`Invalid filter criteria: ${validation.errors.map((e) => e.message).join(', ')}`);
+    }
+
+    const offset = cursor ? this.decodeCursor(cursor) : 0;
+    const sortBy = sort?.field ?? filters.sortBy ?? 'dateAdded';
+    const sortOrder = sort?.order ?? filters.sortOrder ?? 'desc';
+
+    const { whereClause, params: queryParams } = this.buildWhereClause(filters);
+
+    // Get total count
+    const countSql = `SELECT COUNT(*) as count FROM listings l${this.needsSoundJoin(filters) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause}`;
+    const countResult = await query<{ count: string }>(countSql, queryParams);
+    const totalCount = parseInt(countResult.rows[0]?.count ?? '0', 10);
+
+    // Fetch limit+1 to determine if there's a next page
+    const sortColumn = SORT_COLUMN_MAP[sortBy];
+    const orderDirection = sortOrder.toUpperCase();
+    const fetchCount = limit + 1;
+
+    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.date_added, l.status, l.is_featured FROM listings l${this.needsSoundJoin(filters) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
+
+    const dataResult = await query<{
+      id: string;
+      title: string;
+      image_urls: string[];
+      make: string;
+      model: string;
+      year: number;
+      price: string | number;
+      horsepower: number | null;
+      engine_displacement_cc: number | null;
+      date_added: Date;
+      status: 'active' | 'sold' | 'stale';
+      is_featured: boolean;
+    }>(dataSql, [...queryParams, fetchCount, offset]);
+
+    const hasMore = dataResult.rows.length > limit;
+    const rows = hasMore ? dataResult.rows.slice(0, limit) : dataResult.rows;
+
+    const items: ListingSummary[] = rows.map((row) => ({
+      id: row.id,
+      title: row.title,
+      primaryImageUrl: row.image_urls?.[0] ?? null,
+      make: row.make,
+      model: row.model,
+      year: row.year,
+      price: typeof row.price === 'string' ? parseFloat(row.price) : row.price,
+      horsepower: row.horsepower,
+      engineDisplacementCc: row.engine_displacement_cc,
+      dateAdded: row.date_added,
+      status: row.status,
+      isFeatured: row.is_featured,
+    }));
+
+    const nextCursor = hasMore ? this.encodeCursor(offset + limit) : null;
+
+    return {
+      items,
+      nextCursor,
+      totalCount,
+    };
+  }
+
+  /**
+   * Encode an offset into an opaque cursor string (base64).
+   */
+  private encodeCursor(offset: number): string {
+    return Buffer.from(String(offset)).toString('base64');
+  }
+
+  /**
+   * Decode an opaque cursor string back into an offset number.
+   * Throws if the cursor is invalid.
+   */
+  private decodeCursor(cursor: string): number {
+    try {
+      const decoded = Buffer.from(cursor, 'base64').toString('utf8');
+      const offset = parseInt(decoded, 10);
+      if (isNaN(offset) || offset < 0) {
+        throw new Error('Invalid cursor value');
+      }
+      return offset;
+    } catch {
+      throw new Error('Invalid cursor: unable to decode');
+    }
+  }
+
   private needsSoundJoin(criteria: FilterCriteria): boolean {
     const sp = criteria.soundProfile;
     if (!sp) return false;
@@ -234,8 +350,15 @@ export class FilterEngine {
   }
 
   private buildWhereClause(criteria: FilterCriteria): { whereClause: string; params: unknown[] } {
-    const conditions: string[] = ["l.status = 'active'"];
+    const conditions: string[] = [];
     const params: unknown[] = [];
+
+    // Status filtering: never include 'stale' listings in user-facing results
+    if (criteria.showSold) {
+      conditions.push("l.status IN ('active', 'sold')");
+    } else {
+      conditions.push("l.status = 'active'");
+    }
 
     // Engine displacement range
     if (criteria.engineDisplacementMin !== undefined) {

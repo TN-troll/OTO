@@ -9,6 +9,13 @@ import { scrapeRealRouter } from './scrape-real.js';
 import { scrapeAutoscoutRouter } from './scrape-autoscout.js';
 import { smartSearchRouter } from './smart-search.js';
 import { translateRouter } from './translate.js';
+import { imagesRouter } from './images.js';
+import { clicksRouter } from './clicks.js';
+import { contactRouter } from './contact.js';
+import { featuredRouter } from './featured.js';
+import { notificationsRouter } from './notifications.js';
+import { premiumSignupRouter } from './premium-signup.js';
+import { cacheMiddleware } from './middleware/cache.js';
 import { env } from '../config/env.js';
 
 /**
@@ -21,7 +28,7 @@ export function createApp(): express.Application {
   // CORS
   app.use((_req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     if (_req.method === 'OPTIONS') { res.sendStatus(204); return; }
     next();
@@ -29,6 +36,7 @@ export function createApp(): express.Application {
 
   // Middleware
   app.use(express.json());
+  app.use(cacheMiddleware());
 
   // Route modules
   app.use('/api/listings', listingsRouter);
@@ -41,6 +49,12 @@ export function createApp(): express.Application {
   app.use('/api/scrape-autoscout', scrapeAutoscoutRouter);
   app.use('/api/smart-search', smartSearchRouter);
   app.use('/api/translate', translateRouter);
+  app.use('/api/images', imagesRouter);
+  app.use('/api', clicksRouter);
+  app.use('/api/contact', contactRouter);
+  app.use('/api/admin/featured', featuredRouter);
+  app.use('/api/notifications', notificationsRouter);
+  app.use('/api/premium-signup', premiumSignupRouter);
 
   return app;
 }
