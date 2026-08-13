@@ -354,6 +354,16 @@ export function BrowsePage() {
         })}
       </div>
 
+      {/* Quick links */}
+      <div className="mb-4 flex gap-3">
+        <a href="/map" className="inline-flex items-center gap-1.5 text-xs font-medium text-surface-500 hover:text-brand-accent dark:text-surface-400">
+          📍 Map View
+        </a>
+        <a href="/leaderboard" className="inline-flex items-center gap-1.5 text-xs font-medium text-surface-500 hover:text-brand-accent dark:text-surface-400">
+          🏁 0-100 Leaderboard
+        </a>
+      </div>
+
       {/* Search active banner */}
       {isSearchActive && (
         <div className="mb-4 flex items-center gap-3 rounded-lg bg-primary-50 px-4 py-2.5 dark:bg-surface-700">

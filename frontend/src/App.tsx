@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 import { BrowsePage } from './pages/BrowsePage';
 import { ListingDetailPage } from './pages/ListingDetailPage';
 import { ComparePage } from './pages/ComparePage';
+import { MapPage } from './pages/MapPage';
+import { LeaderboardPage } from './pages/LeaderboardPage';
 import { SearchBar } from './components/SearchBar';
 import { FilterPanel } from './components/FilterPanel';
 import { MarketplaceHealthBanner } from './components/MarketplaceHealthBanner';
@@ -223,6 +225,34 @@ export function App() {
               <div className="flex flex-1">
                 <main className="flex-1 overflow-auto">
                   <ComparePage />
+                </main>
+              </div>
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/map"
+          element={
+            <>
+              <Header />
+              <div className="flex flex-1">
+                <main className="flex-1 overflow-auto">
+                  <MapPage />
+                </main>
+              </div>
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/leaderboard"
+          element={
+            <>
+              <Header />
+              <div className="flex flex-1">
+                <main className="flex-1 overflow-auto">
+                  <LeaderboardPage />
                 </main>
               </div>
               <Footer />

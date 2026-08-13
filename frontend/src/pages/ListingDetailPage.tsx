@@ -139,6 +139,9 @@ export function ListingDetailPage() {
           {/* Price History */}
           <PriceHistorySection history={priceHistoryData?.history} />
 
+          {/* Depreciation Calculator */}
+          <DepreciationSection price={listing.price} year={listing.year} mileage={listing.mileage} make={listing.make} />
+
           {/* Description */}
           {listing.description && (
             <DescriptionSection
@@ -149,6 +152,9 @@ export function ListingDetailPage() {
 
           {/* Sound Profile Section */}
           <SoundProfileSection soundProfile={listing.soundProfile} />
+
+          {/* YouTube Engine Sound */}
+          <YouTubeSoundSection make={listing.make} model={listing.model} />
 
           {/* Source Links */}
           <SourceLinksSection sourceUrls={listing.sourceUrls} />
@@ -608,6 +614,100 @@ function MarketValueBadge({ price, marketAvgPrice }: { price: number; marketAvgP
     <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${className}`}>
       {label}
     </span>
+  );
+}
+
+/* ─── YouTube Engine Sound Section ─── */
+
+function YouTubeSoundSection({ make, model }: { make: string; model: string }) {
+  // Construct a YouTube search URL for the engine sound
+  const searchQuery = encodeURIComponent(`${make} ${model} engine sound exhaust`);
+  const youtubeSearchUrl = `https://www.youtube.com/results?search_query=${searchQuery}`;
+  
+  // Embed a curated search result using YouTube's embed with search
+  const embedUrl = `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(`${make} ${model} engine sound`)}`;
+
+  return (
+    <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
+      <h2 className="text-lg font-bold text-surface-900 dark:text-white">Engine Sound</h2>
+      <p className="mt-1 text-xs text-surface-500 dark:text-surface-400">Listen to how this {make} {model} sounds</p>
+      <div className="mt-4 aspect-video overflow-hidden rounded-xl bg-surface-100 dark:bg-surface-700">
+        <iframe
+          src={embedUrl}
+          title={`${make} ${model} engine sound`}
+          className="h-full w-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          loading="lazy"
+        />
+      </div>
+      <a
+        href={youtubeSearchUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-brand-accent hover:underline"
+      >
+        More videos on YouTube →
+      </a>
+    </div>
+  );
+}
+
+/* ─── Depreciation Section ─── */
+
+function DepreciationSection({ price, year, mileage, make }: { price: number; year: number; mileage: number | null; make: string }) {
+  // Luxury/exotic cars depreciate differently than normal cars
+  const luxuryBrands = ['Ferrari', 'Lamborghini', 'McLaren', 'Bugatti', 'Pagani', 'Koenigsegg', 'Rolls-Royce'];
+  const isLuxury = luxuryBrands.includes(make);
+  
+  const currentYear = new Date().getFullYear();
+  const age = currentYear - year;
+  
+  // Annual depreciation rates (simplified model)
+  // Luxury/exotic: 5-8% per year (often appreciates after 10+ years)
+  // Performance: 8-12% per year
+  const annualRate = isLuxury ? 0.06 : 0.10;
+  
+  // Project future values
+  const projections = [1, 2, 3, 5].map(yearsAhead => {
+    // Classics (>15 years old luxury) may appreciate
+    const appreciating = isLuxury && age > 15;
+    const projectedPrice = appreciating 
+      ? Math.round(price * Math.pow(1.03, yearsAhead)) 
+      : Math.round(price * Math.pow(1 - annualRate, yearsAhead));
+    return { years: yearsAhead, price: projectedPrice };
+  });
+
+  const monthlyDepreciation = Math.round((price * annualRate) / 12);
+
+  return (
+    <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
+      <h2 className="text-lg font-bold text-surface-900 dark:text-white">Depreciation Estimate</h2>
+      <p className="mt-1 text-xs text-surface-500 dark:text-surface-400">
+        Based on {isLuxury ? 'luxury/exotic' : 'performance'} car depreciation patterns ({age} years old)
+      </p>
+      
+      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {projections.map(p => (
+          <div key={p.years} className="rounded-lg bg-surface-50 p-3 text-center dark:bg-surface-700">
+            <p className="text-[10px] font-medium text-surface-500 dark:text-surface-400">In {p.years} {p.years === 1 ? 'year' : 'years'}</p>
+            <p className="mt-1 text-sm font-bold text-surface-900 dark:text-white">€{p.price.toLocaleString('nl-NL')}</p>
+            <p className={`text-[10px] ${p.price < price ? 'text-red-500' : 'text-green-500'}`}>
+              {p.price < price ? '▼' : '▲'} €{Math.abs(p.price - price).toLocaleString('nl-NL')}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-3 flex items-center gap-2 rounded-lg bg-surface-50 px-4 py-2.5 dark:bg-surface-700">
+        <span className="text-xs text-surface-500 dark:text-surface-400">Estimated monthly cost of ownership (depreciation only):</span>
+        <span className="text-sm font-bold text-surface-900 dark:text-white">€{monthlyDepreciation.toLocaleString('nl-NL')}/mo</span>
+      </div>
+
+      <p className="mt-2 text-[10px] text-surface-400 dark:text-surface-500 italic">
+        * Simplified estimate based on historical depreciation rates. Actual values may differ significantly based on condition, mileage, and market demand.
+      </p>
+    </div>
   );
 }
 
