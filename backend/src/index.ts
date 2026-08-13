@@ -114,6 +114,15 @@ async function start() {
           ALTER TABLE listings ADD COLUMN IF NOT EXISTS description_en TEXT;
         EXCEPTION WHEN duplicate_column THEN NULL;
         END $$;
+
+        -- Price history tracking
+        CREATE TABLE IF NOT EXISTS price_history (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          listing_id UUID NOT NULL REFERENCES listings(id) ON DELETE CASCADE,
+          price DECIMAL(12,2) NOT NULL,
+          recorded_at TIMESTAMPTZ DEFAULT NOW()
+        );
+        CREATE INDEX IF NOT EXISTS idx_price_history_listing ON price_history(listing_id, recorded_at);
       `);
       console.log('[OTO] Database tables ready');
     } catch (err) {

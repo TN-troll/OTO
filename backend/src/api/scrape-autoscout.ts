@@ -163,6 +163,22 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
         );
 
         if (existing.rows.length > 0) {
+          // Record price if changed
+          const existingId = existing.rows[0].id;
+          const currentPrice = listing.price;
+          const lastPrice = await query<{ price: string }>(
+            `SELECT price FROM listings WHERE id = $1`, [existingId]
+          );
+          if (lastPrice.rows[0] && Math.abs(parseFloat(lastPrice.rows[0].price) - currentPrice) > 1) {
+            await query(
+              `INSERT INTO price_history (listing_id, price) VALUES ($1, $2)`,
+              [existingId, currentPrice]
+            );
+            await query(
+              `UPDATE listings SET price = $1, last_verified = NOW() WHERE id = $2`,
+              [currentPrice, existingId]
+            );
+          }
           skipped++;
           continue;
         }

@@ -120,6 +120,13 @@ listingsRouter.get('/:id', async (req: Request, res: Response): Promise<void> =>
       isActive: row.is_active,
     }));
 
+    // Compute market average price for same make+model
+    const avgResult = await queryOne<{ avg_price: string }>(
+      `SELECT AVG(price) as avg_price FROM listings WHERE make = $1 AND model = $2 AND status = 'active' AND id != $3`,
+      [listing.make, listing.model, listing.id]
+    );
+    const marketAvgPrice = avgResult?.avg_price ? parseFloat(avgResult.avg_price) : null;
+
     // Fetch sound profile if present
     let soundProfile = null;
     if (listing.sound_profile_id) {
@@ -177,6 +184,7 @@ listingsRouter.get('/:id', async (req: Request, res: Response): Promise<void> =>
       lastVerified: listing.last_verified,
       createdAt: listing.created_at,
       updatedAt: listing.updated_at,
+      marketAvgPrice,
     };
 
     res.json(response);
@@ -276,6 +284,25 @@ listingsRouter.get('/:id/similar', async (req: Request, res: Response): Promise<
     res.json(similarListings);
   } catch (err) {
     console.error('Error fetching similar listings:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * GET /api/listings/:id/price-history
+ *
+ * Returns historical price changes for a listing.
+ */
+listingsRouter.get('/:id/price-history', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const result = await query<{ price: string; recorded_at: Date }>(
+      `SELECT price, recorded_at FROM price_history WHERE listing_id = $1 ORDER BY recorded_at ASC`,
+      [id]
+    );
+    res.json({ history: result.rows.map(r => ({ price: parseFloat(r.price), date: r.recorded_at })) });
+  } catch (err) {
+    console.error('Error fetching price history:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

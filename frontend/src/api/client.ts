@@ -148,4 +148,11 @@ export const api = {
   async getSimilarListings(id: string): Promise<ListingSummary[]> {
     return fetchJson<ListingSummary[]>(`${API_BASE}/listings/${id}/similar`);
   },
+
+  /**
+   * Get price history for a listing
+   */
+  async getPriceHistory(id: string): Promise<{ history: { price: number; date: string }[] }> {
+    return fetchJson<{ history: { price: number; date: string }[] }>(`${API_BASE}/listings/${id}/price-history`);
+  },
 };

@@ -33,6 +33,7 @@ interface ListingDetail {
   lastVerified: string;
   createdAt: string;
   updatedAt: string;
+  marketAvgPrice: number | null;
 }
 
 export function ListingDetailPage() {
@@ -57,6 +58,13 @@ export function ListingDetailPage() {
   const { data: similarListings } = useQuery({
     queryKey: ['similar', id],
     queryFn: () => api.getSimilarListings(id!),
+    enabled: !!id,
+  });
+
+  // Fetch price history
+  const { data: priceHistoryData } = useQuery({
+    queryKey: ['priceHistory', id],
+    queryFn: () => api.getPriceHistory(id!),
     enabled: !!id,
   });
 
@@ -112,10 +120,13 @@ export function ListingDetailPage() {
                 {listing.year} • {t.lastVerified} {formatDateTime(listing.lastVerified)}
               </p>
             </div>
-            <div className="rounded-xl bg-surface-50 px-5 py-3 dark:bg-surface-700">
-              <p className="text-3xl font-bold text-brand dark:text-brand-accent">
-                €{Math.round(listing.price).toLocaleString('nl-NL')}
-              </p>
+            <div className="flex flex-col items-end gap-2">
+              <div className="rounded-xl bg-surface-50 px-5 py-3 dark:bg-surface-700">
+                <p className="text-3xl font-bold text-brand dark:text-brand-accent">
+                  €{Math.round(listing.price).toLocaleString('nl-NL')}
+                </p>
+              </div>
+              <MarketValueBadge price={listing.price} marketAvgPrice={listing.marketAvgPrice} />
             </div>
           </div>
 
@@ -124,6 +135,9 @@ export function ListingDetailPage() {
 
           {/* Specifications Grid */}
           <SpecificationsSection listing={listing} />
+
+          {/* Price History */}
+          <PriceHistorySection history={priceHistoryData?.history} />
 
           {/* Description */}
           {listing.description && (
@@ -193,6 +207,7 @@ function DescriptionSection({ description, descriptionEn }: { description: strin
 function ImageGallery({ imageUrls, alt }: { imageUrls: string[]; alt: string }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [imageError, setImageError] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   if (!imageUrls || imageUrls.length === 0) {
     return (
@@ -213,8 +228,9 @@ function ImageGallery({ imageUrls, alt }: { imageUrls: string[]; alt: string }) 
           <img
             src={imageUrls[activeIndex]}
             alt={`${alt} - image ${activeIndex + 1}`}
-            className="mx-auto max-h-[550px] w-full object-contain"
+            className="mx-auto max-h-[550px] w-full cursor-zoom-in object-contain"
             onError={() => setImageError(true)}
+            onClick={() => setLightboxOpen(true)}
           />
         ) : (
           <div className="flex aspect-video items-center justify-center">
@@ -274,6 +290,17 @@ function ImageGallery({ imageUrls, alt }: { imageUrls: string[]; alt: string }) 
             </button>
           ))}
         </div>
+      )}
+
+      {/* Lightbox */}
+      {lightboxOpen && (
+        <LightboxOverlay
+          imageUrls={imageUrls}
+          activeIndex={activeIndex}
+          onClose={() => setLightboxOpen(false)}
+          onPrev={() => setActiveIndex((i) => Math.max(0, i - 1))}
+          onNext={() => setActiveIndex((i) => Math.min(imageUrls.length - 1, i + 1))}
+        />
       )}
     </div>
   );
@@ -422,6 +449,165 @@ function SourceLinksSection({
         ))}
       </div>
     </div>
+  );
+}
+
+/* ─── Lightbox Overlay ─── */
+
+function LightboxOverlay({
+  imageUrls,
+  activeIndex,
+  onClose,
+  onPrev,
+  onNext,
+}: {
+  imageUrls: string[];
+  activeIndex: number;
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+}) {
+  const touchStart = useRef<number>(0);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') onPrev();
+      if (e.key === 'ArrowRight') onNext();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose, onPrev, onNext]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const delta = e.changedTouches[0].clientX - touchStart.current;
+    if (delta > 50) onPrev();
+    else if (delta < -50) onNext();
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm"
+      onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Close button */}
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2.5 text-white transition-colors hover:bg-white/20"
+        aria-label="Close lightbox"
+      >
+        <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      {/* Previous button */}
+      {activeIndex > 0 && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onPrev(); }}
+          className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20"
+          aria-label="Previous image"
+        >
+          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+      )}
+
+      {/* Image */}
+      <img
+        src={imageUrls[activeIndex]}
+        alt={`Image ${activeIndex + 1} of ${imageUrls.length}`}
+        className="max-h-[90vh] max-w-[90vw] object-contain"
+        onClick={(e) => e.stopPropagation()}
+      />
+
+      {/* Next button */}
+      {activeIndex < imageUrls.length - 1 && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onNext(); }}
+          className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20"
+          aria-label="Next image"
+        >
+          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
+
+      {/* Counter */}
+      <div className="absolute bottom-4 text-sm text-white/80">
+        {activeIndex + 1} / {imageUrls.length}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Price History Section ─── */
+
+function PriceHistorySection({ history }: { history?: { price: number; date: string }[] }) {
+  if (!history || history.length < 2) return null;
+
+  return (
+    <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
+      <h2 className="text-lg font-bold text-surface-900 dark:text-white">Price History</h2>
+      <div className="mt-4 space-y-2">
+        {history.map((entry, index) => {
+          const prevPrice = index > 0 ? history[index - 1].price : null;
+          const diff = prevPrice !== null ? entry.price - prevPrice : null;
+          return (
+            <div key={index} className="flex items-center justify-between rounded-lg bg-surface-50 px-4 py-2.5 dark:bg-surface-700">
+              <span className="text-sm text-surface-600 dark:text-surface-300">
+                {new Date(entry.date).toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold text-surface-900 dark:text-white">
+                  €{Math.round(entry.price).toLocaleString('nl-NL')}
+                </span>
+                {diff !== null && diff !== 0 && (
+                  <span className={`text-xs font-medium ${diff < 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                    {diff < 0 ? '▼' : '▲'} €{Math.abs(Math.round(diff)).toLocaleString('nl-NL')}
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Market Value Badge ─── */
+
+function MarketValueBadge({ price, marketAvgPrice }: { price: number; marketAvgPrice: number | null }) {
+  if (!marketAvgPrice) return null;
+
+  const ratio = price / marketAvgPrice;
+
+  let label: string;
+  let className: string;
+  if (ratio < 0.85) {
+    label = 'Below Market';
+    className = 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+  } else if (ratio > 1.15) {
+    label = 'Above Market';
+    className = 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400';
+  } else {
+    label = 'Fair Price';
+    className = 'bg-surface-100 text-surface-700 dark:bg-surface-700 dark:text-surface-300';
+  }
+
+  return (
+    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${className}`}>
+      {label}
+    </span>
   );
 }
 
