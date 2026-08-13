@@ -40,81 +40,6 @@ function SkeletonGrid() {
   );
 }
 
-/** Car silhouettes for category buttons — realistic side profiles */
-function CategorySilhouette({ categoryId }: { categoryId: string }) {
-  const cls = "h-16 w-auto fill-current";
-  switch (categoryId) {
-    case 'supercar': // Lamborghini Countach — iconic wedge shape, angular, very low
-      return (
-        <svg className={cls} viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-          <path d="M15 48 C15 44 20 44 24 44 C28 44 32 48 32 48 L35 48 L36 46 L38 44 L155 44 C155 44 160 44 164 48 L168 48 C172 48 176 44 176 44 L185 44 L188 42 L190 38 L188 34 L182 30 L170 26 L155 20 L138 14 L120 10 L100 8 L70 8 L55 9 L42 12 L30 18 L22 24 L16 30 L12 36 L11 40 L12 44 L15 48 Z" />
-          <path d="M52 12 L58 10 L105 10 L130 12 L145 16 L148 20 L50 20 L48 16 Z" opacity="0.25" />
-          <circle cx="28" cy="48" r="7" opacity="0.4" />
-          <circle cx="168" cy="48" r="7" opacity="0.4" />
-        </svg>
-      );
-    case 'luxury': // Rolls-Royce Phantom — tall, long, upright grille, spirit of ecstasy
-      return (
-        <svg className={cls} viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 48 C12 44 17 42 22 42 C27 42 32 46 32 48 L150 48 C150 44 155 42 160 42 C165 42 170 46 170 48 L182 48 L186 46 L188 42 L188 36 L186 32 L180 28 L172 24 L165 22 L160 18 L155 14 L148 12 L55 12 L48 14 L42 18 L36 22 L28 26 L20 30 L14 36 L12 42 L12 48 Z" />
-          <path d="M55 14 L148 14 L152 16 L155 20 L155 28 L50 28 L42 22 L45 16 Z" opacity="0.25" />
-          <rect x="37" y="7" width="2" height="7" rx="1" opacity="0.6" />
-          <circle cx="27" cy="48" r="8" opacity="0.4" />
-          <circle cx="160" cy="48" r="8" opacity="0.4" />
-        </svg>
-      );
-    case 'performance-sedan': // Mercedes S-Class AMG — long sedan, flowing roofline
-      return (
-        <svg className={cls} viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 48 C12 44 17 42 22 42 C27 42 32 46 32 48 L148 48 C148 44 153 42 158 42 C163 42 168 46 168 48 L182 48 L186 44 L187 40 L186 36 L182 32 L175 28 L168 24 L160 20 L150 16 L140 14 L130 13 L65 13 L55 14 L45 16 L38 20 L30 24 L22 30 L16 36 L13 40 L12 44 L12 48 Z" />
-          <path d="M58 15 L135 15 L148 18 L155 22 L152 28 L150 30 L52 30 L45 24 L48 18 Z" opacity="0.25" />
-          <circle cx="27" cy="48" r="7" opacity="0.4" />
-          <circle cx="158" cy="48" r="7" opacity="0.4" />
-        </svg>
-      );
-    case 'hot-hatch': // VW Golf GTI — compact, boxy rear, short overhangs
-      return (
-        <svg className={cls} viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 48 C18 44 23 42 28 42 C33 42 38 46 38 48 L132 48 C132 44 137 42 142 42 C147 42 152 46 152 48 L165 48 L168 46 L170 42 L170 34 L168 30 L165 26 L162 22 L158 18 L150 15 L140 13 L60 13 L50 15 L42 18 L35 22 L28 28 L22 34 L18 40 L18 44 L18 48 Z" />
-          <path d="M54 15 L145 15 L155 18 L158 22 L158 28 L165 28 L165 32 L52 32 L40 26 L42 20 L46 17 Z" opacity="0.25" />
-          <circle cx="33" cy="48" r="7" opacity="0.4" />
-          <circle cx="142" cy="48" r="7" opacity="0.4" />
-        </svg>
-      );
-    case 'sports-car': // Porsche 911 — sloping rear, round fenders, iconic shape
-      return (
-        <svg className={cls} viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-          <path d="M14 48 C14 44 19 42 24 42 C29 42 34 46 34 48 L145 48 C145 44 150 42 155 42 C160 42 165 46 165 48 L178 48 L182 44 L184 40 L184 36 L182 32 L178 28 L172 24 L165 20 L155 16 L140 13 L125 12 L70 12 L58 14 L48 17 L38 22 L28 28 L20 34 L16 40 L14 44 L14 48 Z" />
-          <path d="M62 14 L130 14 L145 16 L155 20 L160 24 L158 28 L56 28 L48 22 L52 17 Z" opacity="0.25" />
-          <path d="M160 24 L175 28 L180 32 L178 36 L170 34 L162 30 L160 26 Z" opacity="0.15" />
-          <circle cx="29" cy="48" r="7" opacity="0.4" />
-          <circle cx="155" cy="48" r="8" opacity="0.4" />
-        </svg>
-      );
-    case 'suv': // Lamborghini Urus — aggressive SUV, high stance, angular
-      return (
-        <svg className={cls} viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 50 C12 45 18 43 24 43 C30 43 35 47 35 50 L145 50 C145 45 150 43 156 43 C162 43 167 47 167 50 L182 50 L186 47 L188 43 L188 37 L186 32 L180 26 L172 20 L162 16 L150 12 L135 10 L65 10 L52 12 L40 16 L30 22 L22 28 L16 34 L13 40 L12 46 L12 50 Z" />
-          <path d="M55 12 L140 12 L155 15 L165 20 L168 26 L166 32 L54 32 L42 24 L45 18 L48 15 Z" opacity="0.25" />
-          <circle cx="29" cy="50" r="9" opacity="0.4" />
-          <circle cx="156" cy="50" r="9" opacity="0.4" />
-        </svg>
-      );
-    case 'electric': // Porsche Taycan — sleek, low sedan, smooth roofline
-      return (
-        <svg className={cls} viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 48 C12 44 17 42 22 42 C27 42 32 46 32 48 L148 48 C148 44 153 42 158 42 C163 42 168 46 168 48 L182 48 L185 44 L186 40 L185 36 L180 30 L172 24 L162 18 L150 14 L138 12 L65 12 L52 14 L42 18 L32 24 L24 30 L18 36 L14 42 L12 46 L12 48 Z" />
-          <path d="M56 14 L140 14 L155 17 L162 22 L160 28 L55 28 L44 22 L48 17 Z" opacity="0.25" />
-          <path d="M88 18 L92 12 L96 18 L92 16 Z" opacity="0.4" />
-          <circle cx="27" cy="48" r="7" opacity="0.4" />
-          <circle cx="158" cy="48" r="7" opacity="0.4" />
-        </svg>
-      );
-    default:
-      return null;
-  }
-}
-
 export function BrowsePage() {
   const { t } = useLanguage();
   const {
@@ -335,19 +260,23 @@ export function BrowsePage() {
                   updateMakes(category.filter.makes || []);
                 }
               }}
-              className={`group relative overflow-hidden rounded-xl px-3 py-3 text-xs font-semibold transition-all ${
+              className={`group relative overflow-hidden rounded-xl px-3 py-4 text-left transition-all duration-200 ${
                 isActive
-                  ? 'bg-brand text-white shadow-lg ring-2 ring-brand-accent'
-                  : 'bg-white text-surface-700 shadow-sm hover:shadow-md hover:ring-1 hover:ring-surface-200 dark:bg-surface-800 dark:text-surface-200 dark:hover:ring-surface-600'
+                  ? 'bg-brand text-white shadow-lg ring-2 ring-brand-accent scale-[1.02]'
+                  : 'bg-white text-surface-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 dark:bg-surface-800 dark:text-surface-200'
               }`}
             >
-              {/* Silhouette background */}
-              <div className={`absolute inset-0 flex items-center justify-end pr-1 opacity-[0.08] ${isActive ? 'opacity-[0.15]' : 'group-hover:opacity-[0.12]'}`}>
-                <CategorySilhouette categoryId={category.id} />
-              </div>
-              <div className="relative flex flex-col items-start gap-0.5">
-                <span className="text-sm">{category.emoji}</span>
-                <span className="text-[11px] leading-tight">{category.labelNl}</span>
+              {/* Large background emoji */}
+              <span className={`absolute -right-1 -bottom-2 text-4xl transition-transform duration-200 ${
+                isActive ? 'opacity-20 scale-110' : 'opacity-10 group-hover:opacity-15 group-hover:scale-105'
+              }`}>
+                {category.emoji}
+              </span>
+              <div className="relative">
+                <span className="text-lg">{category.emoji}</span>
+                <p className={`mt-1 text-[11px] font-semibold leading-tight ${isActive ? 'text-white' : ''}`}>
+                  {category.labelNl}
+                </p>
               </div>
             </button>
           );
