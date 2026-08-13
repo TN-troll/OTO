@@ -1,35 +1,7 @@
 import { MultiSelect } from './MultiSelect';
 import type { SoundFilterCriteria } from '@car-ads/shared';
 import type { EngineConfiguration, ForcedInduction, ExhaustNote } from '@car-ads/shared';
-
-const ENGINE_CONFIGURATION_OPTIONS = [
-  { value: 'inline', label: 'Inline' },
-  { value: 'v-type', label: 'V-Type' },
-  { value: 'flat', label: 'Flat / Boxer' },
-  { value: 'rotary', label: 'Rotary' },
-];
-
-const CYLINDER_COUNT_OPTIONS = [
-  { value: '4', label: '4 Cylinders' },
-  { value: '6', label: '6 Cylinders' },
-  { value: '8', label: '8 Cylinders' },
-  { value: '10', label: '10 Cylinders' },
-  { value: '12', label: '12 Cylinders' },
-  { value: '16', label: '16 Cylinders' },
-];
-
-const FORCED_INDUCTION_OPTIONS = [
-  { value: 'naturally_aspirated', label: 'Naturally Aspirated' },
-  { value: 'turbocharged', label: 'Turbocharged' },
-  { value: 'supercharged', label: 'Supercharged' },
-];
-
-const EXHAUST_NOTE_OPTIONS = [
-  { value: 'deep_rumble', label: 'Deep Rumble' },
-  { value: 'high_pitched_scream', label: 'High-Pitched Scream' },
-  { value: 'aggressive_bark', label: 'Aggressive Bark' },
-  { value: 'smooth_purr', label: 'Smooth Purr' },
-];
+import { useLanguage } from '../../i18n';
 
 export interface SoundFiltersProps {
   value: SoundFilterCriteria;
@@ -37,10 +9,41 @@ export interface SoundFiltersProps {
 }
 
 export function SoundFilters({ value, onChange }: SoundFiltersProps) {
+  const { t } = useLanguage();
+
+  const ENGINE_CONFIGURATION_OPTIONS = [
+    { value: 'inline', label: t.inline },
+    { value: 'v-type', label: t.vType },
+    { value: 'flat', label: t.flatBoxer },
+    { value: 'rotary', label: t.rotary },
+  ];
+
+  const CYLINDER_COUNT_OPTIONS = [
+    { value: '4', label: `4 ${t.cylinders}` },
+    { value: '6', label: `6 ${t.cylinders}` },
+    { value: '8', label: `8 ${t.cylinders}` },
+    { value: '10', label: `10 ${t.cylinders}` },
+    { value: '12', label: `12 ${t.cylinders}` },
+    { value: '16', label: `16 ${t.cylinders}` },
+  ];
+
+  const FORCED_INDUCTION_OPTIONS = [
+    { value: 'naturally_aspirated', label: t.naturallyAspirated },
+    { value: 'turbocharged', label: t.turbocharged },
+    { value: 'supercharged', label: t.supercharged },
+  ];
+
+  const EXHAUST_NOTE_OPTIONS = [
+    { value: 'deep_rumble', label: t.deepRumble },
+    { value: 'high_pitched_scream', label: t.highPitchedScream },
+    { value: 'aggressive_bark', label: t.aggressiveBark },
+    { value: 'smooth_purr', label: t.smoothPurr },
+  ];
+
   return (
     <div className="space-y-4">
       <MultiSelect
-        label="Engine Configuration"
+        label={t.engineConfiguration}
         options={ENGINE_CONFIGURATION_OPTIONS}
         selected={value.engineConfiguration ?? []}
         onChange={(selected) =>
@@ -48,7 +51,7 @@ export function SoundFilters({ value, onChange }: SoundFiltersProps) {
         }
       />
       <MultiSelect
-        label="Cylinder Count"
+        label={t.cylinderCount}
         options={CYLINDER_COUNT_OPTIONS}
         selected={(value.cylinderCount ?? []).map(String)}
         onChange={(selected) =>
@@ -56,7 +59,7 @@ export function SoundFilters({ value, onChange }: SoundFiltersProps) {
         }
       />
       <MultiSelect
-        label="Forced Induction"
+        label={t.forcedInduction}
         options={FORCED_INDUCTION_OPTIONS}
         selected={value.forcedInduction ?? []}
         onChange={(selected) =>
@@ -64,7 +67,7 @@ export function SoundFilters({ value, onChange }: SoundFiltersProps) {
         }
       />
       <MultiSelect
-        label="Exhaust Note"
+        label={t.exhaustNote}
         options={EXHAUST_NOTE_OPTIONS}
         selected={value.exhaustNote ?? []}
         onChange={(selected) =>

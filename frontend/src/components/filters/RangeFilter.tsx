@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 export interface RangeFilterProps {
   label: string;
@@ -9,6 +9,19 @@ export interface RangeFilterProps {
   valueMin?: number;
   valueMax?: number;
   onChange: (min: number | undefined, max: number | undefined) => void;
+}
+
+/** Format number with dots as thousands separator (NL style) */
+function formatNumber(n: number): string {
+  return n.toLocaleString('nl-NL');
+}
+
+/** Parse a formatted string back to a number (removes dots) */
+function parseFormattedNumber(s: string): number | undefined {
+  const cleaned = s.replace(/\./g, '').replace(/,/g, '.');
+  if (cleaned === '') return undefined;
+  const n = Number(cleaned);
+  return isNaN(n) ? undefined : n;
 }
 
 export function RangeFilter({
@@ -22,57 +35,63 @@ export function RangeFilter({
   onChange,
 }: RangeFilterProps) {
   const [error, setError] = useState<string | null>(null);
+  const [minInput, setMinInput] = useState(valueMin !== undefined ? formatNumber(valueMin) : '');
+  const [maxInput, setMaxInput] = useState(valueMax !== undefined ? formatNumber(valueMax) : '');
+  const [minFocused, setMinFocused] = useState(false);
+  const [maxFocused, setMaxFocused] = useState(false);
 
-  function handleMinChange(value: string) {
-    const parsed = value === '' ? undefined : Number(value);
-    const newMin = parsed;
-    const currentMax = valueMax;
+  const handleMinBlur = useCallback(() => {
+    setMinFocused(false);
+    const parsed = parseFormattedNumber(minInput);
+    const formatted = parsed !== undefined ? formatNumber(parsed) : '';
+    setMinInput(formatted);
 
-    if (newMin !== undefined && currentMax !== undefined && newMin > currentMax) {
-      setError(`Min must be ≤ max`);
+    if (parsed !== undefined && valueMax !== undefined && parsed > valueMax) {
+      setError('Min must be ≤ max');
     } else {
       setError(null);
     }
-    onChange(newMin, currentMax);
-  }
+    onChange(parsed, valueMax);
+  }, [minInput, valueMax, onChange]);
 
-  function handleMaxChange(value: string) {
-    const parsed = value === '' ? undefined : Number(value);
-    const newMax = parsed;
-    const currentMin = valueMin;
+  const handleMaxBlur = useCallback(() => {
+    setMaxFocused(false);
+    const parsed = parseFormattedNumber(maxInput);
+    const formatted = parsed !== undefined ? formatNumber(parsed) : '';
+    setMaxInput(formatted);
 
-    if (currentMin !== undefined && newMax !== undefined && currentMin > newMax) {
-      setError(`Min must be ≤ max`);
+    if (valueMin !== undefined && parsed !== undefined && valueMin > parsed) {
+      setError('Min must be ≤ max');
     } else {
       setError(null);
     }
-    onChange(currentMin, newMax);
-  }
+    onChange(valueMin, parsed);
+  }, [maxInput, valueMin, onChange]);
 
   return (
     <div className="space-y-2">
       <label className="block text-xs font-medium text-surface-500 dark:text-surface-400">{label}</label>
       <div className="flex items-center gap-2">
         <input
-          type="number"
-          min={min}
-          max={max}
-          step={step}
-          placeholder={`${min}${unit}`}
-          value={valueMin ?? ''}
-          onChange={(e) => handleMinChange(e.target.value)}
+          type="text"
+          inputMode="numeric"
+          placeholder={`${formatNumber(min)}${unit ? ` ${unit}` : ''}`}
+          value={minFocused ? minInput : (valueMin !== undefined ? formatNumber(valueMin) : minInput)}
+          onChange={(e) => setMinInput(e.target.value)}
+          onFocus={() => { setMinFocused(true); setMinInput(valueMin !== undefined ? String(valueMin) : ''); }}
+          onBlur={handleMinBlur}
           aria-label={`${label} minimum`}
           className="w-full rounded-lg border border-surface-200 bg-white px-3 py-2 text-sm text-surface-800 placeholder-surface-400 transition-all duration-200 focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20 dark:bg-surface-700 dark:border-surface-600 dark:text-white dark:placeholder-surface-500"
         />
         <span className="text-xs font-medium text-surface-300">–</span>
         <input
-          type="number"
-          min={min}
-          max={max}
-          step={step}
-          placeholder={`${max}${unit}`}
-          value={valueMax ?? ''}
-          onChange={(e) => handleMaxChange(e.target.value)}
+          type="text"
+          inputMode="numeric"
+          placeholder={`${formatNumber(max)}${unit ? ` ${unit}` : ''}`}
+          value={maxFocused ? maxInput : (valueMax !== undefined ? formatNumber(valueMax) : maxInput)}
+          onChange={(e) => setMaxInput(e.target.value)}
+          onFocus={() => { setMaxFocused(true); setMaxInput(valueMax !== undefined ? String(valueMax) : ''); }}
+          onBlur={handleMaxBlur}
           aria-label={`${label} maximum`}
           className="w-full rounded-lg border border-surface-200 bg-white px-3 py-2 text-sm text-surface-800 placeholder-surface-400 transition-all duration-200 focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20 dark:bg-surface-700 dark:border-surface-600 dark:text-white dark:placeholder-surface-500"
         />

@@ -143,6 +143,7 @@ export function BrowsePage() {
     queryKey: unfilteredQueryKey,
     queryFn: () => api.getListings({ page, pageSize: DEFAULT_PAGE_SIZE, sortBy, sortOrder }),
     enabled: !filtersActive && !isSearchActive,
+    placeholderData: (prev: any) => prev, // keep showing old data while new loads
   });
 
   // Determine which data source to use: search > filter > unfiltered
