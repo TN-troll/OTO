@@ -78,6 +78,39 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
       { path: 'toyota/supra', kw: 150, pages: 2 },
       { path: 'lexus/lc', kw: 150, pages: 2 },
       { path: 'lexus/lfa', kw: 0, pages: 1 },
+      // Hot Hatches
+      { path: 'volkswagen/golf', kw: 150, pages: 5 },  // GTI & R
+      { path: 'honda/civic', kw: 150, pages: 3 },      // Type R
+      { path: 'hyundai/i30', kw: 150, pages: 3 },      // i30 N
+      { path: 'hyundai/i20', kw: 100, pages: 2 },      // i20 N
+      { path: 'hyundai/ioniq-5', kw: 400, pages: 2 },  // Ioniq 5 N
+      { path: 'toyota/yaris', kw: 150, pages: 3 },     // GR Yaris
+      { path: 'ford/focus', kw: 150, pages: 3 },       // ST & RS
+      { path: 'mini/cooper', kw: 100, pages: 3 },      // JCW
+      { path: 'renault/megane', kw: 150, pages: 2 },   // RS
+      { path: 'peugeot/308', kw: 150, pages: 2 },      // GTi
+      { path: 'mercedes-benz/a-klasse', kw: 200, pages: 3 }, // A45 AMG
+      { path: 'mercedes-benz/cla', kw: 200, pages: 2 },      // CLA 45
+      { path: 'bmw/1-serie', kw: 150, pages: 2 },      // M135i, 128ti
+      { path: 'bmw/2-serie', kw: 150, pages: 2 },      // M235i
+      { path: 'audi/s3', kw: 150, pages: 3 },
+      { path: 'audi/rs3', kw: 200, pages: 3 },
+      { path: 'seat/leon', kw: 150, pages: 2 },        // Cupra Leon
+      { path: 'cupra/leon', kw: 150, pages: 2 },
+      { path: 'cupra/formentor', kw: 150, pages: 2 },
+      // Performance SUVs (additional)
+      { path: 'porsche/macan', kw: 200, pages: 3 },
+      { path: 'lamborghini/urus', kw: 0, pages: 3 },
+      { path: 'bmw/x3-m', kw: 200, pages: 2 },
+      { path: 'bmw/x4-m', kw: 200, pages: 2 },
+      { path: 'mercedes-benz/gle', kw: 250, pages: 2 },
+      { path: 'audi/sq7', kw: 200, pages: 2 },
+      { path: 'audi/sq8', kw: 200, pages: 2 },
+      // Electric Performance
+      { path: 'porsche/taycan', kw: 200, pages: 5 },
+      { path: 'mercedes-benz/eqs', kw: 200, pages: 2 },
+      { path: 'bmw/i4', kw: 200, pages: 2 },
+      { path: 'bmw/ix', kw: 200, pages: 2 },
     ];
 
     for (const { path, kw, pages } of premiumSearches) {

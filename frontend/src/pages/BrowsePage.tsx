@@ -8,6 +8,7 @@ import { SortControls } from '../components/SortControls';
 import { ViewToggle } from '../components/ViewToggle';
 import { useFilterContext } from '../hooks/FilterContext';
 import { useLanguage } from '../i18n';
+import { CATEGORIES } from '../data/categories';
 
 const DEFAULT_PAGE_SIZE = 50;
 
@@ -194,22 +195,37 @@ export function BrowsePage() {
         </button>
       </div>
 
-      {/* Quick filter badges */}
+      {/* Category filter buttons */}
       <div className="mb-6 flex flex-wrap gap-2">
-        {['Ferrari', 'Porsche', 'Lamborghini', 'McLaren', 'Bentley'].map(make => (
-          <button
-            key={make}
-            type="button"
-            onClick={() => updateMakes(filters.makes.includes(make) ? filters.makes.filter(m => m !== make) : [...filters.makes, make])}
-            className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
-              filters.makes.includes(make)
-                ? 'bg-brand-accent text-brand shadow-sm'
-                : 'bg-white text-surface-600 shadow-sm hover:bg-surface-50 dark:bg-surface-800 dark:text-surface-300 dark:hover:bg-surface-700'
-            }`}
-          >
-            {make}
-          </button>
-        ))}
+        {CATEGORIES.filter(c => c.id !== 'classic').map(category => {
+          // Check if this category is "active" (any of its makes are selected)
+          const isActive = category.filter.makes && category.filter.makes.length > 0 &&
+            category.filter.makes.some(m => filters.makes.includes(m));
+          return (
+            <button
+              key={category.id}
+              type="button"
+              onClick={() => {
+                if (isActive) {
+                  // Remove all makes of this category
+                  const toRemove = new Set(category.filter.makes || []);
+                  updateMakes(filters.makes.filter(m => !toRemove.has(m)));
+                } else {
+                  // Set makes to this category's makes (replace current)
+                  updateMakes(category.filter.makes || []);
+                }
+              }}
+              className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
+                isActive
+                  ? 'bg-brand-accent text-brand shadow-sm'
+                  : 'bg-white text-surface-600 shadow-sm hover:bg-surface-50 dark:bg-surface-800 dark:text-surface-300 dark:hover:bg-surface-700'
+              }`}
+            >
+              <span>{category.emoji}</span>
+              <span>{category.labelNl}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Search active banner */}
