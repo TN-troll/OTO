@@ -180,8 +180,7 @@ async function start() {
         }
       }, ONE_HOUR);
 
-      // Translation batch every 4 hours (5 listings per run, ~4k chars)
-      const FOUR_HOURS = 4 * 60 * 60 * 1000;
+      // Translation batch every 6 hours (3 listings per run, ~2.4k chars)
       setInterval(async () => {
         try {
           console.log('[OTO] [CRON] Running scheduled translation batch...');
@@ -191,7 +190,7 @@ async function start() {
         } catch (err) {
           console.error('[OTO] [CRON] Translation failed:', err);
         }
-      }, FOUR_HOURS);
+      }, SIX_HOURS);
 
       // Run initial scrape 30 seconds after startup
       setTimeout(async () => {
