@@ -82,8 +82,13 @@ export function BrowsePage() {
   });
 
   // Determine which data source to use: search > filter > unfiltered
+  // When filters just became active but result isn't ready yet, show loading
   const data = isSearchActive ? searchResult : filtersActive ? filterResult : unfilteredData;
-  const isLoading = isSearchActive ? isSearching : filtersActive ? filterLoading : unfilteredLoading;
+  const isLoading = isSearchActive
+    ? isSearching && !searchResult
+    : filtersActive
+      ? !filterResult  // Show loading while we wait for first filter result
+      : unfilteredLoading;
   const isFetching = isSearchActive ? isSearching : filtersActive ? filterFetching : unfilteredFetching;
   const error = isSearchActive ? null : filtersActive ? filterError : unfilteredError;
   const refetch = filtersActive || isSearchActive ? undefined : unfilteredRefetch;

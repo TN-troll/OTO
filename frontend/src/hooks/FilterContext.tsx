@@ -74,6 +74,8 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
       models: initialParams.current.get('models')?.split(',').filter(Boolean) || [],
       priceMin: parseNumberParam(initialParams.current.get('priceMin')),
       priceMax: parseNumberParam(initialParams.current.get('priceMax')),
+      mileageMin: parseNumberParam(initialParams.current.get('mileageMin')),
+      mileageMax: parseNumberParam(initialParams.current.get('mileageMax')),
       yearMin: parseNumberParam(initialParams.current.get('yearMin')),
       yearMax: parseNumberParam(initialParams.current.get('yearMax')),
       horsepowerMin: parseNumberParam(initialParams.current.get('horsepowerMin')),
@@ -116,6 +118,8 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
     if (filters.models.length > 0) params.set('models', filters.models.join(','));
     if (filters.priceMin !== undefined) params.set('priceMin', String(filters.priceMin));
     if (filters.priceMax !== undefined) params.set('priceMax', String(filters.priceMax));
+    if (filters.mileageMin !== undefined) params.set('mileageMin', String(filters.mileageMin));
+    if (filters.mileageMax !== undefined) params.set('mileageMax', String(filters.mileageMax));
     if (filters.yearMin !== undefined) params.set('yearMin', String(filters.yearMin));
     if (filters.yearMax !== undefined) params.set('yearMax', String(filters.yearMax));
     if (filters.horsepowerMin !== undefined) params.set('horsepowerMin', String(filters.horsepowerMin));

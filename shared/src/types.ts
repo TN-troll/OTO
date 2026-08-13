@@ -91,6 +91,8 @@ export interface FilterCriteria {
   yearMax?: number;
   priceMin?: number;
   priceMax?: number;
+  mileageMin?: number;
+  mileageMax?: number;
   makes?: string[];
   models?: string[];
   transmissionType?: TransmissionType[];

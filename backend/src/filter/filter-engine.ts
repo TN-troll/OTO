@@ -277,6 +277,16 @@ export class FilterEngine {
       conditions.push(`l.price <= $${params.length}`);
     }
 
+    // Mileage range
+    if (criteria.mileageMin !== undefined) {
+      params.push(criteria.mileageMin);
+      conditions.push(`l.mileage >= $${params.length}`);
+    }
+    if (criteria.mileageMax !== undefined) {
+      params.push(criteria.mileageMax);
+      conditions.push(`l.mileage <= $${params.length}`);
+    }
+
     // Makes (array of allowed values)
     if (criteria.makes?.length) {
       params.push(criteria.makes);

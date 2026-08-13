@@ -15,7 +15,8 @@ RUN npm install --workspaces --include-workspace-root
 # Copy all source code
 COPY . .
 
-# Build the frontend (Vite produces dist/ folder)
+# Build shared types first, then frontend
+RUN cd shared && npx tsc --build
 RUN cd frontend && npx vite build
 
 # Expose port

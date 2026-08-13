@@ -87,6 +87,7 @@ export function FilterPanel() {
   // Count active filters per section
   const makesCount = filters.makes.length + filters.models.length;
   const priceCount = (filters.priceMin !== undefined ? 1 : 0) + (filters.priceMax !== undefined ? 1 : 0);
+  const mileageCount = (filters.mileageMin !== undefined ? 1 : 0) + (filters.mileageMax !== undefined ? 1 : 0);
   const yearCount = (filters.yearMin !== undefined ? 1 : 0) + (filters.yearMax !== undefined ? 1 : 0);
   const hpCount = (filters.horsepowerMin !== undefined ? 1 : 0) + (filters.horsepowerMax !== undefined ? 1 : 0);
   const displacementCount = (filters.engineDisplacementMin !== undefined ? 1 : 0) + (filters.engineDisplacementMax !== undefined ? 1 : 0);
@@ -172,6 +173,19 @@ export function FilterPanel() {
           valueMin={filters.yearMin}
           valueMax={filters.yearMax}
           onChange={(min, max) => updateRange('year', min, max)}
+        />
+      </CollapsibleSection>
+
+      <CollapsibleSection title={t.mileage} count={mileageCount}>
+        <RangeFilter
+          label={`${t.mileage} (km)`}
+          min={0}
+          max={300000}
+          step={5000}
+          unit="km"
+          valueMin={filters.mileageMin}
+          valueMax={filters.mileageMax}
+          onChange={(min, max) => updateRange('mileage', min, max)}
         />
       </CollapsibleSection>
 

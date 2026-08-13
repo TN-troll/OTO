@@ -13,6 +13,8 @@ export interface FilterState {
   yearMax?: number;
   priceMin?: number;
   priceMax?: number;
+  mileageMin?: number;
+  mileageMax?: number;
   makes: string[];
   models: string[];
   transmissionType: TransmissionType[];
@@ -29,6 +31,8 @@ const INITIAL_FILTER_STATE: FilterState = {
   yearMax: undefined,
   priceMin: undefined,
   priceMax: undefined,
+  mileageMin: undefined,
+  mileageMax: undefined,
   makes: [],
   models: [],
   transmissionType: [],
@@ -97,6 +101,8 @@ function buildCriteria(state: FilterState, sorting?: { sortBy: SortField; sortOr
   if (state.yearMax !== undefined) criteria.yearMax = state.yearMax;
   if (state.priceMin !== undefined) criteria.priceMin = state.priceMin;
   if (state.priceMax !== undefined) criteria.priceMax = state.priceMax;
+  if (state.mileageMin !== undefined) criteria.mileageMin = state.mileageMin;
+  if (state.mileageMax !== undefined) criteria.mileageMax = state.mileageMax;
   if (state.makes.length > 0) criteria.makes = state.makes;
   if (state.models.length > 0) criteria.models = state.models;
   if (state.transmissionType.length > 0) criteria.transmissionType = state.transmissionType;
@@ -133,6 +139,8 @@ function hasActiveFilters(state: FilterState): boolean {
     state.yearMax !== undefined ||
     state.priceMin !== undefined ||
     state.priceMax !== undefined ||
+    state.mileageMin !== undefined ||
+    state.mileageMax !== undefined ||
     state.makes.length > 0 ||
     state.models.length > 0 ||
     state.transmissionType.length > 0 ||
@@ -151,6 +159,8 @@ export interface UseFiltersOptions {
     models?: string[];
     priceMin?: number;
     priceMax?: number;
+    mileageMin?: number;
+    mileageMax?: number;
     yearMin?: number;
     yearMax?: number;
     horsepowerMin?: number;
@@ -170,6 +180,8 @@ export function useFilters(options: UseFiltersOptions = {}) {
       models: init.models ?? [],
       priceMin: init.priceMin,
       priceMax: init.priceMax,
+      mileageMin: init.mileageMin,
+      mileageMax: init.mileageMax,
       yearMin: init.yearMin,
       yearMax: init.yearMax,
       horsepowerMin: init.horsepowerMin,
@@ -203,7 +215,7 @@ export function useFilters(options: UseFiltersOptions = {}) {
   });
 
   const updateRange = useCallback(
-    (field: 'engineDisplacement' | 'horsepower' | 'year' | 'price', min: number | undefined, max: number | undefined) => {
+    (field: 'engineDisplacement' | 'horsepower' | 'year' | 'price' | 'mileage', min: number | undefined, max: number | undefined) => {
       setFilters((prev) => ({
         ...prev,
         [`${field}Min`]: min,
