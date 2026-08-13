@@ -10,6 +10,7 @@ interface ListingDetail {
   id: string;
   title: string;
   description: string | null;
+  descriptionEn: string | null;
   price: number;
   mileage: number | null;
   year: number;
@@ -106,13 +107,10 @@ export function ListingDetailPage() {
 
           {/* Description */}
           {listing.description && (
-            <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
-              <h2 className="text-lg font-bold text-surface-900 dark:text-white">{t.adDescription}</h2>
-              <div
-                className="mt-4 text-sm leading-relaxed text-surface-700 dark:text-surface-300 [&_br]:block [&_strong]:font-bold [&_strong]:text-surface-900 dark:[&_strong]:text-white [&_a]:text-brand-accent [&_a]:underline [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-2"
-                dangerouslySetInnerHTML={{ __html: listing.description }}
-              />
-            </div>
+            <DescriptionSection
+              description={listing.description}
+              descriptionEn={listing.descriptionEn}
+            />
           )}
 
           {/* Sound Profile Section */}
@@ -122,6 +120,37 @@ export function ListingDetailPage() {
           <SourceLinksSection sourceUrls={listing.sourceUrls} />
         </div>
       </div>
+    </div>
+  );
+}
+
+/** Description section with language-aware display */
+function DescriptionSection({ description, descriptionEn }: { description: string; descriptionEn: string | null }) {
+  const { t, locale } = useLanguage();
+
+  // Show English translation if user is in EN mode and translation is available
+  const displayText = locale === 'en' && descriptionEn ? descriptionEn : description;
+  const isTranslated = locale === 'en' && descriptionEn !== null;
+
+  return (
+    <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold text-surface-900 dark:text-white">{t.adDescription}</h2>
+        {isTranslated && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-1 text-[10px] font-medium text-primary-700 dark:bg-surface-700 dark:text-surface-300">
+            🌐 Translated
+          </span>
+        )}
+        {locale === 'en' && !descriptionEn && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-surface-100 px-2.5 py-1 text-[10px] font-medium text-surface-500 dark:bg-surface-700 dark:text-surface-400">
+            🇳🇱 Original (NL)
+          </span>
+        )}
+      </div>
+      <div
+        className="mt-4 text-sm leading-relaxed text-surface-700 dark:text-surface-300 [&_br]:block [&_strong]:font-bold [&_strong]:text-surface-900 dark:[&_strong]:text-white [&_a]:text-brand-accent [&_a]:underline [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-2"
+        dangerouslySetInnerHTML={{ __html: displayText }}
+      />
     </div>
   );
 }

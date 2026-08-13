@@ -108,6 +108,12 @@ async function start() {
           ALTER TABLE listings ADD COLUMN IF NOT EXISTS description TEXT;
         EXCEPTION WHEN duplicate_column THEN NULL;
         END $$;
+
+        -- Add translated description column
+        DO $$ BEGIN
+          ALTER TABLE listings ADD COLUMN IF NOT EXISTS description_en TEXT;
+        EXCEPTION WHEN duplicate_column THEN NULL;
+        END $$;
       `);
       console.log('[OTO] Database tables ready');
     } catch (err) {
@@ -173,6 +179,19 @@ async function start() {
           console.error('[OTO] [CRON] Enrichment failed:', err);
         }
       }, ONE_HOUR);
+
+      // Translation batch every 2 hours (10 listings per run, ~8k chars)
+      const TWO_HOURS = 2 * 60 * 60 * 1000;
+      setInterval(async () => {
+        try {
+          console.log('[OTO] [CRON] Running scheduled translation batch...');
+          const response = await fetch(`http://localhost:${port}/api/translate/batch`, { method: 'POST' });
+          const result = await response.json();
+          console.log('[OTO] [CRON] Translation result:', JSON.stringify(result));
+        } catch (err) {
+          console.error('[OTO] [CRON] Translation failed:', err);
+        }
+      }, TWO_HOURS);
 
       // Run initial scrape 30 seconds after startup
       setTimeout(async () => {
