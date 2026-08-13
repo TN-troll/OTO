@@ -149,6 +149,7 @@ export class AggregationPipeline {
         imageUrls: ad.imageUrls.slice(0, MAX_IMAGES_PER_LISTING),
         transmissionType: ad.transmissionType,
         fuelType: ad.fuelType,
+        bodyType: ad.bodyType ?? null,
         marketplace,
         externalId: this.extractExternalId(ad.sourceUrl),
       };
@@ -197,13 +198,13 @@ export class AggregationPipeline {
       `INSERT INTO listings (
         title, price, mileage, year, make, model,
         engine_displacement_cc, horsepower, location, seller_type,
-        transmission_type, fuel_type, image_urls, status,
+        transmission_type, fuel_type, body_type, image_urls, status,
         curation_criteria, date_added, last_verified, created_at, updated_at
       ) VALUES (
         $1, $2, $3, $4, $5, $6,
         $7, $8, $9, $10,
-        $11, $12, $13, 'active',
-        $14, NOW(), NOW(), NOW(), NOW()
+        $11, $12, $13, $14, 'active',
+        $15, NOW(), NOW(), NOW(), NOW()
       ) RETURNING id`,
       [
         listing.title,
@@ -218,6 +219,7 @@ export class AggregationPipeline {
         listing.sellerType,
         listing.transmissionType,
         listing.fuelType,
+        listing.bodyType ?? null,
         listing.imageUrls,
         curationResult.matchedCriteria,
       ],

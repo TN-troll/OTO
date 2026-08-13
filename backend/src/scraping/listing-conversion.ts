@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { MAX_IMAGES_PER_LISTING } from '@car-ads/shared';
 import type { RawAdvertisement } from '@car-ads/shared';
-import type { SellerType, TransmissionType, FuelType } from '@car-ads/shared';
+import type { SellerType, TransmissionType, FuelType, BodyType } from '@car-ads/shared';
 
 /**
  * Represents a listing row as stored in the database.
@@ -21,6 +21,7 @@ export interface ListingRow {
   seller_type: SellerType | null;
   transmission_type: TransmissionType | null;
   fuel_type: FuelType | null;
+  body_type: BodyType | null;
   image_urls: string[];
   source_url: string;
   status: 'active' | 'inactive';
@@ -78,6 +79,7 @@ export function toListingRow(ad: RawAdvertisement): ListingRow {
     seller_type: ad.sellerType,
     transmission_type: ad.transmissionType,
     fuel_type: ad.fuelType,
+    body_type: ad.bodyType ?? null,
     image_urls: ad.imageUrls.slice(0, MAX_IMAGES_PER_LISTING),
     source_url: ad.sourceUrl,
     status: 'active',

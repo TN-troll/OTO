@@ -61,6 +61,7 @@ function createTestAd(overrides: Partial<RawAdvertisement> = {}): RawAdvertiseme
     imageUrls: ['https://img.autotrack.nl/1.jpg', 'https://img.autotrack.nl/2.jpg'],
     transmissionType: 'automatic',
     fuelType: 'petrol',
+    bodyType: null,
     ...overrides,
   };
 }

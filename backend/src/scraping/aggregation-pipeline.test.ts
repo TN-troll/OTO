@@ -31,6 +31,7 @@ function createValidAd(overrides: Partial<RawAdvertisement> = {}): RawAdvertisem
     imageUrls: ['https://img.example.com/1.jpg', 'https://img.example.com/2.jpg'],
     transmissionType: 'automatic',
     fuelType: 'petrol',
+    bodyType: 'coupe',
     ...overrides,
   };
 }
@@ -217,7 +218,7 @@ describe('AggregationPipeline', () => {
         (call) => typeof call[0] === 'string' && call[0].includes('INSERT INTO listings'),
       );
       expect(insertCall).toBeDefined();
-      const imageUrlsParam = insertCall![1]![12] as string[];
+      const imageUrlsParam = insertCall![1]![13] as string[];
       expect(imageUrlsParam.length).toBe(20);
     });
 

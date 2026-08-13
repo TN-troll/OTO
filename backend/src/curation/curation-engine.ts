@@ -203,6 +203,7 @@ export class CurationEngine {
         imageUrls: [],
         transmissionType: null,
         fuelType: null,
+        bodyType: null,
       };
 
       const curationResult = this.evaluate(ad);

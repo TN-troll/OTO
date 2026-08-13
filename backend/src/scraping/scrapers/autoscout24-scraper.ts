@@ -1,5 +1,5 @@
 import { chromium, type Browser, type Page } from 'playwright';
-import type { RawAdvertisement, ListingStatus, SellerType, TransmissionType, FuelType } from '@car-ads/shared';
+import type { RawAdvertisement, ListingStatus, SellerType, TransmissionType, FuelType, BodyType } from '@car-ads/shared';
 import { MAX_IMAGES_PER_LISTING } from '@car-ads/shared';
 import type { MarketplaceScraper } from '../marketplace-scraper.js';
 
@@ -292,6 +292,7 @@ export class AutoScout24Scraper implements MarketplaceScraper {
       imageUrls: imageUrls.slice(0, MAX_IMAGES_PER_LISTING),
       transmissionType: specs.transmissionType,
       fuelType: specs.fuelType,
+      bodyType: specs.bodyType,
     };
   }
 
@@ -366,6 +367,7 @@ export class AutoScout24Scraper implements MarketplaceScraper {
       horsepower: null,
       transmissionType: null,
       fuelType: null,
+      bodyType: null,
     };
 
     const selectors = SELECTORS.detail.specsTable.split(',').map((s) => s.trim());
@@ -454,6 +456,11 @@ export class AutoScout24Scraper implements MarketplaceScraper {
     // Fuel type: "Brandstof"
     if (key.includes('brandstof') || key.includes('fuel')) {
       specs.fuelType = this.parseFuelType(value);
+    }
+
+    // Body type: "Carrosserie", "Carrosserietype", "Type"
+    if (key.includes('carrosserie') || key.includes('body') || (key === 'type' && !key.includes('fuel') && !key.includes('brandstof'))) {
+      specs.bodyType = this.parseBodyType(value);
     }
   }
 
@@ -581,6 +588,21 @@ export class AutoScout24Scraper implements MarketplaceScraper {
     return null;
   }
 
+  private parseBodyType(text: string): BodyType | null {
+    const lower = text.toLowerCase();
+    if (lower.includes('sedan') || lower.includes('limousine')) return 'sedan';
+    if (lower.includes('coupé') || lower.includes('coupe')) return 'coupe';
+    if (lower.includes('cabrio') || lower.includes('convertible')) return 'cabriolet';
+    if (lower.includes('hatchback') || lower.includes('compact')) return 'hatchback';
+    if (lower.includes('suv') || lower.includes('terreinwagen') || lower.includes('off-road')) return 'suv';
+    if (lower.includes('station') || lower.includes('estate') || lower.includes('touring')) return 'station';
+    if (lower.includes('mpv') || lower.includes('minivan') || lower.includes('van')) return 'mpv';
+    if (lower.includes('roadster') || lower.includes('spider') || lower.includes('spyder')) return 'roadster';
+    if (lower.includes('targa')) return 'targa';
+    if (lower.includes('shooting brake')) return 'shooting_brake';
+    return 'other';
+  }
+
   private capitalize(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   }
@@ -602,4 +624,5 @@ interface ParsedSpecs {
   horsepower: number | null;
   transmissionType: TransmissionType | null;
   fuelType: FuelType | null;
+  bodyType: BodyType | null;
 }

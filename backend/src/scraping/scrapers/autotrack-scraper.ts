@@ -176,6 +176,7 @@ export class AutoTrackScraper implements MarketplaceScraper {
     const imageUrls = this.parseImages($);
     const transmissionType = this.parseTransmission($);
     const fuelType = this.parseFuelType($);
+    const bodyType = this.parseBodyType($);
 
     return {
       title,
@@ -192,6 +193,7 @@ export class AutoTrackScraper implements MarketplaceScraper {
       imageUrls,
       transmissionType,
       fuelType,
+      bodyType,
     };
   }
 
@@ -409,6 +411,26 @@ export class AutoTrackScraper implements MarketplaceScraper {
       return 'electric';
     }
     return null;
+  }
+
+  /**
+   * Parse body type (carrosserie) from the listing specs.
+   */
+  private parseBodyType($: cheerio.CheerioAPI): import('@car-ads/shared').BodyType | null {
+    const bodyText = this.findSpecValue($, ['carrosserie', 'carrosserietype', 'body', 'type voertuig'])?.toLowerCase();
+    if (!bodyText) return null;
+
+    if (bodyText.includes('sedan') || bodyText.includes('limousine')) return 'sedan';
+    if (bodyText.includes('coupé') || bodyText.includes('coupe')) return 'coupe';
+    if (bodyText.includes('cabrio') || bodyText.includes('convertible')) return 'cabriolet';
+    if (bodyText.includes('hatchback') || bodyText.includes('compact')) return 'hatchback';
+    if (bodyText.includes('suv') || bodyText.includes('terreinwagen') || bodyText.includes('off-road')) return 'suv';
+    if (bodyText.includes('station') || bodyText.includes('estate') || bodyText.includes('touring')) return 'station';
+    if (bodyText.includes('mpv') || bodyText.includes('minivan') || bodyText.includes('van')) return 'mpv';
+    if (bodyText.includes('roadster') || bodyText.includes('spider') || bodyText.includes('spyder')) return 'roadster';
+    if (bodyText.includes('targa')) return 'targa';
+    if (bodyText.includes('shooting brake')) return 'shooting_brake';
+    return 'other';
   }
 
   /**

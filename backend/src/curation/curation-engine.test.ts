@@ -26,6 +26,7 @@ function makeAd(overrides: Partial<RawAdvertisement> = {}): RawAdvertisement {
     imageUrls: ['https://example.com/img1.jpg'],
     transmissionType: 'automatic',
     fuelType: 'petrol',
+    bodyType: null,
     ...overrides,
   };
 }

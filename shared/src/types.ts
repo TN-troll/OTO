@@ -34,6 +34,7 @@ export interface RawAdvertisement {
   imageUrls: string[];
   transmissionType: TransmissionType | null;
   fuelType: FuelType | null;
+  bodyType: BodyType | null;
 }
 
 /** A fully qualified listing stored on the platform */

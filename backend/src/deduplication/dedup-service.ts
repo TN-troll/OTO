@@ -19,6 +19,7 @@ export interface QualifiedListing {
   imageUrls: string[];
   transmissionType: 'manual' | 'automatic' | null;
   fuelType: 'petrol' | 'diesel' | 'hybrid' | 'electric' | null;
+  bodyType?: string | null;
   marketplace: MarketplaceId;
   externalId: string;
 }
