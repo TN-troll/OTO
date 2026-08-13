@@ -201,6 +201,18 @@ async function start() {
         }
       }, SIX_HOURS);
 
+      // Sound profile assignment every 6 hours
+      setInterval(async () => {
+        try {
+          console.log('[OTO] [CRON] Running sound profile assignment...');
+          const response = await fetch(`http://localhost:${port}/api/sound-profiles/assign`);
+          const result = await response.json();
+          console.log('[OTO] [CRON] Sound profiles result:', JSON.stringify(result));
+        } catch (err) {
+          console.error('[OTO] [CRON] Sound profile assignment failed:', err);
+        }
+      }, SIX_HOURS);
+
       // Run initial scrape 5 minutes after startup (allow server to pass health check first)
       setTimeout(async () => {
         try {
