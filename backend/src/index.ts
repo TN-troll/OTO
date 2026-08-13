@@ -143,20 +143,48 @@ async function start() {
     console.log(`[OTO] Mode: ${useMock ? 'MOCK' : 'DATABASE'}`);
     console.log(`[OTO] Frontend: serving from ${frontendDist}`);
 
-    // Daily auto-scrape (every 24 hours) — only in database mode
+    // Scheduled jobs — only in database mode
     if (!useMock) {
-      const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
-      console.log('[OTO] Daily auto-scrape scheduled (every 24h)');
+      const SIX_HOURS = 6 * 60 * 60 * 1000;
+      const ONE_HOUR = 60 * 60 * 1000;
+
+      console.log('[OTO] Cron schedule: scrape every 6h, enrich every 1h');
+
+      // Full scrape every 6 hours
       setInterval(async () => {
         try {
-          console.log('[OTO] Running daily auto-scrape...');
+          console.log('[OTO] [CRON] Running scheduled scrape...');
           const response = await fetch(`http://localhost:${port}/api/scrape-autoscout/run`);
           const result = await response.json();
-          console.log('[OTO] Daily scrape result:', result);
+          console.log('[OTO] [CRON] Scrape result:', JSON.stringify(result));
         } catch (err) {
-          console.error('[OTO] Daily scrape failed:', err);
+          console.error('[OTO] [CRON] Scrape failed:', err);
         }
-      }, TWENTY_FOUR_HOURS);
+      }, SIX_HOURS);
+
+      // Enrichment every hour (50 listings per run)
+      setInterval(async () => {
+        try {
+          console.log('[OTO] [CRON] Running scheduled enrichment...');
+          const response = await fetch(`http://localhost:${port}/api/scrape-autoscout/enrich`);
+          const result = await response.json();
+          console.log('[OTO] [CRON] Enrich result:', JSON.stringify(result));
+        } catch (err) {
+          console.error('[OTO] [CRON] Enrichment failed:', err);
+        }
+      }, ONE_HOUR);
+
+      // Run initial scrape 30 seconds after startup
+      setTimeout(async () => {
+        try {
+          console.log('[OTO] [CRON] Running initial post-startup scrape...');
+          const response = await fetch(`http://localhost:${port}/api/scrape-autoscout/run`);
+          const result = await response.json();
+          console.log('[OTO] [CRON] Initial scrape result:', JSON.stringify(result));
+        } catch (err) {
+          console.error('[OTO] [CRON] Initial scrape failed:', err);
+        }
+      }, 30_000);
     }
   });
 }

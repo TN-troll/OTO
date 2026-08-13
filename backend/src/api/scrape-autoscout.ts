@@ -24,53 +24,75 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
   try {
     console.log('[OTO] Starting REAL AutoScout24 scrape...');
 
-    const searchPages = [
-      // Luxury brands
-      `${BASE_URL}/lst/ferrari?sort=price&desc=1&powertype=kw&powerfrom=150`,
-      `${BASE_URL}/lst/ferrari?sort=price&desc=1&powertype=kw&powerfrom=150&page=2`,
-      `${BASE_URL}/lst/lamborghini?sort=price&desc=1&powertype=kw&powerfrom=150`,
-      `${BASE_URL}/lst/lamborghini?sort=price&desc=1&powertype=kw&powerfrom=150&page=2`,
-      `${BASE_URL}/lst/porsche/911?sort=price&desc=1&powertype=kw&powerfrom=150`,
-      `${BASE_URL}/lst/porsche/911?sort=price&desc=1&powertype=kw&powerfrom=150&page=2`,
-      `${BASE_URL}/lst/porsche/cayenne?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/porsche/taycan?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/porsche/panamera?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/mclaren?sort=price&desc=1&powertype=kw&powerfrom=150`,
-      `${BASE_URL}/lst/mclaren?sort=price&desc=1&powertype=kw&powerfrom=150&page=2`,
-      `${BASE_URL}/lst/bentley?sort=price&desc=1&powertype=kw&powerfrom=150`,
-      `${BASE_URL}/lst/bentley?sort=price&desc=1&powertype=kw&powerfrom=150&page=2`,
-      `${BASE_URL}/lst/aston-martin?sort=price&desc=1&powertype=kw&powerfrom=150`,
-      `${BASE_URL}/lst/aston-martin?sort=price&desc=1&powertype=kw&powerfrom=150&page=2`,
-      `${BASE_URL}/lst/rolls-royce?sort=price&desc=1`,
-      `${BASE_URL}/lst/rolls-royce?sort=price&desc=1&page=2`,
-      `${BASE_URL}/lst/bugatti?sort=price&desc=1`,
-      `${BASE_URL}/lst/maserati?sort=price&desc=1&powertype=kw&powerfrom=150`,
-      `${BASE_URL}/lst/maserati?sort=price&desc=1&powertype=kw&powerfrom=150&page=2`,
-      // Performance brands — high-end models
-      `${BASE_URL}/lst/mercedes-benz/amg-gt?sort=price&desc=1&powertype=kw&powerfrom=150`,
-      `${BASE_URL}/lst/mercedes-benz/amg-gt?sort=price&desc=1&powertype=kw&powerfrom=150&page=2`,
-      `${BASE_URL}/lst/mercedes-benz/s-klasse?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/mercedes-benz/g-klasse?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/bmw/m5?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/bmw/m3?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/bmw/m4?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/bmw/m8?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/bmw/x5-m?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/bmw/x6-m?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/audi/r8?sort=price&desc=1&powertype=kw&powerfrom=150`,
-      `${BASE_URL}/lst/audi/rs6?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/audi/rs7?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/audi/rsq8?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/audi/e-tron-gt?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/nissan/gt-r?sort=price&desc=1`,
-      `${BASE_URL}/lst/jaguar/f-type?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      `${BASE_URL}/lst/lotus?sort=price&desc=1&powertype=kw&powerfrom=150`,
-      `${BASE_URL}/lst/alfa-romeo/giulia?sort=price&desc=1&powertype=kw&powerfrom=200`,
-      // General high-power search
-      `${BASE_URL}/lst?sort=price&desc=1&powertype=kw&powerfrom=370&pricefrom=75000`,
-      `${BASE_URL}/lst?sort=price&desc=1&powertype=kw&powerfrom=370&pricefrom=75000&page=2`,
-      `${BASE_URL}/lst?sort=price&desc=1&powertype=kw&powerfrom=370&pricefrom=75000&page=3`,
+    // Generate search pages dynamically — comprehensive coverage
+    const searchPages: string[] = [];
+    
+    // Luxury brands — all pages
+    const luxuryBrands = [
+      'ferrari', 'lamborghini', 'mclaren', 'bugatti', 'pagani', 'koenigsegg',
     ];
+    for (const brand of luxuryBrands) {
+      for (let p = 1; p <= 5; p++) {
+        searchPages.push(`${BASE_URL}/lst/${brand}?sort=price&desc=1${p > 1 ? `&page=${p}` : ''}`);
+      }
+    }
+
+    // Premium brands — with power/price filters, more pages
+    const premiumSearches = [
+      { path: 'porsche/911', kw: 150, pages: 5 },
+      { path: 'porsche/cayenne', kw: 150, pages: 3 },
+      { path: 'porsche/taycan', kw: 150, pages: 3 },
+      { path: 'porsche/panamera', kw: 150, pages: 3 },
+      { path: 'porsche/718', kw: 150, pages: 3 },
+      { path: 'porsche/macan', kw: 200, pages: 2 },
+      { path: 'bentley', kw: 0, pages: 5 },
+      { path: 'aston-martin', kw: 0, pages: 5 },
+      { path: 'rolls-royce', kw: 0, pages: 5 },
+      { path: 'maserati', kw: 150, pages: 4 },
+      { path: 'lotus', kw: 0, pages: 4 },
+      { path: 'mercedes-benz/amg-gt', kw: 150, pages: 4 },
+      { path: 'mercedes-benz/s-klasse', kw: 200, pages: 3 },
+      { path: 'mercedes-benz/g-klasse', kw: 200, pages: 3 },
+      { path: 'mercedes-benz/cls', kw: 200, pages: 2 },
+      { path: 'mercedes-benz/gle-klasse', kw: 250, pages: 2 },
+      { path: 'bmw/m3', kw: 200, pages: 3 },
+      { path: 'bmw/m4', kw: 200, pages: 3 },
+      { path: 'bmw/m5', kw: 200, pages: 3 },
+      { path: 'bmw/m8', kw: 200, pages: 3 },
+      { path: 'bmw/x5-m', kw: 200, pages: 2 },
+      { path: 'bmw/x6-m', kw: 200, pages: 2 },
+      { path: 'bmw/z4', kw: 200, pages: 2 },
+      { path: 'audi/r8', kw: 0, pages: 4 },
+      { path: 'audi/rs6', kw: 200, pages: 3 },
+      { path: 'audi/rs7', kw: 200, pages: 3 },
+      { path: 'audi/rsq8', kw: 200, pages: 2 },
+      { path: 'audi/rs3', kw: 200, pages: 2 },
+      { path: 'audi/rs5', kw: 200, pages: 2 },
+      { path: 'audi/e-tron-gt', kw: 200, pages: 3 },
+      { path: 'jaguar/f-type', kw: 150, pages: 3 },
+      { path: 'nissan/gt-r', kw: 0, pages: 3 },
+      { path: 'alfa-romeo/giulia', kw: 150, pages: 3 },
+      { path: 'ford/mustang', kw: 200, pages: 3 },
+      { path: 'chevrolet/corvette', kw: 0, pages: 3 },
+      { path: 'dodge/challenger', kw: 200, pages: 2 },
+      { path: 'toyota/supra', kw: 150, pages: 2 },
+      { path: 'lexus/lc', kw: 150, pages: 2 },
+      { path: 'lexus/lfa', kw: 0, pages: 1 },
+    ];
+
+    for (const { path, kw, pages } of premiumSearches) {
+      for (let p = 1; p <= pages; p++) {
+        const kwParam = kw > 0 ? `&powertype=kw&powerfrom=${kw}` : '';
+        searchPages.push(`${BASE_URL}/lst/${path}?sort=price&desc=1${kwParam}${p > 1 ? `&page=${p}` : ''}`);
+      }
+    }
+
+    // General high-power searches (catches everything we might have missed)
+    for (let p = 1; p <= 10; p++) {
+      searchPages.push(`${BASE_URL}/lst?sort=price&desc=1&powertype=kw&powerfrom=300&pricefrom=50000${p > 1 ? `&page=${p}` : ''}`);
+    }
+
+    console.log(`[OTO] Total search pages to scrape: ${searchPages.length}`);
 
     const allListings: ParsedListing[] = [];
 
@@ -93,13 +115,25 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
     const unique = dedup(allListings);
     console.log(`[OTO] Total unique: ${unique.length}`);
 
-    // Clear old data and insert fresh
-    await query(`DELETE FROM source_references`);
-    await query(`DELETE FROM listings`);
-
+    // Incremental upsert — don't delete existing listings, only add new ones
     let inserted = 0;
+    let skipped = 0;
     for (const listing of unique) {
       try {
+        // Check if this listing already exists (by external ID or title+price combo)
+        const existing = await query(
+          `SELECT l.id FROM listings l
+           JOIN source_references sr ON sr.listing_id = l.id
+           WHERE sr.external_id = $1 AND sr.marketplace = 'autoscout24'
+           LIMIT 1`,
+          [listing.externalId]
+        );
+
+        if (existing.rows.length > 0) {
+          skipped++;
+          continue;
+        }
+
         const result = await query(
           `INSERT INTO listings (title, description, price, mileage, year, make, model, engine_displacement_cc, horsepower, location, seller_type, transmission_type, fuel_type, image_urls, status, curation_criteria, date_added, last_verified)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'active', $15, NOW(), NOW())
@@ -134,6 +168,7 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
       totalFound: allListings.length,
       unique: unique.length,
       inserted,
+      skipped,
     });
   } catch (err) {
     console.error('[OTO] AutoScout24 scrape failed:', err);
