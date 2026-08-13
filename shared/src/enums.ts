@@ -40,3 +40,6 @@ export type MarketplaceStatus = 'healthy' | 'degraded' | 'unreachable';
 
 /** Sort order direction */
 export type SortOrder = 'asc' | 'desc';
+
+/** Body type / carrosserie */
+export type BodyType = 'sedan' | 'coupe' | 'cabriolet' | 'hatchback' | 'suv' | 'station' | 'mpv' | 'roadster' | 'targa' | 'shooting_brake' | 'other';

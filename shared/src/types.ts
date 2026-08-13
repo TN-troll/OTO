@@ -10,6 +10,7 @@ import type {
   SellerType,
   TransmissionType,
   FuelType,
+  BodyType,
   EngineConfiguration,
   ForcedInduction,
   ExhaustNote,
@@ -50,6 +51,7 @@ export interface Listing {
   sellerType: SellerType | null;
   transmissionType: TransmissionType | null;
   fuelType: FuelType | null;
+  bodyType: BodyType | null;
   imageUrls: string[];
   sourceUrls: SourceReference[];
   soundProfileId: string | null;
@@ -97,6 +99,7 @@ export interface FilterCriteria {
   models?: string[];
   transmissionType?: TransmissionType[];
   fuelType?: FuelType[];
+  bodyType?: BodyType[];
   soundProfile?: SoundFilterCriteria;
   searchQuery?: string;
   sortBy?: SortField;

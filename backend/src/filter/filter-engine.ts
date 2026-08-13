@@ -434,6 +434,12 @@ export class FilterEngine {
       conditions.push(`l.fuel_type = ANY($${params.length})`);
     }
 
+    // Body type (array of allowed values)
+    if (criteria.bodyType?.length) {
+      params.push(criteria.bodyType);
+      conditions.push(`l.body_type = ANY($${params.length})`);
+    }
+
     // Sound profile filters
     if (this.needsSoundJoin(criteria)) {
       // Exclude listings with unclassified sound profile

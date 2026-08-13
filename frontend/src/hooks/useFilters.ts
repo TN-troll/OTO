@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import type { FilterCriteria, SoundFilterCriteria, FilterResult, ValidationError } from '@car-ads/shared';
-import type { TransmissionType, FuelType, SortField, SortOrder } from '@car-ads/shared';
+import type { TransmissionType, FuelType, BodyType, SortField, SortOrder } from '@car-ads/shared';
 
 export interface FilterState {
   engineDisplacementMin?: number;
@@ -19,6 +19,7 @@ export interface FilterState {
   models: string[];
   transmissionType: TransmissionType[];
   fuelType: FuelType[];
+  bodyType: BodyType[];
   soundProfile: SoundFilterCriteria;
   showSold: boolean;
 }
@@ -38,6 +39,7 @@ const INITIAL_FILTER_STATE: FilterState = {
   models: [],
   transmissionType: [],
   fuelType: [],
+  bodyType: [],
   soundProfile: {},
   showSold: false,
 };
@@ -109,6 +111,7 @@ function buildCriteria(state: FilterState, sorting?: { sortBy: SortField; sortOr
   if (state.models.length > 0) criteria.models = state.models;
   if (state.transmissionType.length > 0) criteria.transmissionType = state.transmissionType;
   if (state.fuelType.length > 0) criteria.fuelType = state.fuelType;
+  if (state.bodyType.length > 0) criteria.bodyType = state.bodyType;
 
   const sp = state.soundProfile;
   const hasSoundFilters =
@@ -151,6 +154,7 @@ function hasActiveFilters(state: FilterState): boolean {
     state.models.length > 0 ||
     state.transmissionType.length > 0 ||
     state.fuelType.length > 0 ||
+    state.bodyType.length > 0 ||
     state.showSold ||
     Object.values(state.soundProfile).some((v) => Array.isArray(v) && v.length > 0)
   );
@@ -174,6 +178,7 @@ export interface UseFiltersOptions {
     horsepowerMax?: number;
     transmissionType?: string[];
     fuelType?: string[];
+    bodyType?: string[];
     showSold?: boolean;
   };
 }
@@ -196,6 +201,7 @@ export function useFilters(options: UseFiltersOptions = {}) {
       horsepowerMax: init.horsepowerMax,
       transmissionType: (init.transmissionType ?? []) as TransmissionType[],
       fuelType: (init.fuelType ?? []) as FuelType[],
+      bodyType: (init.bodyType ?? []) as BodyType[],
       showSold: init.showSold ?? false,
     };
   });
@@ -271,6 +277,13 @@ export function useFilters(options: UseFiltersOptions = {}) {
     }));
   }, []);
 
+  const updateBodyType = useCallback((selected: string[]) => {
+    setFilters((prev) => ({
+      ...prev,
+      bodyType: selected as BodyType[],
+    }));
+  }, []);
+
   const updateSoundProfile = useCallback((soundProfile: SoundFilterCriteria) => {
     setFilters((prev) => ({
       ...prev,
@@ -304,6 +317,7 @@ export function useFilters(options: UseFiltersOptions = {}) {
     setCategory,
     updateTransmission,
     updateFuelType,
+    updateBodyType,
     updateSoundProfile,
     updateShowSold,
     resetFilters,

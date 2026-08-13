@@ -68,6 +68,7 @@ export function FilterPanel() {
     updateModels,
     updateTransmission,
     updateFuelType,
+    updateBodyType,
     updateSoundProfile,
     updateShowSold,
     resetFilters,
@@ -85,6 +86,20 @@ export function FilterPanel() {
     { value: 'electric', label: t.electric },
   ];
 
+  const BODY_TYPE_OPTIONS = [
+    { value: 'sedan', label: 'Sedan' },
+    { value: 'coupe', label: 'Coupé' },
+    { value: 'cabriolet', label: 'Cabriolet' },
+    { value: 'hatchback', label: 'Hatchback' },
+    { value: 'suv', label: 'SUV' },
+    { value: 'station', label: 'Stationwagon' },
+    { value: 'mpv', label: 'MPV' },
+    { value: 'roadster', label: 'Roadster' },
+    { value: 'targa', label: 'Targa' },
+    { value: 'shooting_brake', label: 'Shooting Brake' },
+    { value: 'other', label: 'Overig' },
+  ];
+
   // Count active filters per section
   const makesCount = filters.makes.length + filters.models.length;
   const priceCount = (filters.priceMin !== undefined ? 1 : 0) + (filters.priceMax !== undefined ? 1 : 0);
@@ -94,6 +109,7 @@ export function FilterPanel() {
   const displacementCount = (filters.engineDisplacementMin !== undefined ? 1 : 0) + (filters.engineDisplacementMax !== undefined ? 1 : 0);
   const transmissionCount = filters.transmissionType.length;
   const fuelCount = filters.fuelType.length;
+  const bodyTypeCount = filters.bodyType.length;
   const soundCount = Object.values(filters.soundProfile).filter((v) => Array.isArray(v) && v.length > 0).length;
 
   return (
@@ -174,6 +190,7 @@ export function FilterPanel() {
           valueMin={filters.yearMin}
           valueMax={filters.yearMax}
           onChange={(min, max) => updateRange('year', min, max)}
+          noThousandsSeparator
         />
       </CollapsibleSection>
 
@@ -231,6 +248,15 @@ export function FilterPanel() {
           options={FUEL_TYPE_OPTIONS}
           selected={filters.fuelType}
           onChange={updateFuelType}
+        />
+      </CollapsibleSection>
+
+      <CollapsibleSection title="Carrosserie" count={bodyTypeCount}>
+        <MultiSelect
+          label="Carrosserie"
+          options={BODY_TYPE_OPTIONS}
+          selected={filters.bodyType}
+          onChange={updateBodyType}
         />
       </CollapsibleSection>
 

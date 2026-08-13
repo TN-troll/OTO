@@ -131,6 +131,7 @@ async function start() {
           ALTER TABLE listings ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE;
           ALTER TABLE listings ADD COLUMN IF NOT EXISTS featured_sort_order INTEGER DEFAULT 0;
           ALTER TABLE listings ADD COLUMN IF NOT EXISTS dealer_email VARCHAR(300);
+          ALTER TABLE listings ADD COLUMN IF NOT EXISTS body_type VARCHAR(30);
         EXCEPTION WHEN duplicate_column THEN NULL;
         END $$;
 
