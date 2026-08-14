@@ -272,7 +272,7 @@ async function start() {
         }
       }, ONE_HOUR);
 
-      // Translation batch every 6 hours (20 listings per run)
+      // Translation batch every hour (100 listings per run)
       setInterval(async () => {
         try {
           console.log('[OTO] [CRON] Running scheduled translation batch...');
@@ -282,7 +282,7 @@ async function start() {
         } catch (err) {
           console.error('[OTO] [CRON] Translation failed:', err);
         }
-      }, SIX_HOURS);
+      }, ONE_HOUR);
 
       // Sound profile assignment every 6 hours
       setInterval(async () => {

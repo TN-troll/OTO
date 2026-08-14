@@ -101,7 +101,7 @@ translateRouter.post('/batch', async (_req: Request, res: Response): Promise<voi
          AND description_en IS NULL 
          AND LENGTH(description) > 20
        ORDER BY date_added DESC
-       LIMIT 20`,
+       LIMIT 100`,
     );
 
     let translated = 0;
