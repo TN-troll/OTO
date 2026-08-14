@@ -255,8 +255,8 @@ export class FilterEngine {
     }
 
     const offset = cursor ? this.decodeCursor(cursor) : 0;
-    const sortBy = sort?.field ?? filters.sortBy ?? 'dateAdded';
-    const sortOrder = sort?.order ?? filters.sortOrder ?? 'desc';
+    const sortBy = sort?.sortBy ?? sort?.field ?? filters.sortBy ?? 'dateAdded';
+    const sortOrder = sort?.sortOrder ?? sort?.order ?? filters.sortOrder ?? 'desc';
 
     const { whereClause, params: queryParams } = this.buildWhereClause(filters);
 
