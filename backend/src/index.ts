@@ -1,6 +1,6 @@
 // Backend entry point for OTO - Online Top Occasions
 // Serves both the API and the frontend static files from a single service.
-// Last deploy trigger: notification banner crash fix
+// Deploy: restored notification banner with hooks fix
 
 import path from 'path';
 import { fileURLToPath } from 'url';

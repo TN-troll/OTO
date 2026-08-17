@@ -188,6 +188,7 @@ export function App() {
           element={
             <FilterProvider>
               <Header />
+              <NotificationPromptBanner />
               <div className="flex flex-1">
                 <FilterSidebar />
                 <MobileFilterDrawer />
