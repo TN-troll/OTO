@@ -6,19 +6,15 @@ import { MapPage } from './pages/MapPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { PremiumPage } from './pages/PremiumPage';
 import { NotificationsPage } from './pages/NotificationsPage';
-import { SearchBar } from './components/SearchBar';
 import { FilterPanel } from './components/FilterPanel';
 import { MarketplaceHealthBanner } from './components/MarketplaceHealthBanner';
 import { NotificationPromptBanner } from './components/NotificationPreferences';
-import { LanguageSwitcher } from './components/LanguageSwitcher';
-import { ThemeToggle } from './components/ThemeToggle';
-import { PremiumBadge } from './components/PremiumBadge';
+import { Header } from './components/Header';
 import { FilterProvider, useFilterContext } from './hooks/FilterContext';
 import { useLanguage } from './i18n';
-import { isPushSupported } from './hooks/usePushNotifications';
 import { useEffect } from 'react';
 
-/** OTO exhaust-pipe logo — uses currentColor so it adapts to dark/light mode */
+/** OTO exhaust-pipe logo — used in Footer */
 function OtoLogo({ className = '' }: { className?: string }) {
   return (
     <svg
@@ -46,60 +42,6 @@ function OtoLogo({ className = '' }: { className?: string }) {
       <ellipse cx="150" cy="40" rx="35" ry="28" stroke="url(#oto-gold)" strokeWidth="6" />
       <ellipse cx="150" cy="40" rx="22" ry="17" stroke="url(#oto-gold)" strokeWidth="2.5" opacity="0.4" />
     </svg>
-  );
-}
-
-function Header() {
-  const { t } = useLanguage();
-
-  return (
-    <header className="sticky top-0 z-50">
-      {/* Main navigation bar */}
-      <div className="bg-gradient-brand shadow-premium">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* Logo */}
-          <a href="/" className="flex items-center gap-3">
-            <OtoLogo className="h-8 w-auto" />
-            <span className="hidden text-xs font-light tracking-wide text-surface-400 md:inline">
-              {t.tagline}
-            </span>
-          </a>
-
-          {/* Search - center */}
-          <div className="hidden max-w-lg flex-1 px-8 md:block">
-            <SearchBar />
-          </div>
-
-          {/* Right side */}
-          <div className="flex items-center gap-3">
-            {isPushSupported() && (
-              <a
-                href="/notifications"
-                className="hidden items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-surface-600 transition-colors hover:bg-surface-100 sm:inline-flex dark:text-surface-300 dark:hover:bg-surface-700"
-                aria-label="Notification settings"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-              </a>
-            )}
-            <a
-              href="/premium"
-              className="hidden items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-amber-600 transition-colors hover:bg-amber-50 sm:inline-flex dark:text-amber-400 dark:hover:bg-amber-900/20"
-            >
-              <PremiumBadge size="sm" />
-            </a>
-            <ThemeToggle />
-            <LanguageSwitcher />
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile search */}
-      <div className="border-b border-surface-200 bg-white px-4 py-3 md:hidden dark:bg-surface-800 dark:border-surface-700">
-        <SearchBar />
-      </div>
-    </header>
   );
 }
 
@@ -152,7 +94,7 @@ function MobileFilterDrawer() {
 
       {/* Drawer */}
       <div
-        className={`fixed inset-y-0 left-0 z-[70] w-80 max-w-[85vw] transform overflow-y-auto bg-white p-6 shadow-2xl transition-transform duration-300 ease-in-out lg:hidden dark:bg-surface-800 ${
+        className={`fixed inset-y-0 left-0 z-[70] w-80 max-w-[85vw] transform overflow-y-auto bg-white p-6 shadow-2xl transition-transform duration-300 ease-in-out lg:hidden dark:bg-surface-900/95 dark:border-r dark:border-white/[0.08] ${
           mobileFilterOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         role="dialog"

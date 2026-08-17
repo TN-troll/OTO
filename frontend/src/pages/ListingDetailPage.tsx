@@ -10,6 +10,8 @@ import { FinanceCalculator } from '../components/FinanceCalculator';
 import { DealerContactForm } from '../components/DealerContactForm';
 import { getProxyImageUrls } from '../utils/imageProxy';
 import { useClickTracker } from '../hooks/useClickTracker';
+import { resolveTranslation } from '../utils/translation';
+import { sanitizeHtmlDescription, escapeHtml } from '../utils/sanitizer';
 
 /** Extended listing type as returned by the detail API (includes nested soundProfile) */
 interface ListingDetail {
@@ -211,31 +213,48 @@ export function ListingDetailPage() {
 }
 
 /** Description section with language-aware display */
-function DescriptionSection({ description, descriptionEn }: { description: string; descriptionEn: string | null }) {
+export function DescriptionSection({ description, descriptionEn }: { description: string; descriptionEn: string | null }) {
   const { t, locale } = useLanguage();
 
-  // Show English translation if user is in EN mode and translation is available
-  const displayText = locale === 'en' && descriptionEn ? descriptionEn : description;
-  const isTranslated = locale === 'en' && descriptionEn !== null;
+  const { text, badge } = resolveTranslation(description, descriptionEn, locale);
+
+  // Sanitize HTML content; if sanitization fails or produces only whitespace,
+  // fall back to showing the original Dutch description as escaped plain text.
+  let sanitizedHtml: string;
+  const sanitized = sanitizeHtmlDescription(text);
+  if (!sanitized || sanitized.trim() === '') {
+    // Fallback: show original Dutch as escaped plain text
+    sanitizedHtml = escapeHtml(description);
+  } else {
+    sanitizedHtml = sanitized;
+  }
 
   return (
     <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-surface-900 dark:text-white">{t.adDescription}</h2>
-        {isTranslated && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-1 text-[10px] font-medium text-primary-700 dark:bg-surface-700 dark:text-surface-300">
+        <h2 className="font-display text-lg font-bold text-surface-900 dark:text-white">
+          {t.adDescription}
+        </h2>
+        {badge === 'translated' && (
+          <span
+            aria-label="This description has been translated from Dutch to English"
+            className="inline-flex items-center gap-1 rounded-full bg-gold/10 px-2.5 py-1 text-[10px] font-medium text-gold-dark dark:text-gold-light"
+          >
             🌐 Translated
           </span>
         )}
-        {locale === 'en' && !descriptionEn && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-surface-100 px-2.5 py-1 text-[10px] font-medium text-surface-500 dark:bg-surface-700 dark:text-surface-400">
+        {badge === 'original-nl' && (
+          <span
+            aria-label="This description is shown in the original Dutch language"
+            className="inline-flex items-center gap-1 rounded-full bg-surface-100 px-2.5 py-1 text-[10px] font-medium text-surface-500 dark:bg-surface-700 dark:text-surface-400"
+          >
             🇳🇱 Original (NL)
           </span>
         )}
       </div>
       <div
-        className="mt-4 text-sm leading-relaxed text-surface-700 dark:text-surface-300 [&_br]:block [&_strong]:font-bold [&_strong]:text-surface-900 dark:[&_strong]:text-white [&_a]:text-brand-accent [&_a]:underline [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-2"
-        dangerouslySetInnerHTML={{ __html: displayText }}
+        className="mt-4 text-sm leading-relaxed text-surface-600 dark:text-surface-300"
+        dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
       />
     </div>
   );
@@ -245,11 +264,46 @@ function DescriptionSection({ description, descriptionEn }: { description: strin
 function ImageGallery({ imageUrls, alt }: { imageUrls: string[]; alt: string }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageTimedOut, setImageTimedOut] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Reset states when active image changes
+  useEffect(() => {
+    setImageLoaded(false);
+    setImageTimedOut(false);
+    setImageError(false);
+
+    // Start 10-second timeout for loading
+    timeoutRef.current = setTimeout(() => {
+      setImageTimedOut(true);
+    }, 10000);
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [activeIndex]);
+
+  // Clear timeout when image loads or errors
+  useEffect(() => {
+    if (imageLoaded || imageError) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    }
+  }, [imageLoaded, imageError]);
 
   if (!imageUrls || imageUrls.length === 0) {
     return (
-      <div className="flex aspect-video items-center justify-center rounded-2xl bg-surface-100 text-surface-400 dark:bg-surface-700 dark:text-surface-500">
+      <div
+        className="flex aspect-video items-center justify-center rounded-2xl bg-surface-100 text-surface-400 dark:bg-surface-700 dark:text-surface-500"
+        role="img"
+        aria-label="No images available"
+      >
         No images available
       </div>
     );
@@ -261,19 +315,42 @@ function ImageGallery({ imageUrls, alt }: { imageUrls: string[]; alt: string }) 
   return (
     <div className="space-y-4">
       {/* Main Image */}
-      <div className="relative overflow-hidden rounded-2xl bg-surface-100 shadow-premium dark:bg-surface-700">
-        {!imageError ? (
-          <img
-            src={imageUrls[activeIndex]}
-            alt={`${alt} - image ${activeIndex + 1}`}
-            className="mx-auto max-h-[550px] w-full cursor-zoom-in object-contain"
-            onError={() => setImageError(true)}
-            onClick={() => setLightboxOpen(true)}
-          />
-        ) : (
-          <div className="flex aspect-video items-center justify-center">
+      <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-surface-100 shadow-premium dark:bg-surface-700">
+        {!imageError && !imageTimedOut ? (
+          <>
+            {/* Shimmer while loading */}
+            {!imageLoaded && (
+              <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-surface-100 via-surface-200 to-surface-100 bg-[length:200%_100%] dark:from-surface-800 dark:via-surface-700 dark:to-surface-800" />
+            )}
+            <img
+              src={imageUrls[activeIndex]}
+              alt={`${alt} - image ${activeIndex + 1}`}
+              className={`mx-auto h-full w-full cursor-zoom-in object-contain transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              loading="eager"
+              fetchPriority="high"
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setImageError(true)}
+              onClick={() => setLightboxOpen(true)}
+            />
+          </>
+        ) : imageTimedOut && !imageError ? (
+          <div
+            className="flex h-full w-full animate-pulse items-center justify-center"
+            role="img"
+            aria-label="Image is loading"
+          >
             <svg className="h-16 w-16 text-surface-300 dark:text-surface-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25m-2.25 0h-2.25m0 0V6.375c0-.621-.504-1.125-1.125-1.125H4.125C3.504 5.25 3 5.754 3 6.375v8.084M12 9.75H9.75" />
+            </svg>
+          </div>
+        ) : (
+          <div
+            className="flex h-full w-full items-center justify-center"
+            role="img"
+            aria-label="Image could not be loaded"
+          >
+            <svg className="h-16 w-16 text-surface-300 dark:text-surface-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25m-2.25 0h-2.25m0 0V6.375c0-.621-.504-1.125-1.125-1.125H4.125C3.504 5.25 3 5.754 3 6.375v8.084M12 9.75H9.75" />
             </svg>
           </div>
         )}
@@ -281,7 +358,7 @@ function ImageGallery({ imageUrls, alt }: { imageUrls: string[]; alt: string }) 
         {/* Left Arrow */}
         {canGoLeft && (
           <button
-            onClick={() => { setActiveIndex((i) => i - 1); setImageError(false); }}
+            onClick={() => { setActiveIndex((i) => i - 1); }}
             className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2.5 shadow-lg transition-all hover:bg-white hover:scale-105 dark:bg-surface-800/90 dark:hover:bg-surface-800"
             aria-label="Previous image"
           >
@@ -292,7 +369,7 @@ function ImageGallery({ imageUrls, alt }: { imageUrls: string[]; alt: string }) 
         {/* Right Arrow */}
         {canGoRight && (
           <button
-            onClick={() => { setActiveIndex((i) => i + 1); setImageError(false); }}
+            onClick={() => { setActiveIndex((i) => i + 1); }}
             className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2.5 shadow-lg transition-all hover:bg-white hover:scale-105 dark:bg-surface-800/90 dark:hover:bg-surface-800"
             aria-label="Next image"
           >
@@ -312,7 +389,7 @@ function ImageGallery({ imageUrls, alt }: { imageUrls: string[]; alt: string }) 
           {imageUrls.map((url, index) => (
             <button
               key={index}
-              onClick={() => { setActiveIndex(index); setImageError(false); }}
+              onClick={() => { setActiveIndex(index); }}
               className={`h-16 w-20 flex-shrink-0 overflow-hidden rounded-lg transition-all duration-200 ${
                 index === activeIndex
                   ? 'ring-2 ring-brand-accent ring-offset-2 dark:ring-offset-surface-900'
@@ -324,6 +401,7 @@ function ImageGallery({ imageUrls, alt }: { imageUrls: string[]; alt: string }) 
                 src={url}
                 alt={`${alt} thumbnail ${index + 1}`}
                 className="h-full w-full object-cover"
+                loading="lazy"
               />
             </button>
           ))}

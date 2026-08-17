@@ -146,7 +146,7 @@ export function SearchBar({ onSearchResults }: SearchBarProps) {
           onChange={handleInputChange}
           placeholder={t.searchPlaceholder}
           maxLength={MAX_QUERY_LENGTH}
-          className="block w-full rounded-xl border border-surface-200/60 bg-white/10 py-3 pl-12 pr-12 text-sm text-white placeholder-surface-400 shadow-sm backdrop-blur-sm transition-all duration-200 focus:border-brand-accent focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 md:bg-white/10 md:text-white md:placeholder-surface-400"
+          className="block w-full rounded-xl border border-surface-200/60 bg-white/10 py-3 pl-12 pr-12 text-base lg:text-sm text-white placeholder-surface-400 shadow-sm backdrop-blur-sm transition-all duration-200 focus:border-brand-accent focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 md:bg-white/10 md:text-white md:placeholder-surface-400"
           aria-label="Search cars by make or model"
           role="searchbox"
         />
@@ -167,7 +167,7 @@ export function SearchBar({ onSearchResults }: SearchBarProps) {
           ) : inputValue.length > 0 ? (
             <button
               onClick={handleClear}
-              className="rounded-full p-1 text-surface-400 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-brand-accent/50"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-surface-400 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-brand-accent/50"
               aria-label="Clear search"
             >
               <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -221,7 +221,7 @@ export function SearchBar({ onSearchResults }: SearchBarProps) {
                       setInputValue(suggestion);
                       setDebouncedQuery(suggestion);
                     }}
-                    className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white transition-all hover:bg-brand-accent hover:text-brand"
+                    className="rounded-full bg-white/10 px-4 py-2.5 min-h-[44px] text-xs font-medium text-white transition-all hover:bg-brand-accent hover:text-brand"
                   >
                     {suggestion}
                   </button>

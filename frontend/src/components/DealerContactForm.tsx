@@ -123,7 +123,7 @@ export function DealerContactForm({
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
         <div
-          className="mx-4 w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-surface-800"
+          className="mx-4 w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-surface-900/90 dark:border dark:border-white/[0.08]"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="text-center">
@@ -151,7 +151,7 @@ export function DealerContactForm({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="mx-4 w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-surface-800"
+        className="mx-4 w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-surface-900/90 dark:border dark:border-white/[0.08]"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-labelledby="contact-form-title"

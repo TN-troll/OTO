@@ -20,7 +20,7 @@ const DEFAULT_PAGE_SIZE = 20;
 /** Skeleton card placeholder for loading state */
 function SkeletonCard() {
   return (
-    <div className="animate-pulse overflow-hidden rounded-xl bg-white shadow-card dark:bg-surface-800">
+    <div className="animate-pulse motion-reduce:animate-none overflow-hidden rounded-xl bg-white shadow-card dark:bg-surface-800">
       <div className="aspect-[3/2] bg-surface-200 dark:bg-surface-700" />
       <div className="p-4 space-y-3">
         <div className="h-4 w-3/4 rounded bg-surface-200 dark:bg-surface-700" />
@@ -35,7 +35,7 @@ function SkeletonCard() {
 
 function SkeletonGrid() {
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid w-full max-w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
       {Array.from({ length: 9 }).map((_, i) => (
         <SkeletonCard key={i} />
       ))}
@@ -170,8 +170,8 @@ export function BrowsePage() {
     return (
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center justify-between">
-          <div className="h-7 w-48 animate-pulse rounded-lg bg-surface-200 dark:bg-surface-700" />
-          <div className="h-8 w-40 animate-pulse rounded-lg bg-surface-200 dark:bg-surface-700" />
+          <div className="h-7 w-48 animate-pulse motion-reduce:animate-none rounded-lg bg-surface-200 dark:bg-surface-700" />
+          <div className="h-8 w-40 animate-pulse motion-reduce:animate-none rounded-lg bg-surface-200 dark:bg-surface-700" />
         </div>
         <SkeletonGrid />
       </div>
@@ -198,13 +198,13 @@ export function BrowsePage() {
   const hasListings = listings.length > 0;
 
   return (
-    <div className="relative">
+    <div className="relative w-full max-w-full overflow-x-hidden">
       {/* Mobile filter button */}
       <div className="mb-4 lg:hidden">
         <button
           type="button"
           onClick={() => setMobileFilterOpen(true)}
-          className="inline-flex items-center gap-2 rounded-lg border border-surface-200 bg-white px-4 py-2.5 text-sm font-medium text-surface-700 shadow-sm transition-colors hover:bg-surface-50 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-200 dark:hover:bg-surface-700"
+          className="inline-flex items-center gap-2 rounded-lg border border-surface-200 bg-white px-4 py-2.5 text-sm font-medium text-surface-700 shadow-sm transition-colors hover:bg-surface-50 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-surface-200 dark:hover:bg-white/[0.08]"
         >
           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
@@ -377,7 +377,7 @@ export function BrowsePage() {
           )}
         </>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-surface-300 bg-white py-20 dark:bg-surface-800 dark:border-surface-700">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-surface-300 bg-white py-20 dark:bg-white/[0.04] dark:border-white/[0.08]">
           <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-surface-100 dark:bg-surface-700">
             <svg className="h-10 w-10 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125v-2.688M5.857 6.143l2.25-2.25m0 0l2.25 2.25M8.107 3.893v6.214M20.625 14.25h-3.375m0 0v-2.688c0-.621-.504-1.125-1.125-1.125H12.89m-7.515 3.813h7.515m0 0v-2.688" />
@@ -390,7 +390,7 @@ export function BrowsePage() {
 
       {/* Floating Compare Bar */}
       {compareIds.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-surface-200 bg-white/95 px-4 py-3 shadow-premium backdrop-blur-sm dark:border-surface-700 dark:bg-surface-800/95">
+        <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-surface-200 bg-white/95 px-4 py-3 shadow-premium backdrop-blur-sm dark:border-white/[0.08] dark:bg-black/80 dark:shadow-glass-dark">
           <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               {compareIds.map(cid => (

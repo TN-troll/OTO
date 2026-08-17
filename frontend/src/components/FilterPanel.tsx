@@ -19,11 +19,11 @@ function CollapsibleSection({ title, defaultOpen = false, count = 0, children }:
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-surface-100 py-4 last:border-b-0 dark:border-surface-700">
+    <div className="border-b border-surface-100 py-4 last:border-b-0 dark:border-white/[0.06]">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between text-left"
+        className="flex min-h-[44px] w-full items-center justify-between text-left"
         aria-expanded={isOpen}
       >
         <div className="flex items-center gap-2">
@@ -123,7 +123,7 @@ export function FilterPanel() {
           <button
             type="button"
             onClick={resetFilters}
-            className="text-xs font-medium text-brand-accent transition-colors hover:text-primary-600"
+            className="flex min-h-[44px] items-center text-xs font-medium text-brand-accent transition-colors hover:text-primary-600"
           >
             {t.resetAll}
           </button>
@@ -267,21 +267,21 @@ export function FilterPanel() {
         />
       </CollapsibleSection>
 
-      {/* Show sold listings toggle */}
-      <div className="border-b border-surface-100 py-4 last:border-b-0 dark:border-surface-700">
-        <label className="flex cursor-pointer items-center justify-between">
+      {/* Show sold listings toggle — 44px touch target */}
+      <div className="border-b border-surface-100 py-4 last:border-b-0 dark:border-white/[0.06]">
+        <label className="flex min-h-[44px] cursor-pointer items-center justify-between">
           <span className="text-sm font-semibold text-surface-800 dark:text-surface-200">
             {t.showSoldListings}
           </span>
-          <div className="relative">
+          <div className="relative flex h-11 w-11 items-center justify-center">
             <input
               type="checkbox"
               className="peer sr-only"
               checked={filters.showSold}
               onChange={(e) => updateShowSold(e.target.checked)}
             />
-            <div className="h-5 w-9 rounded-full bg-surface-200 transition-colors peer-checked:bg-brand-accent peer-focus:ring-2 peer-focus:ring-brand-accent/50 dark:bg-surface-600" />
-            <div className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-4" />
+            <div className="h-6 w-11 rounded-full bg-surface-200 transition-colors peer-checked:bg-brand-accent peer-focus:ring-2 peer-focus:ring-brand-accent/50 dark:bg-surface-600" />
+            <div className="absolute left-1 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
           </div>
         </label>
       </div>

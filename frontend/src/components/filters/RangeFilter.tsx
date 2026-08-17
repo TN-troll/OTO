@@ -85,7 +85,7 @@ export function RangeFilter({
           onFocus={() => { setMinFocused(true); setMinInput(valueMin !== undefined ? String(valueMin) : ''); }}
           onBlur={handleMinBlur}
           aria-label={`${label} minimum`}
-          className="w-full rounded-lg border border-surface-200 bg-white px-3 py-2 text-sm text-surface-800 placeholder-surface-400 transition-all duration-200 focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20 dark:bg-surface-700 dark:border-surface-600 dark:text-white dark:placeholder-surface-500"
+          className="w-full rounded-lg border border-surface-200 bg-white px-3 py-2.5 text-base lg:text-sm text-surface-800 placeholder-surface-400 transition-all duration-200 focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20 dark:bg-surface-700 dark:border-surface-600 dark:text-white dark:placeholder-surface-500"
         />
         <span className="text-xs font-medium text-surface-300">–</span>
         <input
@@ -97,7 +97,7 @@ export function RangeFilter({
           onFocus={() => { setMaxFocused(true); setMaxInput(valueMax !== undefined ? String(valueMax) : ''); }}
           onBlur={handleMaxBlur}
           aria-label={`${label} maximum`}
-          className="w-full rounded-lg border border-surface-200 bg-white px-3 py-2 text-sm text-surface-800 placeholder-surface-400 transition-all duration-200 focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20 dark:bg-surface-700 dark:border-surface-600 dark:text-white dark:placeholder-surface-500"
+          className="w-full rounded-lg border border-surface-200 bg-white px-3 py-2.5 text-base lg:text-sm text-surface-800 placeholder-surface-400 transition-all duration-200 focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/20 dark:bg-surface-700 dark:border-surface-600 dark:text-white dark:placeholder-surface-500"
         />
       </div>
       {error && (

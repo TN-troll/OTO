@@ -29,7 +29,7 @@ export function ListingListItem({ listing }: ListingListItemProps) {
   return (
     <a
       href={`/listing/${listing.id}`}
-      className="group flex overflow-hidden rounded-xl bg-white shadow-card transition-all duration-200 hover:shadow-card-hover dark:bg-surface-800 dark:border dark:border-surface-700"
+      className="group flex overflow-hidden rounded-xl bg-white shadow-card transition-all duration-200 motion-reduce:transition-none hover:shadow-card-hover dark:bg-white/[0.04] dark:border dark:border-white/[0.08]"
       aria-label={`${listing.make} ${listing.model} ${listing.year}`}
     >
       {/* Image — left side */}
@@ -38,12 +38,12 @@ export function ListingListItem({ listing }: ListingListItemProps) {
           <>
             {/* Shimmer skeleton while loading */}
             {!imageLoaded && (
-              <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-surface-100 via-surface-200 to-surface-100 dark:from-surface-700 dark:via-surface-600 dark:to-surface-700" />
+              <div className="absolute inset-0 animate-pulse motion-reduce:animate-none bg-gradient-to-r from-surface-100 via-surface-200 to-surface-100 dark:from-surface-700 dark:via-surface-600 dark:to-surface-700" />
             )}
             <img
               src={getProxyImageUrl(listing.primaryImageUrl)}
               alt={`${listing.make} ${listing.model}`}
-              className={`h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 ${
+              className={`h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none ${
                 imageLoaded ? 'opacity-100' : 'opacity-0'
               }`}
               loading="lazy"
@@ -94,7 +94,7 @@ export function ListingListItem({ listing }: ListingListItemProps) {
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavorite(listing.id); }}
-          className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 shadow-md backdrop-blur-sm transition-all hover:scale-110 dark:bg-surface-800/90"
+          className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 shadow-md backdrop-blur-sm transition-all hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none dark:bg-black/60"
           aria-label={isFavorite(listing.id) ? 'Remove from favorites' : 'Add to favorites'}
         >
           <svg className={`h-4 w-4 ${isFavorite(listing.id) ? 'fill-red-500 text-red-500' : 'fill-none text-surface-600 dark:text-surface-300'}`} stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -114,8 +114,8 @@ export function ListingListItem({ listing }: ListingListItemProps) {
               addToCompare(listing.id);
             }
           }}
-          className={`absolute right-2 top-12 z-10 rounded-full p-2 shadow-md backdrop-blur-sm transition-all hover:scale-110 ${
-            isInCompare(listing.id) ? 'bg-brand-accent/90 text-white' : 'bg-white/90 dark:bg-surface-800/90'
+          className={`absolute right-2 top-12 z-10 rounded-full p-2 shadow-md backdrop-blur-sm transition-all hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none ${
+            isInCompare(listing.id) ? 'bg-brand-accent/90 text-white' : 'bg-white/90 dark:bg-black/60'
           }`}
           aria-label={isInCompare(listing.id) ? 'Remove from compare' : 'Add to compare'}
         >
