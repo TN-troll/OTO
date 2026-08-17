@@ -262,7 +262,7 @@ export function MakeModelSelector({
 
         {/* Search input / trigger */}
         <div
-          className="flex items-center rounded-lg border border-surface-200 bg-white px-3 py-2 text-sm transition-colors focus-within:border-brand-accent focus-within:ring-1 focus-within:ring-brand-accent/30 dark:border-surface-600 dark:bg-surface-700"
+          className="flex min-h-[44px] items-center rounded-lg border border-surface-200 bg-white px-3 py-2 text-sm transition-colors focus-within:border-brand-accent focus-within:ring-1 focus-within:ring-brand-accent/30 dark:border-surface-600 dark:bg-surface-700"
         >
           <svg className="mr-2 h-4 w-4 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -275,7 +275,7 @@ export function MakeModelSelector({
             onFocus={() => setMakeDropdownOpen(true)}
             onKeyDown={handleMakeKeyDown}
             placeholder={t.searchPlaceholder?.replace('...', '') || 'Search make...'}
-            className="w-full bg-transparent outline-none placeholder-surface-400 dark:text-white dark:placeholder-surface-500"
+            className="w-full bg-transparent text-base lg:text-sm outline-none placeholder-surface-400 dark:text-white dark:placeholder-surface-500"
             role="combobox"
             aria-expanded={makeDropdownOpen}
             aria-controls={makeListboxId}
@@ -309,7 +309,7 @@ export function MakeModelSelector({
                     aria-selected={isSelected}
                     onClick={() => { toggleMake(make); setMakeSearch(''); }}
                     onMouseEnter={() => setMakeActiveIndex(index)}
-                    className={`flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors ${
+                    className={`flex min-h-[44px] w-full items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors ${
                       isActive
                         ? 'bg-surface-100 dark:bg-surface-600'
                         : ''
@@ -369,7 +369,7 @@ export function MakeModelSelector({
           )}
 
           {/* Model search input */}
-          <div className="flex items-center rounded-lg border border-surface-200 bg-white px-3 py-2 text-sm transition-colors focus-within:border-brand-accent focus-within:ring-1 focus-within:ring-brand-accent/30 dark:border-surface-600 dark:bg-surface-700">
+          <div className="flex min-h-[44px] items-center rounded-lg border border-surface-200 bg-white px-3 py-2 text-sm transition-colors focus-within:border-brand-accent focus-within:ring-1 focus-within:ring-brand-accent/30 dark:border-surface-600 dark:bg-surface-700">
             <svg className="mr-2 h-4 w-4 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -381,7 +381,7 @@ export function MakeModelSelector({
               onFocus={() => setModelDropdownOpen(true)}
               onKeyDown={handleModelKeyDown}
               placeholder="Search model..."
-              className="w-full bg-transparent outline-none placeholder-surface-400 dark:text-white dark:placeholder-surface-500"
+              className="w-full bg-transparent text-base lg:text-sm outline-none placeholder-surface-400 dark:text-white dark:placeholder-surface-500"
               role="combobox"
               aria-expanded={modelDropdownOpen}
               aria-controls={modelListboxId}
@@ -417,7 +417,7 @@ export function MakeModelSelector({
                       aria-selected={isSelected}
                       onClick={() => { toggleModel(model); setModelSearch(''); }}
                       onMouseEnter={() => setModelActiveIndex(index)}
-                      className={`flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors ${
+                      className={`flex min-h-[44px] w-full items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors ${
                         isActive
                           ? 'bg-surface-100 dark:bg-surface-600'
                           : ''

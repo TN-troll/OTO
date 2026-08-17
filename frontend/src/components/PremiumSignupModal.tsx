@@ -96,7 +96,7 @@ export function PremiumSignupModal({ isOpen, onClose }: PremiumSignupModalProps)
       />
 
       {/* Modal content */}
-      <div className="relative mx-4 w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-surface-800">
+      <div className="relative mx-4 w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-surface-900/90 dark:border dark:border-white/[0.08]">
         {/* Close button */}
         <button
           type="button"

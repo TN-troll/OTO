@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { ListingSummary } from '@car-ads/shared';
 import { useFavorites } from '../hooks/useFavorites';
 import { useCompare } from '../hooks/useCompare';
@@ -7,69 +7,139 @@ import { getProxyImageUrl } from '../utils/imageProxy';
 interface ListingCardProps {
   listing: ListingSummary;
   featured?: boolean;
+  /** When true, uses loading="eager" and fetchPriority="high" for above-the-fold images */
+  priority?: boolean;
 }
 
-function ImagePlaceholder() {
+function ImagePlaceholder({ loading = false }: { loading?: boolean }) {
   return (
-    <div className="flex h-full items-center justify-center">
-      <svg className="h-16 w-16 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+    <div
+      className={`flex h-full w-full items-center justify-center bg-surface-100 dark:bg-surface-800 ${loading ? 'animate-pulse' : ''}`}
+      role="img"
+      aria-label="Image could not be loaded"
+    >
+      <svg
+        className="h-16 w-16 text-surface-300 dark:text-surface-600"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1}
+          d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25m-2.25 0h-2.25m0 0V6.375c0-.621-.504-1.125-1.125-1.125H4.125C3.504 5.25 3 5.754 3 6.375v8.084M12 9.75H9.75"
+        />
       </svg>
     </div>
   );
 }
 
-export function ListingCard({ listing, featured = false }: ListingCardProps) {
+export function ListingCard({ listing, featured = false, priority = false }: ListingCardProps) {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageTimedOut, setImageTimedOut] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { addToCompare, removeFromCompare, isInCompare } = useCompare();
   const isNew = listing.dateAdded && (Date.now() - new Date(listing.dateAdded).getTime()) < 48 * 60 * 60 * 1000;
   const pricePerHp = listing.horsepower ? Math.round(listing.price / listing.horsepower) : null;
+  const isFeaturedCard = featured || listing.isFeatured;
+
+  // 10-second timeout: if image hasn't loaded, show pulsing placeholder
+  useEffect(() => {
+    if (listing.primaryImageUrl && !imageLoaded && !imageError) {
+      timeoutRef.current = setTimeout(() => {
+        setImageTimedOut(true);
+      }, 10000);
+    }
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [listing.primaryImageUrl, imageLoaded, imageError]);
+
+  // Clear timeout when image loads or errors
+  useEffect(() => {
+    if (imageLoaded || imageError) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    }
+  }, [imageLoaded, imageError]);
 
   return (
     <a
       href={`/listing/${listing.id}`}
-      className={`group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover dark:bg-surface-800 dark:border dark:border-surface-700 ${
-        featured ? 'md:col-span-2 md:row-span-2' : ''
-      }`}
+      className={[
+        // Base — Apple glass card
+        'group relative flex flex-col overflow-hidden rounded-[20px]',
+        'bg-white/60 backdrop-blur-xl dark:bg-white/[0.04]',
+        'border border-white/20 dark:border-white/[0.08]',
+        'shadow-glass dark:shadow-glass-dark',
+        // Transition — spring-based with reduced motion support
+        'transition-all duration-300 ease-smooth',
+        'motion-reduce:transition-none motion-reduce:transform-none',
+        // Hover — lift with elevated shadow
+        'hover:-translate-y-1 hover:shadow-glass-elevated',
+        'hover:bg-white/70 dark:hover:bg-white/[0.06]',
+        'hover:border-white/30 dark:hover:border-white/[0.12]',
+        // Focus — visible ring for keyboard navigation (3:1 contrast)
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
+        // Active/Touch — match hover elevation on touch-hold
+        'active:-translate-y-1 active:shadow-glass-elevated',
+        // Featured variant — gold vibrancy tint + ring
+        isFeaturedCard
+          ? 'md:col-span-2 bg-[rgba(212,168,83,0.04)] ring-1 ring-[rgba(212,168,83,0.2)]'
+          : '',
+      ].join(' ')}
       aria-label={`${listing.make} ${listing.model} ${listing.year}`}
     >
-      {/* Image */}
-      <div className={`relative overflow-hidden bg-surface-100 dark:bg-surface-700 ${featured ? 'aspect-[16/9]' : 'aspect-[3/2]'}`}>
-        {listing.primaryImageUrl && !imageError ? (
+      {/* Image container with fixed aspect ratio */}
+      <div className={`relative overflow-hidden ${isFeaturedCard ? 'aspect-[16/9]' : 'aspect-[3/2]'}`}>
+        {listing.primaryImageUrl && !imageError && !imageTimedOut ? (
           <>
             {/* Shimmer skeleton while loading */}
             {!imageLoaded && (
-              <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-surface-100 via-surface-200 to-surface-100 dark:from-surface-700 dark:via-surface-600 dark:to-surface-700" />
+              <div className="absolute inset-0 animate-shimmer motion-reduce:animate-none bg-gradient-to-r from-surface-100 via-surface-200 to-surface-100 bg-[length:200%_100%] dark:from-surface-800 dark:via-surface-700 dark:to-surface-800" />
             )}
             <img
               src={getProxyImageUrl(listing.primaryImageUrl)}
               alt={`${listing.make} ${listing.model}`}
-              className={`h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 ${
-                imageLoaded ? 'opacity-100' : 'opacity-0'
-              }`}
-              loading="lazy"
+              className={[
+                'h-full w-full object-cover',
+                'transition-transform duration-500 ease-smooth',
+                'group-hover:scale-[1.05]',
+                'motion-reduce:transition-none motion-reduce:transform-none',
+                imageLoaded ? 'opacity-100' : 'opacity-0',
+              ].join(' ')}
+              loading={priority ? 'eager' : 'lazy'}
+              fetchPriority={priority ? 'high' : undefined}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
             />
           </>
+        ) : imageTimedOut && !imageError ? (
+          <ImagePlaceholder loading={true} />
         ) : (
           <ImagePlaceholder />
         )}
 
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        {/* Gradient overlay — bottom fade from-black/50 */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
 
-        {/* Year badge */}
-        <div className="absolute left-3 top-3 rounded-md bg-brand/80 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+        {/* Year badge — glass pill */}
+        <div className="absolute left-4 top-4 rounded-full bg-black/30 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
           {listing.year}
         </div>
 
         {/* Featured badge */}
-        {(featured || listing.isFeatured) && (
-          <div className="absolute left-3 top-10 flex items-center gap-1 rounded-md bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
-            <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+        {isFeaturedCard && (
+          <div className="absolute left-4 top-11 flex items-center gap-1 rounded-full bg-accent-gold/90 px-2.5 py-1 text-[10px] font-bold text-white shadow-glow-gold backdrop-blur-sm">
+            <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
             FEATURED
@@ -77,39 +147,39 @@ export function ListingCard({ listing, featured = false }: ListingCardProps) {
         )}
 
         {/* Nieuw badge */}
-        {isNew && !featured && !listing.isFeatured && (
-          <div className="absolute left-3 top-10 rounded-md bg-green-500 px-2 py-0.5 text-[10px] font-bold text-white">
+        {isNew && !isFeaturedCard && (
+          <div className="absolute left-4 top-11 rounded-full bg-green-500/90 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm">
             NIEUW
           </div>
         )}
-        {isNew && (featured || listing.isFeatured) && (
-          <div className="absolute left-3 top-[38px] rounded-md bg-green-500 px-2 py-0.5 text-[10px] font-bold text-white">
+        {isNew && isFeaturedCard && (
+          <div className="absolute left-4 top-[4.5rem] rounded-full bg-green-500/90 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm">
             NIEUW
           </div>
         )}
 
         {/* Sold overlay badge */}
         {listing.status === 'sold' && (
-          <div className="absolute inset-0 z-[5] flex items-center justify-center bg-black/40">
-            <span className="rounded-lg bg-red-600/90 px-4 py-2 text-lg font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
+          <div className="absolute inset-0 z-[5] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+            <span className="rounded-full bg-red-600/90 px-5 py-2.5 text-lg font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-md">
               Sold
             </span>
           </div>
         )}
 
-        {/* Favorite button */}
+        {/* Favorite button — 44x44px touch target */}
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavorite(listing.id); }}
-          className="absolute right-3 top-3 z-10 rounded-full bg-white/90 p-2 shadow-md backdrop-blur-sm transition-all hover:scale-110 dark:bg-surface-800/90"
+          className="absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/80 shadow-glass backdrop-blur-xl transition-all duration-200 ease-smooth hover:scale-110 hover:bg-white/90 dark:bg-black/60 motion-reduce:transition-none motion-reduce:transform-none"
           aria-label={isFavorite(listing.id) ? 'Remove from favorites' : 'Add to favorites'}
         >
-          <svg className={`h-4 w-4 ${isFavorite(listing.id) ? 'fill-red-500 text-red-500' : 'fill-none text-surface-600 dark:text-surface-300'}`} stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+          <svg className={`h-4 w-4 ${isFavorite(listing.id) ? 'fill-red-500 text-red-500' : 'fill-none text-surface-700 dark:text-surface-200'}`} stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
           </svg>
         </button>
 
-        {/* Compare button */}
+        {/* Compare button — 44x44px touch target, 8px gap from favorite */}
         <button
           type="button"
           onClick={(e) => {
@@ -121,49 +191,54 @@ export function ListingCard({ listing, featured = false }: ListingCardProps) {
               addToCompare(listing.id);
             }
           }}
-          className={`absolute right-3 top-14 z-10 rounded-full p-2 shadow-md backdrop-blur-sm transition-all hover:scale-110 ${
-            isInCompare(listing.id) ? 'bg-brand-accent/90 text-white' : 'bg-white/90 dark:bg-surface-800/90'
-          }`}
+          className={[
+            'absolute right-3 top-[3.75rem] z-10 flex h-11 w-11 items-center justify-center rounded-full shadow-glass backdrop-blur-xl transition-all duration-200 ease-smooth hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none',
+            isInCompare(listing.id)
+              ? 'bg-accent-gold/90 text-white'
+              : 'bg-white/80 dark:bg-black/60',
+          ].join(' ')}
           aria-label={isInCompare(listing.id) ? 'Remove from compare' : 'Add to compare'}
         >
-          <svg className={`h-4 w-4 ${isInCompare(listing.id) ? 'text-white' : 'text-surface-600 dark:text-surface-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+          <svg className={`h-4 w-4 ${isInCompare(listing.id) ? 'text-white' : 'text-surface-700 dark:text-surface-200'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
           </svg>
         </button>
 
-        {/* Price badge */}
-        <div className="absolute bottom-3 right-3 rounded-lg bg-white/95 px-3 py-1.5 shadow-premium backdrop-blur-sm dark:bg-surface-800">
-          <span className="text-base font-bold text-brand dark:text-brand-accent">
+        {/* Price badge — glass panel */}
+        <div className="absolute bottom-4 right-4 rounded-2xl bg-white/80 px-4 py-2.5 shadow-glass backdrop-blur-xl dark:bg-black/60">
+          <span className="text-lg font-bold tracking-tight text-surface-900 dark:text-white">
             €{listing.price.toLocaleString('nl-NL')}
           </span>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex flex-1 flex-col p-4">
-        {/* Make & Model */}
-        <h3 className="text-base font-bold text-surface-900 transition-colors duration-200 group-hover:text-brand-accent dark:text-white">
-          {listing.make}{' '}
-          <span className="font-medium text-surface-600 dark:text-surface-300">{listing.model}</span>
+      {/* Content — generous padding, clean hierarchy */}
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
+        {/* Make & Model — tracking-tight, 17px semibold */}
+        <h3 className="text-[17px] font-semibold tracking-tight text-surface-900 dark:text-white">
+          {listing.make}
+          <span className="ml-1.5 font-normal text-surface-500 dark:text-surface-400">
+            {listing.model}
+          </span>
         </h3>
 
-        {/* Specs tags */}
+        {/* Spec pills — glass capsules with backdrop-blur-sm */}
         <div className="mt-3 flex flex-wrap gap-2">
           {listing.horsepower != null && (
-            <span className="inline-flex items-center gap-1 rounded-md bg-surface-100 px-2 py-1 text-xs font-medium text-surface-700 dark:bg-surface-700 dark:text-surface-300">
-              <svg className="h-3 w-3 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span className="inline-flex items-center gap-1 rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
+              <svg className="h-3 w-3 text-accent-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
               {listing.horsepower} HP
             </span>
           )}
           {listing.engineDisplacementCc != null && (
-            <span className="inline-flex items-center rounded-md bg-surface-100 px-2 py-1 text-xs font-medium text-surface-700 dark:bg-surface-700 dark:text-surface-300">
+            <span className="inline-flex items-center rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
               {(listing.engineDisplacementCc / 1000).toFixed(1)}L
             </span>
           )}
           {pricePerHp != null && (
-            <span className="inline-flex items-center rounded-md bg-surface-100 px-2 py-1 text-xs font-medium text-surface-700 dark:bg-surface-700 dark:text-surface-300">
+            <span className="inline-flex items-center rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
               €{pricePerHp.toLocaleString('nl-NL')}/HP
             </span>
           )}

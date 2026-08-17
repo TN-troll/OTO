@@ -22,11 +22,11 @@ export function MultiSelect({ label, options, selected, onChange }: MultiSelectP
   return (
     <fieldset className="space-y-2">
       <legend className="block text-xs font-medium text-surface-500 dark:text-surface-400">{label}</legend>
-      <div className="space-y-1">
+      <div className="space-y-2">
         {options.map((option) => (
           <label
             key={option.value}
-            className={`flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-all duration-150 ${
+            className={`flex min-h-[44px] cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-all duration-150 ${
               selected.includes(option.value)
                 ? 'bg-primary-50 text-surface-900 dark:bg-surface-700 dark:text-white'
                 : 'text-surface-700 hover:bg-surface-50 dark:text-surface-300 dark:hover:bg-surface-700'
@@ -36,7 +36,7 @@ export function MultiSelect({ label, options, selected, onChange }: MultiSelectP
               type="checkbox"
               checked={selected.includes(option.value)}
               onChange={() => handleToggle(option.value)}
-              className="h-4 w-4 rounded border-surface-300 text-brand-accent focus:ring-brand-accent/50"
+              className="h-5 w-5 rounded border-surface-300 text-brand-accent focus:ring-brand-accent/50"
             />
             <span className="font-medium">{option.label}</span>
           </label>
