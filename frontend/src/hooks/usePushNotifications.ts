@@ -29,11 +29,15 @@ function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
  * Check if browser supports push notifications
  */
 export function isPushSupported(): boolean {
-  return (
-    'serviceWorker' in navigator &&
-    'PushManager' in window &&
-    'Notification' in window
-  );
+  try {
+    return (
+      'serviceWorker' in navigator &&
+      'PushManager' in window &&
+      'Notification' in window
+    );
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -50,7 +54,10 @@ export function usePushNotifications() {
     frequency: 'immediate',
   });
   const [subscriptionId, setSubscriptionId] = useState<string | null>(
-    () => localStorage.getItem('oto-push-subscription-id')
+    () => {
+      try { return localStorage.getItem('oto-push-subscription-id'); }
+      catch { return null; }
+    }
   );
 
   // Check support and current permission state
@@ -60,21 +67,32 @@ export function usePushNotifications() {
       return;
     }
 
-    setPermission(Notification.permission as PushPermissionState);
+    try {
+      setPermission(Notification.permission as PushPermissionState);
+    } catch {
+      // Some browsers throw when accessing Notification.permission
+      setPermission('unsupported');
+      return;
+    }
 
     // Check if already subscribed
     if (Notification.permission === 'granted') {
-      navigator.serviceWorker.ready.then((registration) => {
-        registration.pushManager.getSubscription().then((sub) => {
+      navigator.serviceWorker.ready
+        .then((registration) =>
+          registration.pushManager.getSubscription()
+        )
+        .then((sub) => {
           if (sub) {
             setIsSubscribed(true);
           }
+        })
+        .catch(() => {
+          // Silently ignore — push subscription check may fail in some environments
         });
-      });
     }
 
     // Load saved preferences from localStorage
-    const savedPrefs = localStorage.getItem('oto-notification-preferences');
+    const savedPrefs = (() => { try { return localStorage.getItem('oto-notification-preferences'); } catch { return null; } })();
     if (savedPrefs) {
       try {
         setPreferences(JSON.parse(savedPrefs));

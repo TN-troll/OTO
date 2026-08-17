@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import { Component, type ReactNode } from 'react';
 import { BrowsePage } from './pages/BrowsePage';
 import { ListingDetailPage } from './pages/ListingDetailPage';
 import { ComparePage } from './pages/ComparePage';
@@ -13,6 +14,40 @@ import { Header } from './components/Header';
 import { FilterProvider, useFilterContext } from './hooks/FilterContext';
 import { useLanguage } from './i18n';
 import { useEffect } from 'react';
+
+/** Error boundary to prevent full-page crashes */
+class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; error: Error | null }> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex min-h-[200px] items-center justify-center p-8">
+          <div className="rounded-xl bg-white p-6 shadow-lg text-center dark:bg-surface-800">
+            <p className="text-base font-semibold text-red-600 dark:text-red-400">Something went wrong</p>
+            <p className="mt-2 text-sm text-surface-500 dark:text-surface-400">
+              {this.state.error?.message || 'An unexpected error occurred.'}
+            </p>
+            <button
+              onClick={() => { this.setState({ hasError: false, error: null }); window.location.reload(); }}
+              className="mt-4 rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand/90"
+            >
+              Reload
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 /** OTO exhaust-pipe logo — used in Footer */
 function OtoLogo({ className = '' }: { className?: string }) {
@@ -144,6 +179,7 @@ function Footer() {
 
 export function App() {
   return (
+    <ErrorBoundary>
     <div className="glass-mesh-bg flex min-h-screen flex-col transition-colors duration-300">
       <MarketplaceHealthBanner />
       <Routes>
@@ -152,7 +188,6 @@ export function App() {
           element={
             <FilterProvider>
               <Header />
-              <NotificationPromptBanner />
               <div className="flex flex-1">
                 <FilterSidebar />
                 <MobileFilterDrawer />
@@ -258,5 +293,6 @@ export function App() {
         />
       </Routes>
     </div>
+    </ErrorBoundary>
   );
 }

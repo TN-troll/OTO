@@ -20,26 +20,34 @@ export function NotificationPromptBanner() {
   const { permission, subscribe, isLoading } = usePushNotifications();
   const [dismissed, setDismissed] = useState(false);
 
-  // Check if user previously dismissed — must be before conditional returns (Rules of Hooks)
   useEffect(() => {
-    const wasDismissed = localStorage.getItem('oto-notification-prompt-dismissed');
-    if (wasDismissed) setDismissed(true);
+    try {
+      const wasDismissed = localStorage.getItem('oto-notification-prompt-dismissed');
+      if (wasDismissed) setDismissed(true);
+    } catch {
+      // localStorage may be unavailable
+    }
   }, []);
-
-  // Requirement 4.5: Hide if browser doesn't support Notification API
-  if (!isPushSupported()) return null;
-
-  // Don't show if already granted, denied, or user dismissed
-  if (permission === 'granted' || permission === 'denied' || dismissed) return null;
 
   const handleDismiss = () => {
     setDismissed(true);
-    localStorage.setItem('oto-notification-prompt-dismissed', 'true');
+    try {
+      localStorage.setItem('oto-notification-prompt-dismissed', 'true');
+    } catch {
+      // Silently ignore
+    }
   };
 
   const handleEnable = async () => {
     await subscribe();
   };
+
+  // Determine visibility — never conditionally return null to avoid React hook issues
+  const isVisible = isPushSupported() && permission !== 'granted' && permission !== 'denied' && !dismissed;
+
+  if (!isVisible) {
+    return <></>;
+  }
 
   return (
     <div className="mx-auto mb-4 max-w-5xl animate-fade-in rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 shadow-sm dark:border-amber-800 dark:bg-amber-900/20">
