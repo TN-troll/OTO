@@ -20,17 +20,17 @@ export function NotificationPromptBanner() {
   const { permission, subscribe, isLoading } = usePushNotifications();
   const [dismissed, setDismissed] = useState(false);
 
+  // Check if user previously dismissed — must be before conditional returns (Rules of Hooks)
+  useEffect(() => {
+    const wasDismissed = localStorage.getItem('oto-notification-prompt-dismissed');
+    if (wasDismissed) setDismissed(true);
+  }, []);
+
   // Requirement 4.5: Hide if browser doesn't support Notification API
   if (!isPushSupported()) return null;
 
   // Don't show if already granted, denied, or user dismissed
   if (permission === 'granted' || permission === 'denied' || dismissed) return null;
-
-  // Check if user previously dismissed
-  useEffect(() => {
-    const wasDismissed = localStorage.getItem('oto-notification-prompt-dismissed');
-    if (wasDismissed) setDismissed(true);
-  }, []);
 
   const handleDismiss = () => {
     setDismissed(true);
