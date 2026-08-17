@@ -144,7 +144,7 @@ function Footer() {
 
 export function App() {
   return (
-    <div className="flex min-h-screen flex-col bg-surface-50 dark:bg-surface-900 transition-colors duration-300">
+    <div className="glass-mesh-bg flex min-h-screen flex-col transition-colors duration-300">
       <MarketplaceHealthBanner />
       <Routes>
         <Route
