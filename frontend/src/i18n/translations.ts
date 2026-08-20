@@ -108,6 +108,13 @@ export interface Translations {
   unreachableSingular: string;
   unreachablePlural: string;
   dismissNotification: string;
+
+  // Map view tabs
+  tabListings: string;
+  tabMap: string;
+  recentlyViewed: string;
+  loadingMap: string;
+  mapLoadError: string;
 }
 
 export const translations: Record<Locale, Translations> = {
@@ -202,6 +209,11 @@ export const translations: Record<Locale, Translations> = {
     unreachableSingular: 'is currently unreachable. Listings from this source may not be up to date.',
     unreachablePlural: 'are currently unreachable. Listings from these sources may not be up to date.',
     dismissNotification: 'Dismiss notification',
+    tabListings: 'Listings',
+    tabMap: 'Map',
+    recentlyViewed: 'Recently Viewed',
+    loadingMap: 'Loading map...',
+    mapLoadError: 'Could not load map',
   },
   nl: {
     brandName: 'OTO',
@@ -294,5 +306,10 @@ export const translations: Record<Locale, Translations> = {
     unreachableSingular: 'is momenteel onbereikbaar. Advertenties van deze bron zijn mogelijk niet actueel.',
     unreachablePlural: 'zijn momenteel onbereikbaar. Advertenties van deze bronnen zijn mogelijk niet actueel.',
     dismissNotification: 'Melding sluiten',
+    tabListings: 'Overzicht',
+    tabMap: 'Kaart',
+    recentlyViewed: 'Laatst bekeken',
+    loadingMap: 'Kaart laden...',
+    mapLoadError: 'Kaart kon niet worden geladen',
   },
 };
