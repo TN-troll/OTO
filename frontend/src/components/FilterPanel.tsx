@@ -1,60 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { DEFAULT_RANGES } from '@car-ads/shared';
 import { RangeFilter } from './filters/RangeFilter';
 import { MultiSelect } from './filters/MultiSelect';
 import { SoundFilters } from './filters/SoundFilters';
 import { MakeModelSelector } from './filters/MakeModelSelector';
+import { CollapsibleSection } from './filters/CollapsibleSection';
+import { PresetCards } from './filters/PresetCards';
+import { FilterSummaryBar } from './filters/FilterSummaryBar';
+import { DrivetrainFilter } from './filters/DrivetrainFilter';
+import { ColorFilter } from './filters/ColorFilter';
+import { SellerTypeFilter } from './filters/SellerTypeFilter';
+import { DoorsSeatsFilter } from './filters/DoorsSeatsFilter';
+import { ConditionFilter } from './filters/ConditionFilter';
+import { EnginePerformanceSection } from './filters/EnginePerformanceSection';
+import { HeritageEditionSection } from './filters/HeritageEditionSection';
+import { MobileFilterDrawer } from './filters/MobileFilterDrawer';
 import { useFilterContext } from '../hooks/FilterContext';
 import { useLanguage } from '../i18n';
 
-const CURRENT_YEAR = new Date().getFullYear();
-
-interface CollapsibleSectionProps {
-  title: string;
-  defaultOpen?: boolean;
-  count?: number;
-  children: React.ReactNode;
-}
-
-function CollapsibleSection({ title, defaultOpen = false, count = 0, children }: CollapsibleSectionProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-
-  return (
-    <div className="border-b border-surface-100 py-4 last:border-b-0 dark:border-white/[0.06]">
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex min-h-[44px] w-full items-center justify-between text-left"
-        aria-expanded={isOpen}
-      >
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-surface-800 dark:text-surface-200">{title}</span>
-          {count > 0 && (
-            <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-brand-accent px-1.5 text-[10px] font-bold text-brand">
-              {count}
-            </span>
-          )}
-        </div>
-        <svg
-          className={`h-4 w-4 text-surface-400 transition-transform duration-200 dark:text-surface-500 ${isOpen ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-      <div
-        className={`overflow-hidden transition-all duration-200 ${
-          isOpen ? 'mt-4 max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-        }`}
-      >
-        {children}
-      </div>
-    </div>
+/**
+ * Hook to track viewport width for responsive rendering.
+ * Returns true when viewport is below 768px (mobile breakpoint).
+ */
+function useIsMobile(): boolean {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
   );
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 767px)');
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener('change', handler);
+    setIsMobile(mql.matches);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
+
+  return isMobile;
 }
 
-export function FilterPanel() {
+/**
+ * The core filter content rendered in both mobile drawer and desktop sidebar.
+ * Contains all filter sections in the correct order:
+ * 1. Quick Presets (top)
+ * 2. Existing filters (Make/Model, Price, Year, HP, Displacement, Mileage, Transmission, Fuel, Body, Sound)
+ * 3. New filters (Drivetrain, Color, Seller Type, Doors & Seats, Condition, Engine & Performance, Heritage & Edition)
+ */
+export function FilterContent() {
   const { t } = useLanguage();
   const {
     filters,
@@ -72,7 +63,12 @@ export function FilterPanel() {
     updateSoundProfile,
     updateShowSold,
     resetFilters,
+    clearFilterSection,
+    filterOptions,
   } = useFilterContext();
+
+  // Dynamic range bounds from filter options, fallback to shared constants
+  const ranges = filterOptions?.ranges ?? DEFAULT_RANGES;
 
   const TRANSMISSION_OPTIONS = [
     { value: 'manual', label: t.manual },
@@ -100,7 +96,7 @@ export function FilterPanel() {
     { value: 'other', label: 'Overig' },
   ];
 
-  // Count active filters per section
+  // Count active filters per section for existing filters
   const makesCount = filters.makes.length + filters.models.length;
   const priceCount = (filters.priceMin !== undefined ? 1 : 0) + (filters.priceMax !== undefined ? 1 : 0);
   const mileageCount = (filters.mileageMin !== undefined ? 1 : 0) + (filters.mileageMax !== undefined ? 1 : 0);
@@ -113,7 +109,7 @@ export function FilterPanel() {
   const soundCount = Object.values(filters.soundProfile).filter((v) => Array.isArray(v) && v.length > 0).length;
 
   return (
-    <div>
+    <>
       {/* Header */}
       <div className="flex items-center justify-between pb-4">
         <h2 className="text-base font-bold text-surface-900 dark:text-white">
@@ -150,7 +146,12 @@ export function FilterPanel() {
         </div>
       )}
 
-      {/* Result count */}
+      {/* Result count — shimmer animation while loading */}
+      {filtersActive && isValid && isFetching && (
+        <div className="mb-4 rounded-lg bg-surface-100 px-3 py-2 dark:bg-surface-700">
+          <div className="h-4 w-32 animate-shimmer rounded bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] dark:from-surface-600 dark:via-surface-700 dark:to-surface-600" />
+        </div>
+      )}
       {filtersActive && isValid && filterResult && !isFetching && (
         <div className="mb-4 rounded-lg bg-surface-100 px-3 py-2 text-xs font-medium text-surface-700 dark:bg-surface-700 dark:text-surface-200">
           <span className="font-bold text-brand-accent">{filterResult.totalCount}</span>{' '}
@@ -158,8 +159,29 @@ export function FilterPanel() {
         </div>
       )}
 
-      {/* Filter sections */}
-      <CollapsibleSection title={t.make} defaultOpen count={makesCount}>
+      {/* Filter Summary Bar — shows active filter chips above results */}
+      <FilterSummaryBar />
+
+      {/* ══════════════════════════════════════════════════════════════════════════
+          1. Quick Presets (top)
+         ══════════════════════════════════════════════════════════════════════════ */}
+      <div className="border-b border-glass-border py-3 dark:border-white/[0.06]">
+        <span className="mb-2 block text-sm font-semibold text-surface-800 dark:text-surface-200">
+          {t.filterSectionPresets}
+        </span>
+        <PresetCards />
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════════════
+          2. Existing filters (Make/Model, Price, Year, HP, Displacement, Mileage,
+             Transmission, Fuel Type, Body Type, Sound Profile)
+         ══════════════════════════════════════════════════════════════════════════ */}
+      <CollapsibleSection
+        title={t.make}
+        defaultExpanded={true}
+        activeCount={makesCount}
+        onClear={() => clearFilterSection('make')}
+      >
         <MakeModelSelector
           selectedMakes={filters.makes}
           selectedModels={filters.models}
@@ -168,11 +190,16 @@ export function FilterPanel() {
         />
       </CollapsibleSection>
 
-      <CollapsibleSection title={t.price} defaultOpen count={priceCount}>
+      <CollapsibleSection
+        title={t.price}
+        defaultExpanded={true}
+        activeCount={priceCount}
+        onClear={() => clearFilterSection('price')}
+      >
         <RangeFilter
           label={`${t.price} (€)`}
-          min={0}
-          max={50_000_000}
+          min={ranges.price.min}
+          max={ranges.price.max}
           step={1000}
           unit="€"
           valueMin={filters.priceMin}
@@ -181,11 +208,16 @@ export function FilterPanel() {
         />
       </CollapsibleSection>
 
-      <CollapsibleSection title={t.year} defaultOpen count={yearCount}>
+      <CollapsibleSection
+        title={t.year}
+        defaultExpanded={false}
+        activeCount={yearCount}
+        onClear={() => clearFilterSection('year')}
+      >
         <RangeFilter
           label={t.year}
-          min={1950}
-          max={CURRENT_YEAR}
+          min={ranges.year.min}
+          max={ranges.year.max}
           step={1}
           valueMin={filters.yearMin}
           valueMax={filters.yearMax}
@@ -194,24 +226,16 @@ export function FilterPanel() {
         />
       </CollapsibleSection>
 
-      <CollapsibleSection title={t.mileage} count={mileageCount}>
-        <RangeFilter
-          label={`${t.mileage} (km)`}
-          min={0}
-          max={300000}
-          step={5000}
-          unit="km"
-          valueMin={filters.mileageMin}
-          valueMax={filters.mileageMax}
-          onChange={(min, max) => updateRange('mileage', min, max)}
-        />
-      </CollapsibleSection>
-
-      <CollapsibleSection title={t.horsepower} defaultOpen count={hpCount}>
+      <CollapsibleSection
+        title={t.horsepower}
+        defaultExpanded={false}
+        activeCount={hpCount}
+        onClear={() => clearFilterSection('engine')}
+      >
         <RangeFilter
           label={`${t.horsepower} (HP)`}
-          min={0}
-          max={2000}
+          min={ranges.horsepower.min}
+          max={ranges.horsepower.max}
           step={10}
           unit="HP"
           valueMin={filters.horsepowerMin}
@@ -220,11 +244,16 @@ export function FilterPanel() {
         />
       </CollapsibleSection>
 
-      <CollapsibleSection title={t.engineDisplacement} count={displacementCount}>
+      <CollapsibleSection
+        title={t.engineDisplacement}
+        defaultExpanded={false}
+        activeCount={displacementCount}
+        onClear={() => clearFilterSection('engine')}
+      >
         <RangeFilter
           label={`${t.engineDisplacement} (cc)`}
-          min={0}
-          max={10_000}
+          min={ranges.engineDisplacement.min}
+          max={ranges.engineDisplacement.max}
           step={100}
           unit="cc"
           valueMin={filters.engineDisplacementMin}
@@ -233,7 +262,30 @@ export function FilterPanel() {
         />
       </CollapsibleSection>
 
-      <CollapsibleSection title={t.transmission} count={transmissionCount}>
+      <CollapsibleSection
+        title={t.mileage}
+        defaultExpanded={false}
+        activeCount={mileageCount}
+        onClear={() => clearFilterSection('mileage')}
+      >
+        <RangeFilter
+          label={`${t.mileage} (km)`}
+          min={ranges.mileage.min}
+          max={ranges.mileage.max}
+          step={5000}
+          unit="km"
+          valueMin={filters.mileageMin}
+          valueMax={filters.mileageMax}
+          onChange={(min, max) => updateRange('mileage', min, max)}
+        />
+      </CollapsibleSection>
+
+      <CollapsibleSection
+        title={t.transmission}
+        defaultExpanded={false}
+        activeCount={transmissionCount}
+        onClear={() => clearFilterSection('transmission')}
+      >
         <MultiSelect
           label={t.transmission}
           options={TRANSMISSION_OPTIONS}
@@ -242,7 +294,12 @@ export function FilterPanel() {
         />
       </CollapsibleSection>
 
-      <CollapsibleSection title={t.fuelType} count={fuelCount}>
+      <CollapsibleSection
+        title={t.fuelType}
+        defaultExpanded={false}
+        activeCount={fuelCount}
+        onClear={() => clearFilterSection('fuelType')}
+      >
         <MultiSelect
           label={t.fuelType}
           options={FUEL_TYPE_OPTIONS}
@@ -251,7 +308,12 @@ export function FilterPanel() {
         />
       </CollapsibleSection>
 
-      <CollapsibleSection title="Carrosserie" count={bodyTypeCount}>
+      <CollapsibleSection
+        title="Carrosserie"
+        defaultExpanded={false}
+        activeCount={bodyTypeCount}
+        onClear={() => clearFilterSection('bodyType')}
+      >
         <MultiSelect
           label="Carrosserie"
           options={BODY_TYPE_OPTIONS}
@@ -260,15 +322,31 @@ export function FilterPanel() {
         />
       </CollapsibleSection>
 
-      <CollapsibleSection title={t.soundProfile} count={soundCount}>
+      <CollapsibleSection
+        title={t.soundProfile}
+        defaultExpanded={false}
+        activeCount={soundCount}
+        onClear={() => clearFilterSection('sound')}
+      >
         <SoundFilters
           value={filters.soundProfile}
           onChange={updateSoundProfile}
         />
       </CollapsibleSection>
 
+      {/* ══════════════════════════════════════════════════════════════════════════
+          3. New filter sections
+         ══════════════════════════════════════════════════════════════════════════ */}
+      <DrivetrainFilter />
+      <ColorFilter />
+      <SellerTypeFilter />
+      <DoorsSeatsFilter />
+      <ConditionFilter />
+      <EnginePerformanceSection />
+      <HeritageEditionSection />
+
       {/* Show sold listings toggle — 44px touch target */}
-      <div className="border-b border-surface-100 py-4 last:border-b-0 dark:border-white/[0.06]">
+      <div className="border-b border-glass-border py-4 last:border-b-0 dark:border-white/[0.06]">
         <label className="flex min-h-[44px] cursor-pointer items-center justify-between">
           <span className="text-sm font-semibold text-surface-800 dark:text-surface-200">
             {t.showSoldListings}
@@ -285,6 +363,39 @@ export function FilterPanel() {
           </div>
         </label>
       </div>
+    </>
+  );
+}
+
+/**
+ * FilterPanel — renders the full filter interface.
+ *
+ * Responsive behavior:
+ * - Mobile (<768px): Renders FilterContent inside MobileFilterDrawer (slide-up overlay)
+ * - Desktop (≥768px): Renders FilterContent inline with glass morphism panel styling
+ *
+ * Section order:
+ * 1. Quick Presets (top)
+ * 2. Existing filters (Make/Model, Price, Year, HP, Displacement, Mileage, Transmission, Fuel, Body, Sound)
+ * 3. New filters (Drivetrain, Color, Seller Type, Doors & Seats, Condition, Engine & Performance, Heritage & Edition)
+ *
+ * Make and Price sections are expanded by default (defaultExpanded={true}).
+ * FilterSummaryBar is shown above filter sections when filters are active.
+ */
+export function FilterPanel() {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <MobileFilterDrawer>
+        <FilterContent />
+      </MobileFilterDrawer>
+    );
+  }
+
+  return (
+    <div className="rounded-card border border-glass-border bg-glass-light p-4 backdrop-blur-glass dark:bg-glass-dark dark:border-white/[0.08]">
+      <FilterContent />
     </div>
   );
 }

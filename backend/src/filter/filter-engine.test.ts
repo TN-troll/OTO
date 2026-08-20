@@ -897,4 +897,377 @@ describe('FilterEngine', () => {
       expect(result.items[0].isFeatured).toBe(true);
     });
   });
+
+  describe('validateCriteria() - new filter fields', () => {
+    // ─── Drivetrain validation ────────────────────────────────────────────
+
+    it('should accept valid drivetrain values', () => {
+      const result = engine.validateCriteria({ drivetrain: ['rwd', 'fwd', 'awd'] });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should reject invalid drivetrain values', () => {
+      const result = engine.validateCriteria({ drivetrain: ['rwd', '4wd' as any] });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('drivetrain');
+    });
+
+    // ─── Condition validation ────────────────────────────────────────────
+
+    it('should accept valid condition values', () => {
+      const result = engine.validateCriteria({ condition: ['new', 'used', 'classic'] });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should reject invalid condition values', () => {
+      const result = engine.validateCriteria({ condition: ['new', 'broken' as any] });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('condition');
+    });
+
+    // ─── Engine detail configuration validation ─────────────────────────
+
+    it('should accept valid engineDetailConfiguration values', () => {
+      const result = engine.validateCriteria({ engineDetailConfiguration: ['v8', 'inline-6', 'rotary'] });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should reject invalid engineDetailConfiguration values', () => {
+      const result = engine.validateCriteria({ engineDetailConfiguration: ['v8', 'v14' as any] });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('engineDetailConfiguration');
+    });
+
+    // ─── Forced induction detail validation ──────────────────────────────
+
+    it('should accept valid forcedInductionDetail values', () => {
+      const result = engine.validateCriteria({ forcedInductionDetail: ['turbocharged', 'twin_turbo'] });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should reject invalid forcedInductionDetail values', () => {
+      const result = engine.validateCriteria({ forcedInductionDetail: ['quad_turbo' as any] });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('forcedInductionDetail');
+    });
+
+    // ─── Heritage era validation ────────────────────────────────────────
+
+    it('should accept valid heritageEra values', () => {
+      const result = engine.validateCriteria({ heritageEra: ['classic', 'modern_classic', 'contemporary'] });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should reject invalid heritageEra values', () => {
+      const result = engine.validateCriteria({ heritageEra: ['future' as any] });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('heritageEra');
+    });
+
+    // ─── Seller type validation ─────────────────────────────────────────
+
+    it('should accept valid sellerType values', () => {
+      const result = engine.validateCriteria({ sellerType: ['dealer', 'private'] });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should reject invalid sellerType values', () => {
+      const result = engine.validateCriteria({ sellerType: ['auction' as any] });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('sellerType');
+    });
+
+    // ─── Doors validation ────────────────────────────────────────────────
+
+    it('should accept valid doors values (positive integers)', () => {
+      const result = engine.validateCriteria({ doors: [2, 3, 4, 5] });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should reject non-positive doors values', () => {
+      const result = engine.validateCriteria({ doors: [2, 0] });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('doors');
+    });
+
+    it('should reject non-integer doors values', () => {
+      const result = engine.validateCriteria({ doors: [2.5] });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('doors');
+    });
+
+    // ─── Seats validation ────────────────────────────────────────────────
+
+    it('should accept valid seats values (positive integers)', () => {
+      const result = engine.validateCriteria({ seats: [2, 4, 5, 7] });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should reject non-positive seats values', () => {
+      const result = engine.validateCriteria({ seats: [-1] });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('seats');
+    });
+
+    it('should reject non-integer seats values', () => {
+      const result = engine.validateCriteria({ seats: [4.5] });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('seats');
+    });
+
+    // ─── Acceleration max validation ─────────────────────────────────────
+
+    it('should accept valid accelerationMax (positive number)', () => {
+      const result = engine.validateCriteria({ accelerationMax: 3.5 });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should reject zero accelerationMax', () => {
+      const result = engine.validateCriteria({ accelerationMax: 0 });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('accelerationMax');
+    });
+
+    it('should reject negative accelerationMax', () => {
+      const result = engine.validateCriteria({ accelerationMax: -2 });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('accelerationMax');
+    });
+
+    // ─── Top speed min validation ────────────────────────────────────────
+
+    it('should accept valid topSpeedMin (positive number)', () => {
+      const result = engine.validateCriteria({ topSpeedMin: 300 });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should reject zero topSpeedMin', () => {
+      const result = engine.validateCriteria({ topSpeedMin: 0 });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('topSpeedMin');
+    });
+
+    it('should reject negative topSpeedMin', () => {
+      const result = engine.validateCriteria({ topSpeedMin: -100 });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('topSpeedMin');
+    });
+
+    // ─── isSpecialEdition validation ─────────────────────────────────────
+
+    it('should accept boolean isSpecialEdition (true)', () => {
+      const result = engine.validateCriteria({ isSpecialEdition: true });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should accept boolean isSpecialEdition (false)', () => {
+      const result = engine.validateCriteria({ isSpecialEdition: false });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should reject non-boolean isSpecialEdition', () => {
+      const result = engine.validateCriteria({ isSpecialEdition: 'yes' as any });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('isSpecialEdition');
+    });
+
+    // ─── Performance preset validation ───────────────────────────────────
+
+    it('should accept valid performancePreset', () => {
+      const result = engine.validateCriteria({ performancePreset: 'v8_grand_tourers' });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should accept null performancePreset', () => {
+      const result = engine.validateCriteria({ performancePreset: null });
+      expect(result.valid).toBe(true);
+    });
+
+    it('should reject invalid performancePreset', () => {
+      const result = engine.validateCriteria({ performancePreset: 'unknown_preset' as any });
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].field).toBe('performancePreset');
+    });
+
+    // ─── Valid new fields pass together ──────────────────────────────────
+
+    it('should accept all new filter fields with valid values simultaneously', () => {
+      const result = engine.validateCriteria({
+        drivetrain: ['rwd', 'awd'],
+        condition: ['new', 'used'],
+        engineDetailConfiguration: ['v8', 'v12'],
+        forcedInductionDetail: ['turbocharged'],
+        heritageEra: ['contemporary'],
+        sellerType: ['dealer'],
+        doors: [2, 4],
+        seats: [2, 4],
+        accelerationMax: 4.0,
+        topSpeedMin: 250,
+        isSpecialEdition: true,
+        performancePreset: 'track_weapons',
+      });
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
+    });
+
+    // ─── Empty arrays pass ───────────────────────────────────────────────
+
+    it('should accept empty arrays for multi-select fields', () => {
+      const result = engine.validateCriteria({
+        drivetrain: [],
+        condition: [],
+        engineDetailConfiguration: [],
+        forcedInductionDetail: [],
+        heritageEra: [],
+        sellerType: [],
+        doors: [],
+        seats: [],
+      });
+      expect(result.valid).toBe(true);
+    });
+  });
+
+  describe('expandPerformancePreset()', () => {
+    it('should return criteria unchanged when no performancePreset is set', () => {
+      const criteria: FilterCriteria = { horsepowerMin: 300, makes: ['Ferrari'] };
+      const result = engine.expandPerformancePreset(criteria);
+      expect(result).toEqual(criteria);
+    });
+
+    it('should return criteria unchanged when performancePreset is null', () => {
+      const criteria: FilterCriteria = { performancePreset: null, horsepowerMin: 300 };
+      const result = engine.expandPerformancePreset(criteria);
+      expect(result).toEqual(criteria);
+    });
+
+    it('should expand v8_grand_tourers preset into compound filters', () => {
+      const criteria: FilterCriteria = { performancePreset: 'v8_grand_tourers' };
+      const result = engine.expandPerformancePreset(criteria);
+
+      expect(result.performancePreset).toBeUndefined();
+      expect(result.bodyType).toEqual(['coupe', 'cabriolet']);
+      expect(result.horsepowerMin).toBe(400);
+      expect(result.soundProfile?.cylinderCount).toEqual([8, 10, 12]);
+    });
+
+    it('should expand track_weapons preset into compound filters', () => {
+      const criteria: FilterCriteria = { performancePreset: 'track_weapons' };
+      const result = engine.expandPerformancePreset(criteria);
+
+      expect(result.performancePreset).toBeUndefined();
+      expect(result.horsepowerMin).toBe(500);
+      expect(result.transmissionType).toEqual(['manual', 'automatic']);
+      expect(result.bodyType).toEqual(['coupe']);
+    });
+
+    it('should expand daily_luxury preset into compound filters', () => {
+      const criteria: FilterCriteria = { performancePreset: 'daily_luxury' };
+      const result = engine.expandPerformancePreset(criteria);
+
+      expect(result.performancePreset).toBeUndefined();
+      expect(result.transmissionType).toEqual(['automatic']);
+      expect(result.doors).toEqual([4, 5]);
+      expect(result.makes).toContain('BMW');
+      expect(result.makes).toContain('Porsche');
+    });
+
+    it('should expand classic_collectibles preset into compound filters', () => {
+      const criteria: FilterCriteria = { performancePreset: 'classic_collectibles' };
+      const result = engine.expandPerformancePreset(criteria);
+
+      expect(result.performancePreset).toBeUndefined();
+      expect(result.yearMax).toBe(2000);
+      expect(result.isSpecialEdition).toBe(true);
+      expect(result.mileageMax).toBe(100000);
+    });
+
+    it('should give user-supplied values precedence over preset defaults', () => {
+      const criteria: FilterCriteria = {
+        performancePreset: 'track_weapons',
+        horsepowerMin: 600, // User overrides preset's 500
+      };
+      const result = engine.expandPerformancePreset(criteria);
+
+      expect(result.horsepowerMin).toBe(600);
+      // Preset's bodyType should still apply since user didn't provide it
+      expect(result.bodyType).toEqual(['coupe']);
+    });
+
+    it('should give user-supplied array values precedence over preset arrays', () => {
+      const criteria: FilterCriteria = {
+        performancePreset: 'daily_luxury',
+        makes: ['Porsche'], // User overrides preset's makes list
+      };
+      const result = engine.expandPerformancePreset(criteria);
+
+      expect(result.makes).toEqual(['Porsche']);
+      // Other preset values should still apply
+      expect(result.transmissionType).toEqual(['automatic']);
+    });
+
+    it('should strip the performancePreset field from the result', () => {
+      const criteria: FilterCriteria = { performancePreset: 'v8_grand_tourers' };
+      const result = engine.expandPerformancePreset(criteria);
+
+      expect('performancePreset' in result).toBe(false);
+    });
+
+    it('should strip an unknown preset and return criteria without it', () => {
+      const criteria: FilterCriteria = {
+        performancePreset: 'nonexistent_preset' as any,
+        horsepowerMin: 300,
+      };
+      const result = engine.expandPerformancePreset(criteria);
+
+      expect('performancePreset' in result).toBe(false);
+      expect(result.horsepowerMin).toBe(300);
+    });
+
+    it('should merge soundProfile from preset when user has no soundProfile', () => {
+      const criteria: FilterCriteria = { performancePreset: 'v8_grand_tourers' };
+      const result = engine.expandPerformancePreset(criteria);
+
+      expect(result.soundProfile?.cylinderCount).toEqual([8, 10, 12]);
+    });
+
+    it('should let user soundProfile fields override preset soundProfile fields', () => {
+      const criteria: FilterCriteria = {
+        performancePreset: 'v8_grand_tourers',
+        soundProfile: { cylinderCount: [12] }, // User overrides
+      };
+      const result = engine.expandPerformancePreset(criteria);
+
+      expect(result.soundProfile?.cylinderCount).toEqual([12]);
+    });
+  });
+
+  describe('query() with performance preset expansion', () => {
+    it('should expand preset before building WHERE clause', async () => {
+      mockDbResults(0, []);
+
+      await engine.query({ performancePreset: 'track_weapons' });
+
+      const countCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && call[0].includes('COUNT(*)'),
+      );
+      const sql = countCall?.[0] as string;
+      // track_weapons expands to horsepowerMin: 500, bodyType: ['coupe'], transmissionType: ['manual', 'automatic']
+      expect(sql).toContain('l.horsepower >= ');
+      expect(sql).toContain('l.body_type = ANY(');
+      expect(sql).toContain('l.transmission_type = ANY(');
+    });
+
+    it('should not include performancePreset as a raw column filter', async () => {
+      mockDbResults(0, []);
+
+      await engine.query({ performancePreset: 'daily_luxury' });
+
+      const countCall = mockQuery.mock.calls.find(
+        (call) => typeof call[0] === 'string' && call[0].includes('COUNT(*)'),
+      );
+      const sql = countCall?.[0] as string;
+      expect(sql).not.toContain('performance_preset');
+      expect(sql).not.toContain('performancePreset');
+    });
+  });
 });

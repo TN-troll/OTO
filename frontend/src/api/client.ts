@@ -1,4 +1,4 @@
-import type { FilterCriteria, FilterResult, Listing, ListingSummary, MarketplaceHealth, MapLocationsResponse } from '@car-ads/shared';
+import type { FilterCriteria, FilterResult, FilterOptionsResponse, Listing, ListingSummary, MarketplaceHealth, MapLocationsResponse } from '@car-ads/shared';
 
 // In production, frontend is served from the same origin as the API
 // In dev, Vite proxy handles /api → localhost:4000
@@ -50,17 +50,6 @@ export interface SearchResult {
   pageSize: number;
   totalPages: number;
   suggestions?: string[];
-}
-
-export interface FilterOptions {
-  makes: string[];
-  models: string[];
-  fuelTypes: string[];
-  transmissionTypes: string[];
-  engineConfigurations: string[];
-  cylinderCounts: number[];
-  forcedInductionTypes: string[];
-  exhaustNotes: string[];
 }
 
 export const api = {
@@ -146,10 +135,10 @@ export const api = {
   },
 
   /**
-   * Get available filter options
+   * Get available filter options (dynamic ranges, discrete values, make/model dependency)
    */
-  async getFilterOptions(): Promise<FilterOptions> {
-    return fetchJson<FilterOptions>(`${API_BASE}/filter-options`);
+  async getFilterOptions(): Promise<FilterOptionsResponse> {
+    return fetchJson<FilterOptionsResponse>(`${API_BASE}/filter-options`);
   },
 
   /**

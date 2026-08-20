@@ -43,3 +43,21 @@ export type SortOrder = 'asc' | 'desc';
 
 /** Body type / carrosserie */
 export type BodyType = 'sedan' | 'coupe' | 'cabriolet' | 'hatchback' | 'suv' | 'station' | 'mpv' | 'roadster' | 'targa' | 'shooting_brake' | 'other';
+
+/** Drivetrain layout */
+export type DrivetrainType = 'rwd' | 'fwd' | 'awd';
+
+/** Vehicle condition */
+export type ConditionType = 'new' | 'used' | 'classic';
+
+/** Detailed engine configuration (cylinder layout) */
+export type EngineDetailConfiguration = 'inline-4' | 'inline-6' | 'v6' | 'v8' | 'v10' | 'v12' | 'flat-4' | 'flat-6' | 'w12' | 'rotary';
+
+/** Forced induction detail (more granular than ForcedInduction) */
+export type ForcedInductionDetail = 'naturally_aspirated' | 'turbocharged' | 'supercharged' | 'twin_turbo';
+
+/** Heritage era classification based on production year */
+export type HeritageEra = 'classic' | 'modern_classic' | 'contemporary';
+
+/** Performance preset identifiers for quick-filter cards */
+export type PerformancePresetId = 'v8_grand_tourers' | 'track_weapons' | 'daily_luxury' | 'classic_collectibles';

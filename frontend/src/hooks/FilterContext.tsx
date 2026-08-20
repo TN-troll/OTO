@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
-import type { SortField, SortOrder } from '@car-ads/shared';
+import type { SortField, SortOrder, FilterOptionsResponse } from '@car-ads/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useFilters } from './useFilters';
 import { api, SearchResult } from '../api/client';
@@ -23,6 +23,9 @@ interface FilterContextValue extends FilterHookReturn {
   // Mobile filter drawer
   mobileFilterOpen: boolean;
   setMobileFilterOpen: (open: boolean) => void;
+  // Filter options (dynamic data)
+  filterOptions: FilterOptionsResponse | undefined;
+  filterOptionsLoading: boolean;
 }
 
 const FilterContext = createContext<FilterContextValue | null>(null);
@@ -43,7 +46,7 @@ function getInitialParams(): URLSearchParams {
 export function FilterProvider({ children }: { children: React.ReactNode }) {
   const initialParams = useRef(getInitialParams());
 
-  // Initialize state from URL params (read once on mount)
+  // Initialize sorting from URL params (read once on mount)
   const [sortBy, setSortByState] = useState<SortField>(() => {
     const v = initialParams.current.get('sortBy');
     return v && VALID_SORT_FIELDS.includes(v as SortField) ? (v as SortField) : 'price';
@@ -64,27 +67,19 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
   // Mobile filter drawer state
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
+  // Fetch filter options for dynamic ranges and make/model dependency
+  const { data: filterOptions, isLoading: filterOptionsLoading } = useQuery<FilterOptionsResponse>({
+    queryKey: ['filterOptions'],
+    queryFn: () => api.getFilterOptions(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
   const filterHook = useFilters({
     sortBy,
     sortOrder,
     page,
     pageSize,
-    initialFiltersFromParams: {
-      makes: initialParams.current.get('makes')?.split(',').filter(Boolean) || [],
-      models: initialParams.current.get('models')?.split(',').filter(Boolean) || [],
-      priceMin: parseNumberParam(initialParams.current.get('priceMin')),
-      priceMax: parseNumberParam(initialParams.current.get('priceMax')),
-      mileageMin: parseNumberParam(initialParams.current.get('mileageMin')),
-      mileageMax: parseNumberParam(initialParams.current.get('mileageMax')),
-      yearMin: parseNumberParam(initialParams.current.get('yearMin')),
-      yearMax: parseNumberParam(initialParams.current.get('yearMax')),
-      horsepowerMin: parseNumberParam(initialParams.current.get('horsepowerMin')),
-      horsepowerMax: parseNumberParam(initialParams.current.get('horsepowerMax')),
-      transmissionType: initialParams.current.get('transmissionType')?.split(',').filter(Boolean) || [],
-      fuelType: initialParams.current.get('fuelType')?.split(',').filter(Boolean) || [],
-      bodyType: initialParams.current.get('bodyType')?.split(',').filter(Boolean) || [],
-      showSold: initialParams.current.get('showSold') === 'true',
-    },
+    modelsByMake: filterOptions?.modelsByMake,
   });
 
   // Search query with TanStack Query
@@ -106,35 +101,37 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
     }
   }, [filterHook.filters]);
 
-  // Sync state to URL using history.replaceState (no React re-renders)
+  // Sync sorting/search/page to URL via history.replaceState
+  // (Filter state URL sync is handled inside useFilters itself)
   useEffect(() => {
-    const params = new URLSearchParams();
+    const currentParams = new URLSearchParams(window.location.search);
 
-    if (page > 1) params.set('page', String(page));
-    if (sortBy !== 'price') params.set('sortBy', sortBy);
-    if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
-    if (searchQuery) params.set('q', searchQuery);
+    // Update sort/page/search params
+    if (page > 1) {
+      currentParams.set('page', String(page));
+    } else {
+      currentParams.delete('page');
+    }
+    if (sortBy !== 'price') {
+      currentParams.set('sortBy', sortBy);
+    } else {
+      currentParams.delete('sortBy');
+    }
+    if (sortOrder !== 'desc') {
+      currentParams.set('sortOrder', sortOrder);
+    } else {
+      currentParams.delete('sortOrder');
+    }
+    if (searchQuery) {
+      currentParams.set('q', searchQuery);
+    } else {
+      currentParams.delete('q');
+    }
 
-    const { filters } = filterHook;
-    if (filters.makes.length > 0) params.set('makes', filters.makes.join(','));
-    if (filters.models.length > 0) params.set('models', filters.models.join(','));
-    if (filters.priceMin !== undefined) params.set('priceMin', String(filters.priceMin));
-    if (filters.priceMax !== undefined) params.set('priceMax', String(filters.priceMax));
-    if (filters.mileageMin !== undefined) params.set('mileageMin', String(filters.mileageMin));
-    if (filters.mileageMax !== undefined) params.set('mileageMax', String(filters.mileageMax));
-    if (filters.yearMin !== undefined) params.set('yearMin', String(filters.yearMin));
-    if (filters.yearMax !== undefined) params.set('yearMax', String(filters.yearMax));
-    if (filters.horsepowerMin !== undefined) params.set('horsepowerMin', String(filters.horsepowerMin));
-    if (filters.horsepowerMax !== undefined) params.set('horsepowerMax', String(filters.horsepowerMax));
-    if (filters.transmissionType.length > 0) params.set('transmissionType', filters.transmissionType.join(','));
-    if (filters.fuelType.length > 0) params.set('fuelType', filters.fuelType.join(','));
-    if (filters.bodyType.length > 0) params.set('bodyType', filters.bodyType.join(','));
-    if (filters.showSold) params.set('showSold', 'true');
-
-    const search = params.toString();
+    const search = currentParams.toString();
     const newUrl = search ? `${window.location.pathname}?${search}` : window.location.pathname;
     window.history.replaceState(null, '', newUrl);
-  }, [page, sortBy, sortOrder, searchQuery, filterHook.filters]);
+  }, [page, sortBy, sortOrder, searchQuery]);
 
   const setSortBy = useCallback((s: SortField) => {
     setSortByState(s);
@@ -174,6 +171,8 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
         clearSearch,
         mobileFilterOpen,
         setMobileFilterOpen,
+        filterOptions,
+        filterOptionsLoading,
       }}
     >
       {children}

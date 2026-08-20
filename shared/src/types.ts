@@ -16,6 +16,12 @@ import type {
   ExhaustNote,
   MarketplaceStatus,
   SortOrder,
+  DrivetrainType,
+  ConditionType,
+  EngineDetailConfiguration,
+  ForcedInductionDetail,
+  HeritageEra,
+  PerformancePresetId,
 } from './enums';
 
 /** Raw advertisement data as scraped from a marketplace before curation */
@@ -56,6 +62,16 @@ export interface Listing {
   imageUrls: string[];
   sourceUrls: SourceReference[];
   soundProfileId: string | null;
+  drivetrain: DrivetrainType | null;
+  exteriorColor: string | null;
+  doorCount: number | null;
+  seatCount: number | null;
+  condition: ConditionType | null;
+  engineDetailConfig: EngineDetailConfiguration | null;
+  forcedInductionDetail: ForcedInductionDetail | null;
+  zeroToHundredSeconds: number | null;
+  topSpeedKmh: number | null;
+  isSpecialEdition: boolean;
   status: 'active' | 'sold' | 'stale' | 'inactive';
   curationCriteria: CurationCriterion[];
   dateAdded: Date;
@@ -109,6 +125,20 @@ export interface FilterCriteria {
   pageSize?: number;
   /** When true, include sold listings alongside active ones in results */
   showSold?: boolean;
+  // New filter fields
+  drivetrain?: DrivetrainType[];
+  color?: string[];
+  sellerType?: SellerType[];
+  doors?: number[];
+  seats?: number[];
+  condition?: ConditionType[];
+  performancePreset?: PerformancePresetId | null;
+  engineDetailConfiguration?: EngineDetailConfiguration[];
+  forcedInductionDetail?: ForcedInductionDetail[];
+  heritageEra?: HeritageEra[];
+  isSpecialEdition?: boolean;
+  accelerationMax?: number;
+  topSpeedMin?: number;
 }
 
 /** Sound-specific filter criteria */
@@ -208,4 +238,39 @@ export interface MapLocationsResponse {
   locations: MapLocation[];
   totalListings: number;
   generatedAt: string; // ISO timestamp
+}
+
+// ─── Performance Presets ────────────────────────────────────────────────────────
+
+/** A performance preset that expands into a set of filter criteria */
+export interface PerformancePreset {
+  id: PerformancePresetId;
+  label: string;
+  description: string;
+  filters: Partial<FilterCriteria>;
+}
+
+// ─── Filter Options ─────────────────────────────────────────────────────────────
+
+/** Response from the GET /api/filter-options endpoint with dynamic filter values */
+export interface FilterOptionsResponse {
+  ranges: {
+    price: { min: number; max: number };
+    horsepower: { min: number; max: number };
+    engineDisplacement: { min: number; max: number };
+    year: { min: number; max: number };
+    mileage: { min: number; max: number };
+  };
+  drivetrains: DrivetrainType[];
+  colors: string[];
+  sellerTypes: SellerType[];
+  doorCounts: number[];
+  seatCounts: number[];
+  conditions: ConditionType[];
+  engineDetailConfigurations: EngineDetailConfiguration[];
+  forcedInductionDetails: ForcedInductionDetail[];
+  heritageEraDistribution: Record<HeritageEra, number>;
+  specialEditionCount: number;
+  makes: string[];
+  modelsByMake: Record<string, string[]>;
 }

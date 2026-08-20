@@ -81,6 +81,7 @@ export default {
         'glass-elevated': '0 20px 60px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
         glow: '0 0 20px rgba(0, 122, 255, 0.15)',
         'glow-gold': '0 0 20px rgba(212, 168, 83, 0.2)',
+        'glass-glow': '0 0 12px rgba(var(--color-accent-rgb), 0.3)',
       },
       borderRadius: {
         card: '20px',
@@ -92,6 +93,19 @@ export default {
         'gradient-brand': 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
         'gradient-gold': 'linear-gradient(135deg, #d4a853 0%, #f0d48a 50%, #d4a853 100%)',
         'gradient-card': 'linear-gradient(180deg, transparent 0%, rgb(0 0 0 / 0.6) 100%)',
+      },
+      backgroundColor: {
+        'glass-light': 'rgba(255, 255, 255, 0.72)',
+        'glass-dark': 'rgba(30, 30, 30, 0.72)',
+      },
+      borderColor: {
+        'glass-border': 'rgba(255, 255, 255, 0.18)',
+      },
+      minWidth: {
+        touch: '44px',
+      },
+      minHeight: {
+        touch: '44px',
       },
       transitionTimingFunction: {
         spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
