@@ -1,4 +1,4 @@
-import type { FilterCriteria, FilterResult, Listing, ListingSummary, MarketplaceHealth } from '@car-ads/shared';
+import type { FilterCriteria, FilterResult, Listing, ListingSummary, MarketplaceHealth, MapLocationsResponse } from '@car-ads/shared';
 
 // In production, frontend is served from the same origin as the API
 // In dev, Vite proxy handles /api → localhost:4000
@@ -181,5 +181,12 @@ export const api = {
    */
   async getPriceHistory(id: string): Promise<{ history: { price: number; date: string }[] }> {
     return fetchJson<{ history: { price: number; date: string }[] }>(`${API_BASE}/listings/${id}/price-history`);
+  },
+
+  /**
+   * Get map locations with aggregated listing data
+   */
+  async getMapLocations(): Promise<MapLocationsResponse> {
+    return fetchJson<MapLocationsResponse>(`${API_BASE}/map/locations`);
   },
 };

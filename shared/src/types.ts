@@ -179,3 +179,33 @@ export interface ExclusiveModelEntry {
   make: string;
   model: string;
 }
+
+// ─── Map Types ──────────────────────────────────────────────────────────────────
+
+/** A location on the dealer map with aggregated listing data */
+export interface MapLocation {
+  city: string;
+  latitude: number;
+  longitude: number;
+  totalCount: number;
+  dealerCount: number;
+  privateCount: number;
+  previews: MapListingPreview[];
+}
+
+/** Preview of a listing shown in map marker popups */
+export interface MapListingPreview {
+  id: string;
+  title: string;
+  price: number;
+  primaryImageUrl: string | null;
+  make: string;
+  model: string;
+}
+
+/** API Response for the map locations endpoint */
+export interface MapLocationsResponse {
+  locations: MapLocation[];
+  totalListings: number;
+  generatedAt: string; // ISO timestamp
+}

@@ -1,0 +1,29 @@
+/**
+ * Custom map styles — overrides for Leaflet MarkerCluster defaults.
+ *
+ * Our MarkerClusterGroup uses a custom iconCreateFunction that renders
+ * gold cluster icons via inline styles on a DivIcon. The default
+ * MarkerCluster.Default.css would apply unwanted background/border styles
+ * to .marker-cluster-* classes that conflict with our custom output.
+ *
+ * We only import the base MarkerCluster.css for positioning/sizing, then
+ * neutralize the few default cluster styles that leak through.
+ */
+
+/* Reset default marker-cluster background/border that conflicts with custom icons */
+.marker-cluster-custom {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Ensure our custom location markers have no default leaflet icon backgrounds */
+.location-marker-custom {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Leaflet default icon class resets — prevent the default blue marker pin */
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+}

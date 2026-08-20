@@ -15,6 +15,7 @@ import { contactRouter } from './contact.js';
 import { featuredRouter } from './featured.js';
 import { notificationsRouter } from './notifications.js';
 import { premiumSignupRouter } from './premium-signup.js';
+import { mapRouter } from './map.js';
 import { cacheMiddleware } from './middleware/cache.js';
 import { env } from '../config/env.js';
 
@@ -55,6 +56,7 @@ export function createApp(): express.Application {
   app.use('/api/admin/featured', featuredRouter);
   app.use('/api/notifications', notificationsRouter);
   app.use('/api/premium-signup', premiumSignupRouter);
+  app.use('/api/map', mapRouter);
 
   return app;
 }

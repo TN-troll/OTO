@@ -1,12 +1,13 @@
 import { Routes, Route } from 'react-router-dom';
-import { Component, type ReactNode } from 'react';
+import { Component, lazy, Suspense, type ReactNode } from 'react';
 import { BrowsePage } from './pages/BrowsePage';
 import { ListingDetailPage } from './pages/ListingDetailPage';
 import { ComparePage } from './pages/ComparePage';
-import { MapPage } from './pages/MapPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { PremiumPage } from './pages/PremiumPage';
 import { NotificationsPage } from './pages/NotificationsPage';
+
+const MapPage = lazy(() => import('./pages/MapPage'));
 import { FilterPanel } from './components/FilterPanel';
 import { MarketplaceHealthBanner } from './components/MarketplaceHealthBanner';
 import { NotificationPromptBanner } from './components/NotificationPreferences';
@@ -239,7 +240,9 @@ export function App() {
               <Header />
               <div className="flex flex-1">
                 <main className="flex-1 overflow-auto">
-                  <MapPage />
+                  <Suspense fallback={<div className="flex items-center justify-center min-h-[400px]"><p className="text-surface-500 dark:text-surface-400">Loading map...</p></div>}>
+                    <MapPage />
+                  </Suspense>
                 </main>
               </div>
               <Footer />
