@@ -234,12 +234,16 @@ export function BrowseLayout() {
         >
           <MapErrorBoundary>
             <Suspense fallback={<MapLoadingSkeleton />}>
-              <main className="flex-1 overflow-auto">
-                <MapPage />
-                <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
-                  <RecentlyViewedStrip />
-                </div>
-              </main>
+              <div className="flex flex-1">
+                <FilterSidebar />
+                <MobileFilterOverlay />
+                <main className="flex-1 overflow-auto">
+                  <MapPage />
+                  <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
+                    <RecentlyViewedStrip />
+                  </div>
+                </main>
+              </div>
             </Suspense>
           </MapErrorBoundary>
         </div>
