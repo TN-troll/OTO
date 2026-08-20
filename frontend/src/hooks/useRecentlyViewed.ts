@@ -12,7 +12,11 @@ export function useRecentlyViewed() {
   const addViewed = useCallback((id: string) => {
     setRecentIds(prev => {
       const next = [id, ...prev.filter(rid => rid !== id)].slice(0, MAX_RECENT);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      } catch {
+        // Graceful degradation: localStorage unavailable or quota exceeded
+      }
       return next;
     });
   }, []);

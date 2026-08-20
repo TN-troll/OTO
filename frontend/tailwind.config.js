@@ -100,6 +100,7 @@ export default {
       },
       animation: {
         'fade-in': 'fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        'fade-in-up': 'fadeInUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
         'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
         'scale-in': 'scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         spring: 'spring 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -110,6 +111,10 @@ export default {
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
+        },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         slideUp: {
           '0%': { opacity: '0', transform: 'translateY(10px)' },

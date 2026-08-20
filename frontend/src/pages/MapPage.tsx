@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
 import { api } from '../api/client';
 import { InteractiveMap } from '../components/map/InteractiveMap';
 import { MarkerClusterGroup } from '../components/map/MarkerClusterGroup';
@@ -47,7 +46,6 @@ function useIsMobile(): boolean {
  * - Renders InteractiveMap with MarkerClusterGroup containing LocationMarker instances
  * - Shows LocationPopup (desktop) or MobileBottomSheet (mobile) on marker click
  * - Loading, error, and empty states
- * - "Back to listings" navigation link
  *
  * Requirements: 1.1, 3.1, 4.1, 7.2
  */
@@ -123,28 +121,12 @@ export default function MapPage() {
         <p className="text-sm text-surface-500 dark:text-surface-400">
           No dealer locations available at this time.
         </p>
-        <Link
-          to="/"
-          className="text-sm font-medium text-brand-accent hover:underline"
-        >
-          ← Back to listings
-        </Link>
       </div>
     );
   }
 
   return (
     <div className="relative flex flex-col">
-      {/* Navigation header */}
-      <div className="absolute left-4 top-4 z-[1000]">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-1 rounded-lg bg-white/90 px-3 py-1.5 text-sm font-medium text-surface-700 shadow-md backdrop-blur-sm transition-colors hover:bg-white dark:bg-surface-800/90 dark:text-surface-200 dark:hover:bg-surface-800"
-        >
-          ← Back to listings
-        </Link>
-      </div>
-
       {/* Interactive map with markers */}
       <InteractiveMap locations={locations}>
         <MarkerClusterGroup>

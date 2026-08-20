@@ -1,20 +1,14 @@
-import { Routes, Route } from 'react-router-dom';
-import { Component, lazy, Suspense, type ReactNode } from 'react';
-import { BrowsePage } from './pages/BrowsePage';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Component, type ReactNode } from 'react';
 import { ListingDetailPage } from './pages/ListingDetailPage';
 import { ComparePage } from './pages/ComparePage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { PremiumPage } from './pages/PremiumPage';
 import { NotificationsPage } from './pages/NotificationsPage';
-
-const MapPage = lazy(() => import('./pages/MapPage'));
-import { FilterPanel } from './components/FilterPanel';
+import { BrowseLayout } from './components/BrowseLayout';
 import { MarketplaceHealthBanner } from './components/MarketplaceHealthBanner';
-import { NotificationPromptBanner } from './components/NotificationPreferences';
 import { Header } from './components/Header';
-import { FilterProvider, useFilterContext } from './hooks/FilterContext';
 import { useLanguage } from './i18n';
-import { useEffect } from 'react';
 
 /** Error boundary to prevent full-page crashes */
 class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; error: Error | null }> {
@@ -81,83 +75,6 @@ function OtoLogo({ className = '' }: { className?: string }) {
   );
 }
 
-function FilterSidebar() {
-  return (
-    <aside className="hidden w-80 shrink-0 overflow-y-auto border-r border-surface-200 bg-white p-6 lg:block dark:bg-surface-800 dark:border-surface-700">
-      <FilterPanel />
-    </aside>
-  );
-}
-
-/** Mobile slide-over drawer containing the FilterPanel */
-function MobileFilterDrawer() {
-  const { t } = useLanguage();
-  const { mobileFilterOpen, setMobileFilterOpen } = useFilterContext();
-
-  // Lock body scroll when open
-  useEffect(() => {
-    if (mobileFilterOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [mobileFilterOpen]);
-
-  // Close on Escape
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape' && mobileFilterOpen) {
-        setMobileFilterOpen(false);
-      }
-    }
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [mobileFilterOpen, setMobileFilterOpen]);
-
-  return (
-    <>
-      {/* Backdrop */}
-      <div
-        className={`fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
-          mobileFilterOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
-        }`}
-        onClick={() => setMobileFilterOpen(false)}
-        aria-hidden="true"
-      />
-
-      {/* Drawer */}
-      <div
-        className={`fixed inset-y-0 left-0 z-[70] w-80 max-w-[85vw] transform overflow-y-auto bg-white p-6 shadow-2xl transition-transform duration-300 ease-in-out lg:hidden dark:bg-surface-900/95 dark:border-r dark:border-white/[0.08] ${
-          mobileFilterOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-        role="dialog"
-        aria-modal="true"
-        aria-label={t.filters}
-      >
-        {/* Close button */}
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-base font-bold text-surface-900 dark:text-white">{t.filters}</h2>
-          <button
-            type="button"
-            onClick={() => setMobileFilterOpen(false)}
-            className="rounded-lg p-2 text-surface-500 transition-colors hover:bg-surface-100 hover:text-surface-900 dark:text-surface-400 dark:hover:bg-surface-700 dark:hover:text-white"
-            aria-label="Close filters"
-          >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        <FilterPanel />
-      </div>
-    </>
-  );
-}
-
 function Footer() {
   const { t } = useLanguage();
 
@@ -184,25 +101,8 @@ export function App() {
     <div className="glass-mesh-bg flex min-h-screen flex-col transition-colors duration-300">
       <MarketplaceHealthBanner />
       <Routes>
-        <Route
-          path="/"
-          element={
-            <FilterProvider>
-              <Header />
-              <NotificationPromptBanner />
-              <div className="flex flex-1">
-                <FilterSidebar />
-                <MobileFilterDrawer />
-                <main className="flex-1 overflow-auto">
-                  <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-                    <BrowsePage />
-                  </div>
-                </main>
-              </div>
-              <Footer />
-            </FilterProvider>
-          }
-        />
+        <Route path="/" element={<BrowseLayout />} />
+        <Route path="/map" element={<Navigate to="/" replace />} />
         <Route
           path="/listing/:id"
           element={
@@ -227,22 +127,6 @@ export function App() {
               <div className="flex flex-1">
                 <main className="flex-1 overflow-auto">
                   <ComparePage />
-                </main>
-              </div>
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/map"
-          element={
-            <>
-              <Header />
-              <div className="flex flex-1">
-                <main className="flex-1 overflow-auto">
-                  <Suspense fallback={<div className="flex items-center justify-center min-h-[400px]"><p className="text-surface-500 dark:text-surface-400">Loading map...</p></div>}>
-                    <MapPage />
-                  </Suspense>
                 </main>
               </div>
               <Footer />
