@@ -74,7 +74,7 @@ export function MakeModelSelector({
   });
 
   // Fetch models for the selected make(s)
-  const { data: modelsForMake } = useQuery({
+  const { data: modelsForMake, isLoading: modelsLoading } = useQuery({
     queryKey: ['modelsForMake', selectedMakes],
     queryFn: () => api.getModelsForMake(selectedMakes),
     enabled: selectedMakes.length > 0,
@@ -346,6 +346,13 @@ export function MakeModelSelector({
             Model
           </label>
 
+          {/* Loading skeleton while models load for new make selection */}
+          {modelsLoading && selectedModels.length === 0 && (
+            <div className="mb-2 space-y-1.5" aria-label="Loading models">
+              <div className="h-[44px] animate-pulse rounded-lg bg-surface-100 dark:bg-surface-700" />
+            </div>
+          )}
+
           {/* Selected model tags */}
           {selectedModels.length > 0 && (
             <div className="mb-2 flex flex-wrap gap-1.5">
@@ -400,8 +407,15 @@ export function MakeModelSelector({
               aria-labelledby="model-label"
               className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-lg border border-surface-200 bg-white shadow-lg dark:border-surface-600 dark:bg-surface-800"
             >
-              {availableModels.length === 0 ? (
-                <div className="px-3 py-2 text-xs text-surface-400">Loading models...</div>
+              {modelsLoading ? (
+                <div className="space-y-1 p-2" aria-label="Loading models">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-9 animate-pulse rounded-md bg-surface-100 dark:bg-surface-700"
+                    />
+                  ))}
+                </div>
               ) : filteredModels.length === 0 ? (
                 <div className="px-3 py-2 text-xs text-surface-400">No models found</div>
               ) : (

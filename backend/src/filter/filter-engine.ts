@@ -17,8 +17,35 @@ import {
   PRICE_MIN,
   PRICE_MAX,
   DEFAULT_PAGE_SIZE,
+  PERFORMANCE_PRESETS,
 } from '@car-ads/shared';
-import type { SortField, SortOrder } from '@car-ads/shared';
+import type {
+  SortField,
+  SortOrder,
+  DrivetrainType,
+  ConditionType,
+  EngineDetailConfiguration,
+  ForcedInductionDetail,
+  HeritageEra,
+  PerformancePresetId,
+  SellerType,
+} from '@car-ads/shared';
+
+// ─── Valid value sets for runtime validation ────────────────────────────────────
+
+const VALID_DRIVETRAIN_VALUES: DrivetrainType[] = ['rwd', 'fwd', 'awd'];
+const VALID_CONDITION_VALUES: ConditionType[] = ['new', 'used', 'classic'];
+const VALID_ENGINE_DETAIL_CONFIGURATION_VALUES: EngineDetailConfiguration[] = [
+  'inline-4', 'inline-6', 'v6', 'v8', 'v10', 'v12', 'flat-4', 'flat-6', 'w12', 'rotary',
+];
+const VALID_FORCED_INDUCTION_DETAIL_VALUES: ForcedInductionDetail[] = [
+  'naturally_aspirated', 'turbocharged', 'supercharged', 'twin_turbo',
+];
+const VALID_HERITAGE_ERA_VALUES: HeritageEra[] = ['classic', 'modern_classic', 'contemporary'];
+const VALID_SELLER_TYPE_VALUES: SellerType[] = ['dealer', 'private'];
+const VALID_PERFORMANCE_PRESET_IDS: PerformancePresetId[] = [
+  'v8_grand_tourers', 'track_weapons', 'daily_luxury', 'classic_collectibles',
+];
 import { query } from '../db/connection.js';
 import { getRedisClient } from '../cache/redis.js';
 
@@ -100,6 +127,17 @@ export class FilterEngine {
       });
     }
 
+    if (
+      criteria.mileageMin !== undefined &&
+      criteria.mileageMax !== undefined &&
+      criteria.mileageMin > criteria.mileageMax
+    ) {
+      errors.push({
+        field: 'mileage',
+        message: 'Minimum mileage must not exceed maximum',
+      });
+    }
+
     // Validate field bounds
     if (criteria.engineDisplacementMin !== undefined && criteria.engineDisplacementMin < DISPLACEMENT_MIN) {
       errors.push({
@@ -153,6 +191,152 @@ export class FilterEngine {
       });
     }
 
+    // ─── New filter field validation ──────────────────────────────────────────
+
+    // Drivetrain: each value must be a valid DrivetrainType
+    if (criteria.drivetrain?.length) {
+      for (const value of criteria.drivetrain) {
+        if (!VALID_DRIVETRAIN_VALUES.includes(value as DrivetrainType)) {
+          errors.push({
+            field: 'drivetrain',
+            message: `Invalid drivetrain value: '${value}'. Must be one of: ${VALID_DRIVETRAIN_VALUES.join(', ')}`,
+          });
+          break;
+        }
+      }
+    }
+
+    // Condition: each value must be a valid ConditionType
+    if (criteria.condition?.length) {
+      for (const value of criteria.condition) {
+        if (!VALID_CONDITION_VALUES.includes(value as ConditionType)) {
+          errors.push({
+            field: 'condition',
+            message: `Invalid condition value: '${value}'. Must be one of: ${VALID_CONDITION_VALUES.join(', ')}`,
+          });
+          break;
+        }
+      }
+    }
+
+    // Engine detail configuration: each value must be valid
+    if (criteria.engineDetailConfiguration?.length) {
+      for (const value of criteria.engineDetailConfiguration) {
+        if (!VALID_ENGINE_DETAIL_CONFIGURATION_VALUES.includes(value as EngineDetailConfiguration)) {
+          errors.push({
+            field: 'engineDetailConfiguration',
+            message: `Invalid engine detail configuration value: '${value}'. Must be one of: ${VALID_ENGINE_DETAIL_CONFIGURATION_VALUES.join(', ')}`,
+          });
+          break;
+        }
+      }
+    }
+
+    // Forced induction detail: each value must be valid
+    if (criteria.forcedInductionDetail?.length) {
+      for (const value of criteria.forcedInductionDetail) {
+        if (!VALID_FORCED_INDUCTION_DETAIL_VALUES.includes(value as ForcedInductionDetail)) {
+          errors.push({
+            field: 'forcedInductionDetail',
+            message: `Invalid forced induction detail value: '${value}'. Must be one of: ${VALID_FORCED_INDUCTION_DETAIL_VALUES.join(', ')}`,
+          });
+          break;
+        }
+      }
+    }
+
+    // Heritage era: each value must be valid
+    if (criteria.heritageEra?.length) {
+      for (const value of criteria.heritageEra) {
+        if (!VALID_HERITAGE_ERA_VALUES.includes(value as HeritageEra)) {
+          errors.push({
+            field: 'heritageEra',
+            message: `Invalid heritage era value: '${value}'. Must be one of: ${VALID_HERITAGE_ERA_VALUES.join(', ')}`,
+          });
+          break;
+        }
+      }
+    }
+
+    // Seller type: each value must be valid
+    if (criteria.sellerType?.length) {
+      for (const value of criteria.sellerType) {
+        if (!VALID_SELLER_TYPE_VALUES.includes(value as SellerType)) {
+          errors.push({
+            field: 'sellerType',
+            message: `Invalid seller type value: '${value}'. Must be one of: ${VALID_SELLER_TYPE_VALUES.join(', ')}`,
+          });
+          break;
+        }
+      }
+    }
+
+    // Doors: each value must be a positive integer
+    if (criteria.doors?.length) {
+      for (const value of criteria.doors) {
+        if (!Number.isInteger(value) || value <= 0) {
+          errors.push({
+            field: 'doors',
+            message: `Invalid doors value: '${value}'. Must be a positive integer`,
+          });
+          break;
+        }
+      }
+    }
+
+    // Seats: each value must be a positive integer
+    if (criteria.seats?.length) {
+      for (const value of criteria.seats) {
+        if (!Number.isInteger(value) || value <= 0) {
+          errors.push({
+            field: 'seats',
+            message: `Invalid seats value: '${value}'. Must be a positive integer`,
+          });
+          break;
+        }
+      }
+    }
+
+    // Acceleration max: must be a positive number
+    if (criteria.accelerationMax !== undefined) {
+      if (typeof criteria.accelerationMax !== 'number' || criteria.accelerationMax <= 0) {
+        errors.push({
+          field: 'accelerationMax',
+          message: 'Acceleration max must be a positive number',
+        });
+      }
+    }
+
+    // Top speed min: must be a positive number
+    if (criteria.topSpeedMin !== undefined) {
+      if (typeof criteria.topSpeedMin !== 'number' || criteria.topSpeedMin <= 0) {
+        errors.push({
+          field: 'topSpeedMin',
+          message: 'Top speed min must be a positive number',
+        });
+      }
+    }
+
+    // isSpecialEdition: must be a boolean when present
+    if (criteria.isSpecialEdition !== undefined) {
+      if (typeof criteria.isSpecialEdition !== 'boolean') {
+        errors.push({
+          field: 'isSpecialEdition',
+          message: 'isSpecialEdition must be a boolean',
+        });
+      }
+    }
+
+    // Performance preset: must be a valid preset ID when present
+    if (criteria.performancePreset !== undefined && criteria.performancePreset !== null) {
+      if (!VALID_PERFORMANCE_PRESET_IDS.includes(criteria.performancePreset as PerformancePresetId)) {
+        errors.push({
+          field: 'performancePreset',
+          message: `Invalid performance preset: '${criteria.performancePreset}'. Must be one of: ${VALID_PERFORMANCE_PRESET_IDS.join(', ')}`,
+        });
+      }
+    }
+
     return {
       valid: errors.length === 0,
       errors,
@@ -164,27 +348,30 @@ export class FilterEngine {
    * Results are cached in Redis with a 5-minute TTL.
    */
   async query(criteria: FilterCriteria): Promise<FilterResult> {
-    const validation = this.validateCriteria(criteria);
+    // Expand performance preset into compound filter values before validation
+    const expandedCriteria = this.expandPerformancePreset(criteria);
+
+    const validation = this.validateCriteria(expandedCriteria);
     if (!validation.valid) {
       throw new Error(`Invalid filter criteria: ${validation.errors.map((e) => e.message).join(', ')}`);
     }
 
     // Check cache first
-    const cacheKey = this.buildCacheKey(criteria);
+    const cacheKey = this.buildCacheKey(expandedCriteria);
     const cached = await this.getFromCache(cacheKey);
     if (cached) {
       return cached;
     }
 
-    const page = criteria.page ?? 1;
-    const pageSize = criteria.pageSize ?? DEFAULT_PAGE_SIZE;
-    const sortBy = criteria.sortBy ?? 'dateAdded';
-    const sortOrder = criteria.sortOrder ?? 'desc';
+    const page = expandedCriteria.page ?? 1;
+    const pageSize = expandedCriteria.pageSize ?? DEFAULT_PAGE_SIZE;
+    const sortBy = expandedCriteria.sortBy ?? 'dateAdded';
+    const sortOrder = expandedCriteria.sortOrder ?? 'desc';
 
-    const { whereClause, params } = this.buildWhereClause(criteria);
+    const { whereClause, params } = this.buildWhereClause(expandedCriteria);
 
     // Get total count
-    const countSql = `SELECT COUNT(*) as count FROM listings l${this.needsSoundJoin(criteria) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause}`;
+    const countSql = `SELECT COUNT(*) as count FROM listings l${this.needsSoundJoin(expandedCriteria) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause}`;
     const countResult = await query<{ count: string }>(countSql, params);
     const totalCount = parseInt(countResult.rows[0]?.count ?? '0', 10);
 
@@ -193,7 +380,7 @@ export class FilterEngine {
     const sortColumn = SORT_COLUMN_MAP[sortBy];
     const orderDirection = sortOrder.toUpperCase();
 
-    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.date_added, l.status, l.is_featured FROM listings l${this.needsSoundJoin(criteria) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.date_added, l.status, l.is_featured FROM listings l${this.needsSoundJoin(expandedCriteria) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
 
     const dataResult = await query<{
       id: string;
@@ -249,19 +436,22 @@ export class FilterEngine {
   async queryCursor(params: CursorPaginationParams): Promise<CursorPaginatedResponse<ListingSummary>> {
     const { cursor, limit, filters, sort } = params;
 
-    const validation = this.validateCriteria(filters);
+    // Expand performance preset into compound filter values before validation
+    const expandedFilters = this.expandPerformancePreset(filters);
+
+    const validation = this.validateCriteria(expandedFilters);
     if (!validation.valid) {
       throw new Error(`Invalid filter criteria: ${validation.errors.map((e) => e.message).join(', ')}`);
     }
 
     const offset = cursor ? this.decodeCursor(cursor) : 0;
-    const sortBy = sort?.sortBy ?? sort?.field ?? filters.sortBy ?? 'dateAdded';
-    const sortOrder = sort?.sortOrder ?? sort?.order ?? filters.sortOrder ?? 'desc';
+    const sortBy = sort?.sortBy ?? sort?.field ?? expandedFilters.sortBy ?? 'dateAdded';
+    const sortOrder = sort?.sortOrder ?? sort?.order ?? expandedFilters.sortOrder ?? 'desc';
 
-    const { whereClause, params: queryParams } = this.buildWhereClause(filters);
+    const { whereClause, params: queryParams } = this.buildWhereClause(expandedFilters);
 
     // Get total count
-    const countSql = `SELECT COUNT(*) as count FROM listings l${this.needsSoundJoin(filters) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause}`;
+    const countSql = `SELECT COUNT(*) as count FROM listings l${this.needsSoundJoin(expandedFilters) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause}`;
     const countResult = await query<{ count: string }>(countSql, queryParams);
     const totalCount = parseInt(countResult.rows[0]?.count ?? '0', 10);
 
@@ -270,7 +460,7 @@ export class FilterEngine {
     const orderDirection = sortOrder.toUpperCase();
     const fetchCount = limit + 1;
 
-    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.date_added, l.status, l.is_featured FROM listings l${this.needsSoundJoin(filters) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
+    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.date_added, l.status, l.is_featured FROM listings l${this.needsSoundJoin(expandedFilters) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
 
     const dataResult = await query<{
       id: string;
@@ -336,6 +526,55 @@ export class FilterEngine {
     } catch {
       throw new Error('Invalid cursor: unable to decode');
     }
+  }
+
+  /**
+   * Expand a performance preset into compound filter values.
+   * Preset filters act as defaults — explicit user values take precedence.
+   * Returns a new criteria object without the performancePreset field.
+   */
+  expandPerformancePreset(criteria: FilterCriteria): FilterCriteria {
+    if (!criteria.performancePreset) {
+      return criteria;
+    }
+
+    const preset = PERFORMANCE_PRESETS.find((p) => p.id === criteria.performancePreset);
+    if (!preset) {
+      // Unknown preset — strip the field and continue with criteria as-is
+      const { performancePreset: _, ...rest } = criteria;
+      return rest;
+    }
+
+    // Merge: preset filters act as defaults, explicit user values take precedence
+    const { performancePreset: _, ...userCriteria } = criteria;
+    const merged: FilterCriteria = { ...preset.filters, ...userCriteria };
+
+    // For array fields, use user values if provided (non-empty), otherwise preset values
+    const arrayFields = [
+      'makes', 'models', 'transmissionType', 'fuelType', 'bodyType',
+      'drivetrain', 'color', 'sellerType', 'doors', 'seats', 'condition',
+      'engineDetailConfiguration', 'forcedInductionDetail', 'heritageEra',
+    ] as const;
+
+    for (const field of arrayFields) {
+      const userValue = userCriteria[field] as unknown[] | undefined;
+      const presetValue = preset.filters[field] as unknown[] | undefined;
+      if (userValue?.length) {
+        (merged as Record<string, unknown>)[field] = userValue;
+      } else if (presetValue?.length) {
+        (merged as Record<string, unknown>)[field] = presetValue;
+      }
+    }
+
+    // For soundProfile, merge nested object: user values override preset sub-fields
+    if (preset.filters.soundProfile || userCriteria.soundProfile) {
+      merged.soundProfile = {
+        ...preset.filters.soundProfile,
+        ...userCriteria.soundProfile,
+      };
+    }
+
+    return merged;
   }
 
   private needsSoundJoin(criteria: FilterCriteria): boolean {
@@ -465,10 +704,86 @@ export class FilterEngine {
       }
     }
 
+    // New premium filter fields
+    this.buildNewFieldClauses(criteria, conditions, params);
+
     return {
       whereClause: conditions.join(' AND '),
       params,
     };
+  }
+
+  /**
+   * Build WHERE clause conditions for the new premium filter fields:
+   * drivetrain, color, sellerType, doors, seats, condition,
+   * engineDetailConfiguration, forcedInductionDetail, heritageEra,
+   * isSpecialEdition, accelerationMax, topSpeedMin.
+   */
+  private buildNewFieldClauses(criteria: FilterCriteria, conditions: string[], params: unknown[]): void {
+    // Drivetrain
+    if (criteria.drivetrain?.length) {
+      params.push(criteria.drivetrain);
+      conditions.push(`l.drivetrain = ANY($${params.length})`);
+    }
+    // Color
+    if (criteria.color?.length) {
+      params.push(criteria.color);
+      conditions.push(`l.exterior_color = ANY($${params.length})`);
+    }
+    // Seller type
+    if (criteria.sellerType?.length) {
+      params.push(criteria.sellerType);
+      conditions.push(`l.seller_type = ANY($${params.length})`);
+    }
+    // Doors
+    if (criteria.doors?.length) {
+      params.push(criteria.doors);
+      conditions.push(`l.door_count = ANY($${params.length})`);
+    }
+    // Seats
+    if (criteria.seats?.length) {
+      params.push(criteria.seats);
+      conditions.push(`l.seat_count = ANY($${params.length})`);
+    }
+    // Condition
+    if (criteria.condition?.length) {
+      params.push(criteria.condition);
+      conditions.push(`l.condition = ANY($${params.length})`);
+    }
+    // Engine detail configuration
+    if (criteria.engineDetailConfiguration?.length) {
+      params.push(criteria.engineDetailConfiguration);
+      conditions.push(`l.engine_detail_config = ANY($${params.length})`);
+    }
+    // Forced induction detail
+    if (criteria.forcedInductionDetail?.length) {
+      params.push(criteria.forcedInductionDetail);
+      conditions.push(`l.forced_induction_detail = ANY($${params.length})`);
+    }
+    // Heritage era → year-based filtering
+    if (criteria.heritageEra?.length) {
+      const eraConditions = criteria.heritageEra.map((era) => {
+        switch (era) {
+          case 'classic': return 'l.year < 1990';
+          case 'modern_classic': return '(l.year >= 1990 AND l.year <= 2010)';
+          case 'contemporary': return 'l.year > 2010';
+        }
+      });
+      conditions.push(`(${eraConditions.join(' OR ')})`);
+    }
+    // Special edition
+    if (criteria.isSpecialEdition === true) {
+      conditions.push(`l.is_special_edition = TRUE`);
+    }
+    // Performance figures with NULL exclusion
+    if (criteria.accelerationMax !== undefined) {
+      params.push(criteria.accelerationMax);
+      conditions.push(`l.zero_to_hundred_seconds IS NOT NULL AND l.zero_to_hundred_seconds <= $${params.length}`);
+    }
+    if (criteria.topSpeedMin !== undefined) {
+      params.push(criteria.topSpeedMin);
+      conditions.push(`l.top_speed_kmh IS NOT NULL AND l.top_speed_kmh >= $${params.length}`);
+    }
   }
 
   private buildCacheKey(criteria: FilterCriteria): string {

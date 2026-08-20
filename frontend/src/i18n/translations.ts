@@ -115,6 +115,92 @@ export interface Translations {
   recentlyViewed: string;
   loadingMap: string;
   mapLoadError: string;
+
+  // Filter sections
+  filterSectionPresets: string;
+  filterSectionDrivetrain: string;
+  filterSectionColor: string;
+  filterSectionSellerType: string;
+  filterSectionDoors: string;
+  filterSectionSeats: string;
+  filterSectionCondition: string;
+  filterSectionEnginePerformance: string;
+  filterSectionHeritageEdition: string;
+
+  // Drivetrain values
+  drivetrainRwd: string;
+  drivetrainFwd: string;
+  drivetrainAwd: string;
+
+  // Condition values
+  conditionNew: string;
+  conditionUsed: string;
+  conditionClassic: string;
+
+  // Engine detail configurations
+  engineConfigInline4: string;
+  engineConfigInline6: string;
+  engineConfigV6: string;
+  engineConfigV8: string;
+  engineConfigV10: string;
+  engineConfigV12: string;
+  engineConfigFlat4: string;
+  engineConfigFlat6: string;
+  engineConfigW12: string;
+  engineConfigRotary: string;
+
+  // Forced induction details
+  forcedInductionNaturallyAspirated: string;
+  forcedInductionTurbocharged: string;
+  forcedInductionSupercharged: string;
+  forcedInductionTwinTurbo: string;
+
+  // Heritage eras
+  heritageEraClassic: string;
+  heritageEraModernClassic: string;
+  heritageEraContemporary: string;
+
+  // Performance presets
+  presetV8GrandTourers: string;
+  presetV8GrandTourersDesc: string;
+  presetTrackWeapons: string;
+  presetTrackWeaponsDesc: string;
+  presetDailyLuxury: string;
+  presetDailyLuxuryDesc: string;
+  presetClassicCollectibles: string;
+  presetClassicCollectiblesDesc: string;
+
+  // Seller types (filter context)
+  sellerTypeDealer: string;
+  sellerTypePrivate: string;
+
+  // Special edition
+  specialEdition: string;
+  specialEditionHint: string;
+
+  // Performance figures
+  accelerationMax: string;
+  topSpeedMin: string;
+
+  // Filter actions
+  clearSection: string;
+  showResults: string;
+
+  // Filter chip formats
+  chipPriceRange: string;
+  chipYearRange: string;
+  chipHorsepowerRange: string;
+  chipMileageRange: string;
+  chipDisplacementRange: string;
+  chipAccelerationMax: string;
+  chipTopSpeedMin: string;
+
+  // Filter placeholders
+  placeholderMin: string;
+  placeholderMax: string;
+
+  // Filter validation
+  validationMinExceedsMax: string;
 }
 
 export const translations: Record<Locale, Translations> = {
@@ -214,6 +300,92 @@ export const translations: Record<Locale, Translations> = {
     recentlyViewed: 'Recently Viewed',
     loadingMap: 'Loading map...',
     mapLoadError: 'Could not load map',
+
+    // Filter sections
+    filterSectionPresets: 'Quick Presets',
+    filterSectionDrivetrain: 'Drivetrain',
+    filterSectionColor: 'Color',
+    filterSectionSellerType: 'Seller Type',
+    filterSectionDoors: 'Doors',
+    filterSectionSeats: 'Seats',
+    filterSectionCondition: 'Condition',
+    filterSectionEnginePerformance: 'Engine & Performance',
+    filterSectionHeritageEdition: 'Heritage & Edition',
+
+    // Drivetrain values
+    drivetrainRwd: 'RWD',
+    drivetrainFwd: 'FWD',
+    drivetrainAwd: 'AWD',
+
+    // Condition values
+    conditionNew: 'New',
+    conditionUsed: 'Used',
+    conditionClassic: 'Classic',
+
+    // Engine detail configurations
+    engineConfigInline4: 'Inline-4',
+    engineConfigInline6: 'Inline-6',
+    engineConfigV6: 'V6',
+    engineConfigV8: 'V8',
+    engineConfigV10: 'V10',
+    engineConfigV12: 'V12',
+    engineConfigFlat4: 'Flat-4',
+    engineConfigFlat6: 'Flat-6',
+    engineConfigW12: 'W12',
+    engineConfigRotary: 'Rotary',
+
+    // Forced induction details
+    forcedInductionNaturallyAspirated: 'Naturally Aspirated',
+    forcedInductionTurbocharged: 'Turbocharged',
+    forcedInductionSupercharged: 'Supercharged',
+    forcedInductionTwinTurbo: 'Twin-Turbo',
+
+    // Heritage eras
+    heritageEraClassic: 'Classic (pre-1990)',
+    heritageEraModernClassic: 'Modern Classic (1990–2010)',
+    heritageEraContemporary: 'Contemporary (2010+)',
+
+    // Performance presets
+    presetV8GrandTourers: 'V8+ Grand Tourers',
+    presetV8GrandTourersDesc: 'Grand touring cars with V8 or larger engines',
+    presetTrackWeapons: 'Track Weapons',
+    presetTrackWeaponsDesc: 'High-performance track-focused machines',
+    presetDailyLuxury: 'Daily Luxury',
+    presetDailyLuxuryDesc: 'Premium daily drivers from top brands',
+    presetClassicCollectibles: 'Classic Collectibles',
+    presetClassicCollectiblesDesc: 'Collectible classics and special editions',
+
+    // Seller types (filter context)
+    sellerTypeDealer: 'Dealer',
+    sellerTypePrivate: 'Private',
+
+    // Special edition
+    specialEdition: 'Special Edition',
+    specialEditionHint: 'e.g. GT3 RS, CSL, SVJ, Speciale, F40, Evo',
+
+    // Performance figures
+    accelerationMax: '0–100 km/h (max)',
+    topSpeedMin: 'Top Speed (min)',
+
+    // Filter actions
+    clearSection: 'Clear',
+    showResults: 'Show results',
+
+    // Filter chip formats
+    chipPriceRange: '€{min}–€{max}',
+    chipYearRange: '{min}–{max}',
+    chipHorsepowerRange: '{min}–{max} HP',
+    chipMileageRange: '{min}–{max} km',
+    chipDisplacementRange: '{min}–{max} cc',
+    chipAccelerationMax: '≤ {value}s 0–100',
+    chipTopSpeedMin: '≥ {value} km/h',
+
+    // Filter placeholders
+    placeholderMin: 'Min',
+    placeholderMax: 'Max',
+
+    // Filter validation
+    validationMinExceedsMax: 'Minimum value cannot exceed maximum',
   },
   nl: {
     brandName: 'OTO',
@@ -311,5 +483,91 @@ export const translations: Record<Locale, Translations> = {
     recentlyViewed: 'Laatst bekeken',
     loadingMap: 'Kaart laden...',
     mapLoadError: 'Kaart kon niet worden geladen',
+
+    // Filter sections
+    filterSectionPresets: 'Snelkeuze',
+    filterSectionDrivetrain: 'Aandrijving',
+    filterSectionColor: 'Kleur',
+    filterSectionSellerType: 'Verkoper',
+    filterSectionDoors: 'Deuren',
+    filterSectionSeats: 'Zitplaatsen',
+    filterSectionCondition: 'Staat',
+    filterSectionEnginePerformance: 'Motor & Prestaties',
+    filterSectionHeritageEdition: 'Erfgoed & Editie',
+
+    // Drivetrain values
+    drivetrainRwd: 'Achterwiel',
+    drivetrainFwd: 'Voorwiel',
+    drivetrainAwd: 'Vierwiel',
+
+    // Condition values
+    conditionNew: 'Nieuw',
+    conditionUsed: 'Gebruikt',
+    conditionClassic: 'Klassiek',
+
+    // Engine detail configurations
+    engineConfigInline4: 'Lijn-4',
+    engineConfigInline6: 'Lijn-6',
+    engineConfigV6: 'V6',
+    engineConfigV8: 'V8',
+    engineConfigV10: 'V10',
+    engineConfigV12: 'V12',
+    engineConfigFlat4: 'Boxer-4',
+    engineConfigFlat6: 'Boxer-6',
+    engineConfigW12: 'W12',
+    engineConfigRotary: 'Wankel',
+
+    // Forced induction details
+    forcedInductionNaturallyAspirated: 'Atmosferisch',
+    forcedInductionTurbocharged: 'Turbo',
+    forcedInductionSupercharged: 'Compressor',
+    forcedInductionTwinTurbo: 'Biturbo',
+
+    // Heritage eras
+    heritageEraClassic: 'Klassiek (vóór 1990)',
+    heritageEraModernClassic: 'Modern Klassiek (1990–2010)',
+    heritageEraContemporary: 'Hedendaags (2010+)',
+
+    // Performance presets
+    presetV8GrandTourers: 'V8+ Grand Tourers',
+    presetV8GrandTourersDesc: 'Grantoerismo\'s met V8 of grotere motoren',
+    presetTrackWeapons: 'Circuitwapens',
+    presetTrackWeaponsDesc: 'High-performance circuitgerichte machines',
+    presetDailyLuxury: 'Dagelijkse Luxe',
+    presetDailyLuxuryDesc: 'Premium daily drivers van topmerken',
+    presetClassicCollectibles: 'Klassieke Verzamelaars',
+    presetClassicCollectiblesDesc: 'Verzamelbare klassiekers en speciale edities',
+
+    // Seller types (filter context)
+    sellerTypeDealer: 'Dealer',
+    sellerTypePrivate: 'Particulier',
+
+    // Special edition
+    specialEdition: 'Speciale Editie',
+    specialEditionHint: 'bijv. GT3 RS, CSL, SVJ, Speciale, F40, Evo',
+
+    // Performance figures
+    accelerationMax: '0–100 km/u (max)',
+    topSpeedMin: 'Topsnelheid (min)',
+
+    // Filter actions
+    clearSection: 'Wissen',
+    showResults: 'Toon resultaten',
+
+    // Filter chip formats
+    chipPriceRange: '€{min}–€{max}',
+    chipYearRange: '{min}–{max}',
+    chipHorsepowerRange: '{min}–{max} PK',
+    chipMileageRange: '{min}–{max} km',
+    chipDisplacementRange: '{min}–{max} cc',
+    chipAccelerationMax: '≤ {value}s 0–100',
+    chipTopSpeedMin: '≥ {value} km/u',
+
+    // Filter placeholders
+    placeholderMin: 'Min',
+    placeholderMax: 'Max',
+
+    // Filter validation
+    validationMinExceedsMax: 'Minimumwaarde mag niet hoger zijn dan maximum',
   },
 };
