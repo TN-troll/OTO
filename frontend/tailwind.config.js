@@ -111,15 +111,29 @@ export default {
         spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
         smooth: 'cubic-bezier(0.16, 1, 0.3, 1)',
         snappy: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
+        bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        expo: 'cubic-bezier(0.19, 1, 0.22, 1)',
       },
       animation: {
         'fade-in': 'fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
         'fade-in-up': 'fadeInUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
         'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+        'slide-down': 'slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        'slide-in-right': 'slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
         'scale-in': 'scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         spring: 'spring 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
         shimmer: 'shimmer 2s ease-in-out infinite',
         'pulse-subtle': 'pulseSubtle 2s ease-in-out infinite',
+        'float': 'float 3s ease-in-out infinite',
+        'glow-pulse': 'glowPulse 2s ease-in-out infinite',
+        'stagger-1': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both',
+        'stagger-2': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both',
+        'stagger-3': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both',
+        'stagger-4': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both',
+        'stagger-5': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both',
+        'stagger-6': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both',
+        'blur-in': 'blurIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        'reveal': 'reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
       },
       keyframes: {
         fadeIn: {
@@ -127,15 +141,23 @@ export default {
           '100%': { opacity: '1' },
         },
         fadeInUp: {
-          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '0%': { opacity: '0', transform: 'translateY(12px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '0%': { opacity: '0', transform: 'translateY(16px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        slideDown: {
+          '0%': { opacity: '0', transform: 'translateY(-12px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideInRight: {
+          '0%': { opacity: '0', transform: 'translateX(16px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
         scaleIn: {
-          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '0%': { opacity: '0', transform: 'scale(0.92)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
         },
         spring: {
@@ -150,6 +172,22 @@ export default {
         pulseSubtle: {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0.7' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-4px)' },
+        },
+        glowPulse: {
+          '0%, 100%': { boxShadow: '0 0 12px rgba(212, 168, 83, 0.2)' },
+          '50%': { boxShadow: '0 0 24px rgba(212, 168, 83, 0.4)' },
+        },
+        blurIn: {
+          '0%': { opacity: '0', filter: 'blur(8px)', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', filter: 'blur(0)', transform: 'scale(1)' },
+        },
+        reveal: {
+          '0%': { opacity: '0', transform: 'translateY(20px) scale(0.97)', filter: 'blur(4px)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scale(1)', filter: 'blur(0)' },
         },
       },
     },

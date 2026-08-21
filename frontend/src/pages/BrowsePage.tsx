@@ -271,7 +271,7 @@ export function BrowsePage() {
 
       {/* Category filter buttons */}
       <div className="mb-6 grid grid-cols-2 gap-2.5 sm:grid-cols-4 lg:grid-cols-7">
-        {CATEGORIES.filter(c => c.id !== 'classic').map(category => {
+        {CATEGORIES.filter(c => c.id !== 'classic').map((category, idx) => {
           const isActive = activeCategory === category.id;
           const IconComponent = CATEGORY_ICONS[category.id];
           return (

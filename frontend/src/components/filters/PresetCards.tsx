@@ -44,11 +44,11 @@ export function PresetCards() {
             className={`
               group flex min-h-[56px] flex-col items-start gap-1.5 rounded-2xl px-3.5 py-3
               backdrop-blur-[20px] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
-              border text-left
+              border text-left hover:-translate-y-0.5 active:scale-[0.97]
               ${
                 isActive
-                  ? 'border-brand-accent/60 bg-gradient-to-br from-brand-accent/15 to-brand-accent/5 shadow-[0_0_20px_rgba(var(--color-accent-rgb),0.2)] dark:from-brand-accent/20 dark:to-brand-accent/5'
-                  : 'border-white/[0.15] bg-white/60 hover:border-brand-accent/30 hover:bg-white/80 hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] dark:border-white/[0.08] dark:bg-[rgba(30,30,30,0.60)] dark:hover:border-white/[0.15] dark:hover:bg-[rgba(30,30,30,0.80)]'
+                  ? 'border-brand-accent/60 bg-gradient-to-br from-brand-accent/15 to-brand-accent/5 shadow-[0_0_20px_rgba(var(--color-accent-rgb),0.2)] animate-glow-pulse dark:from-brand-accent/20 dark:to-brand-accent/5'
+                  : 'border-white/[0.15] bg-white/60 hover:border-brand-accent/30 hover:bg-white/80 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] dark:border-white/[0.08] dark:bg-[rgba(30,30,30,0.60)] dark:hover:border-white/[0.15] dark:hover:bg-[rgba(30,30,30,0.80)]'
               }
             `}
             aria-pressed={isActive}

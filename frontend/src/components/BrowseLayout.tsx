@@ -1,4 +1,4 @@
-import { lazy, Suspense, useRef, Component, type ReactNode } from 'react';
+import { lazy, Suspense, Component, type ReactNode } from 'react';
 import { useTabState } from '../hooks/useTabState';
 import { Header } from './Header';
 import { NotificationPromptBanner } from './NotificationPreferences';
@@ -7,7 +7,6 @@ import { RecentlyViewedStrip } from './RecentlyViewedStrip';
 import { BrowsePage } from '../pages/BrowsePage';
 import { FilterProvider } from '../hooks/FilterContext';
 import { useLanguage } from '../i18n';
-import { useEffect } from 'react';
 
 const MapPage = lazy(() => import('../pages/MapPage'));
 
@@ -182,10 +181,6 @@ function Footer() {
 
 export function BrowseLayout() {
   const { activeTab, setActiveTab } = useTabState();
-  const prevTabRef = useRef(activeTab);
-
-  const isTransitioning = prevTabRef.current !== activeTab;
-  useEffect(() => { prevTabRef.current = activeTab; }, [activeTab]);
 
   return (
     <FilterProvider>
@@ -209,13 +204,11 @@ export function BrowseLayout() {
             id="tabpanel-listings"
             role="tabpanel"
             aria-labelledby="tab-listings"
-            className={activeTab === 'listings' ? 'block' : 'hidden'}
+            className={activeTab === 'listings' ? 'block animate-blur-in' : 'hidden'}
           >
-            <div className={isTransitioning && activeTab === 'listings' ? 'animate-fade-in-up' : ''}>
-              <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-                <BrowsePage />
-                <RecentlyViewedStrip />
-              </div>
+            <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+              <BrowsePage />
+              <RecentlyViewedStrip />
             </div>
           </div>
 
@@ -225,7 +218,7 @@ export function BrowseLayout() {
               id="tabpanel-map"
               role="tabpanel"
               aria-labelledby="tab-map"
-              className="animate-fade-in-up"
+              className="animate-blur-in"
             >
               <MapErrorBoundary>
                 <Suspense fallback={<MapLoadingSkeleton />}>
