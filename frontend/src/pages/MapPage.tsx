@@ -2,27 +2,23 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { useFilterContext } from '../hooks/FilterContext';
-import { buildCriteria } from '../hooks/useFilters';
+import { buildCriteria, hasActiveFilters } from '../hooks/useFilters';
+import { useLanguage } from '../i18n';
 import { InteractiveMap } from '../components/map/InteractiveMap';
 import { MarkerClusterGroup } from '../components/map/MarkerClusterGroup';
 import { LocationMarker } from '../components/map/LocationMarker';
 import { LocationPopup } from '../components/map/LocationPopup';
 import { MobileBottomSheet } from '../components/map/MobileBottomSheet';
+import { formatNumber } from '../utils/formatNumber';
 import type { MapLocation } from '@car-ads/shared';
 
-// Leaflet core CSS (required for map tiles, controls, popups)
+// Leaflet core CSS
 import 'leaflet/dist/leaflet.css';
-// MarkerCluster base CSS (positioning and sizing for cluster icons)
 import 'leaflet.markercluster/dist/MarkerCluster.css';
-// Custom map overrides (neutralize default cluster styles that conflict with our custom icons)
 import '../components/map/map.css';
 
-/** Mobile breakpoint in pixels */
 const MOBILE_BREAKPOINT = 768;
 
-/**
- * Hook to detect if viewport is below the mobile breakpoint.
- */
 function useIsMobile(): boolean {
   const [isMobile, setIsMobile] = useState(() => {
     if (typeof window === 'undefined') return false;
@@ -41,35 +37,30 @@ function useIsMobile(): boolean {
 }
 
 /**
- * MapPage — Interactive dealer map showing listing locations across the Netherlands.
- *
- * Features:
- * - Fetches locations from GET /api/map/locations using TanStack Query
- * - Renders InteractiveMap with MarkerClusterGroup containing LocationMarker instances
- * - Shows LocationPopup (desktop) or MobileBottomSheet (mobile) on marker click
- * - Loading, error, and empty states
- *
- * Requirements: 1.1, 3.1, 4.1, 7.2
+ * MapPage — Interactive map with filter integration, result counts,
+ * and smooth transitions when filters update.
  */
 export default function MapPage() {
   const isMobile = useIsMobile();
+  const { locale } = useLanguage();
   const [selectedLocation, setSelectedLocation] = useState<MapLocation | null>(null);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
-  const { debouncedFilters } = useFilterContext();
+  const { debouncedFilters, filtersActive } = useFilterContext();
   const criteria = useMemo(() => buildCriteria(debouncedFilters), [debouncedFilters]);
 
   const {
     data,
     isLoading,
+    isFetching,
     isError,
     error,
     refetch,
   } = useQuery({
     queryKey: ['mapLocations', criteria],
     queryFn: () => api.getMapLocationsFiltered(criteria),
-    staleTime: 60_000, // 1 minute
-    gcTime: 600_000, // 10 minutes
+    staleTime: 60_000,
+    gcTime: 600_000,
     retry: 3,
   });
 
@@ -86,13 +77,14 @@ export default function MapPage() {
   }, []);
 
   const locations = data?.locations ?? [];
+  const totalListings = data?.totalListings ?? 0;
 
-  // Loading state
+  // Loading state (initial load only)
   if (isLoading) {
     return (
-      <div className="flex min-h-[400px] flex-col items-center justify-center gap-4 px-4">
+      <div className="flex min-h-[500px] flex-col items-center justify-center gap-4 px-4">
         <div className="h-10 w-10 animate-spin rounded-full border-4 border-surface-200 border-t-brand-accent dark:border-surface-700 dark:border-t-brand-accent" />
-        <p className="text-sm text-surface-500 dark:text-surface-400">Loading map locations...</p>
+        <p className="text-sm text-surface-500 dark:text-surface-400">Loading map...</p>
       </div>
     );
   }
@@ -100,17 +92,17 @@ export default function MapPage() {
   // Error state
   if (isError) {
     return (
-      <div className="flex min-h-[400px] flex-col items-center justify-center gap-4 px-4">
+      <div className="flex min-h-[500px] flex-col items-center justify-center gap-4 px-4">
         <div className="rounded-xl bg-red-50 p-6 text-center dark:bg-red-900/20">
           <p className="text-sm font-medium text-red-700 dark:text-red-400">
-            Failed to load map locations
+            Failed to load map
           </p>
           <p className="mt-1 text-xs text-red-500 dark:text-red-300">
             {error instanceof Error ? error.message : 'An unexpected error occurred'}
           </p>
           <button
             onClick={() => refetch()}
-            className="mt-4 rounded-lg bg-red-100 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-200 dark:bg-red-900/40 dark:text-red-300 dark:hover:bg-red-900/60"
+            className="mt-4 rounded-lg bg-red-100 px-4 py-2 text-sm font-medium text-red-700 transition-colors duration-150 hover:bg-red-200 dark:bg-red-900/40 dark:text-red-300 dark:hover:bg-red-900/60"
           >
             Try again
           </button>
@@ -119,53 +111,90 @@ export default function MapPage() {
     );
   }
 
-  // Empty state
-  if (locations.length === 0) {
-    return (
-      <div className="flex min-h-[400px] flex-col items-center justify-center gap-4 px-4">
-        <p className="text-sm text-surface-500 dark:text-surface-400">
-          No dealer locations available at this time.
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <div className="relative flex flex-col">
-      {/* Interactive map with markers */}
-      <InteractiveMap locations={locations}>
-        <MarkerClusterGroup>
-          {locations.map((location) => (
-            <LocationMarker
-              key={`${location.city}-${location.latitude}-${location.longitude}`}
-              location={location}
-              onClick={handleMarkerClick}
-            />
-          ))}
-        </MarkerClusterGroup>
-      </InteractiveMap>
+    <div className="relative flex h-[calc(100vh-120px)] flex-col">
+      {/* Map container — fills available height */}
+      <div className="relative flex-1">
+        <InteractiveMap locations={locations}>
+          <MarkerClusterGroup>
+            {locations.map((location) => (
+              <LocationMarker
+                key={`${location.city}-${location.latitude}-${location.longitude}`}
+                location={location}
+                onClick={handleMarkerClick}
+              />
+            ))}
+          </MarkerClusterGroup>
+        </InteractiveMap>
 
-      {/* Desktop: show popup overlay when a location is selected */}
+        {/* Refetching overlay — subtle pulse when filters change */}
+        {isFetching && !isLoading && (
+          <div className="absolute inset-0 z-[900] flex items-start justify-center pt-4 pointer-events-none animate-fade-in">
+            <div className="flex items-center gap-2 rounded-full bg-brand/90 px-4 py-2 shadow-lg backdrop-blur-md">
+              <div className="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              <span className="text-xs font-medium text-white">Updating map...</span>
+            </div>
+          </div>
+        )}
+
+        {/* Results count badge — top-left floating */}
+        <div className="absolute left-4 top-4 z-[900] animate-fade-in">
+          <div className="flex items-center gap-2 rounded-2xl border border-white/20 bg-surface-900/80 px-4 py-2 shadow-lg backdrop-blur-lg">
+            <svg className="h-4 w-4 text-brand-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+              <circle cx="12" cy="9" r="2.5" />
+            </svg>
+            <div>
+              <span className="text-sm font-bold text-white">{formatNumber(totalListings, locale)}</span>
+              <span className="ml-1.5 text-xs text-surface-300">
+                {locale === 'nl' ? 'auto\'s' : 'cars'}
+              </span>
+            </div>
+            {filtersActive && (
+              <span className="ml-1 flex h-5 items-center rounded-full bg-brand-accent/20 px-2 text-[10px] font-semibold text-brand-accent">
+                {locale === 'nl' ? 'Gefilterd' : 'Filtered'}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Empty state overlay */}
+        {locations.length === 0 && !isFetching && (
+          <div className="absolute inset-0 z-[800] flex items-center justify-center bg-surface-900/40 backdrop-blur-sm animate-fade-in">
+            <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface-900/80 px-8 py-6 shadow-xl backdrop-blur-lg">
+              <svg className="h-10 w-10 text-surface-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                <circle cx="12" cy="9" r="2.5" />
+                <path d="M3 3l18 18" strokeWidth={2} />
+              </svg>
+              <p className="text-sm font-medium text-surface-200">
+                {locale === 'nl' ? 'Geen resultaten voor deze filters' : 'No results for these filters'}
+              </p>
+              <p className="text-xs text-surface-400">
+                {locale === 'nl' ? 'Pas je filters aan om meer te zien' : 'Adjust your filters to see more'}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop: popup overlay */}
       {!isMobile && selectedLocation && (
-        <div className="absolute right-4 top-4 z-[1000] rounded-2xl bg-white p-4 shadow-xl dark:bg-surface-800 dark:border dark:border-white/[0.08]">
+        <div className="absolute right-4 top-16 z-[1000] animate-scale-in rounded-2xl border border-white/[0.1] bg-surface-900/90 p-4 shadow-xl backdrop-blur-xl">
           <button
             onClick={() => setSelectedLocation(null)}
-            className="absolute right-2 top-2 rounded-lg p-1 text-surface-400 transition-colors hover:bg-surface-100 hover:text-surface-600 dark:hover:bg-surface-700"
+            className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full text-surface-400 transition-colors duration-150 hover:bg-white/10 hover:text-white"
             aria-label="Close popup"
           >
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                fillRule="evenodd"
-                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
+              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
           </button>
           <LocationPopup location={selectedLocation} />
         </div>
       )}
 
-      {/* Mobile: show bottom sheet when a location is selected */}
+      {/* Mobile: bottom sheet */}
       {isMobile && (
         <MobileBottomSheet isOpen={isBottomSheetOpen} onClose={handleBottomSheetClose}>
           {selectedLocation && <LocationPopup location={selectedLocation} />}
