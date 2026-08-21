@@ -34,63 +34,6 @@ function MobileFilterOverlay() {
   );
 }
 
-/**
- * View toggle — compact pill buttons for switching between Listings and Map.
- * Rendered in the top bar area.
- */
-function ViewTogglePill({ activeTab, onTabChange }: { activeTab: 'listings' | 'map'; onTabChange: (tab: 'listings' | 'map') => void }) {
-  const { t } = useLanguage();
-
-  return (
-    <div role="tablist" className="inline-flex items-center gap-0.5 rounded-full border border-white/[0.12] bg-white/[0.06] p-0.5 backdrop-blur-md">
-      <button
-        type="button"
-        role="tab"
-        id="tab-listings"
-        aria-selected={activeTab === 'listings'}
-        aria-controls="tabpanel-listings"
-        tabIndex={activeTab === 'listings' ? 0 : -1}
-        onClick={() => onTabChange('listings')}
-        className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-[background-color,color] duration-150 ${
-          activeTab === 'listings'
-            ? 'bg-white/[0.15] text-white shadow-sm'
-            : 'text-surface-400 hover:text-surface-200'
-        }`}
-      >
-        {/* Grid/cards icon — represents listing overview */}
-        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="3" width="7" height="7" rx="1.5" />
-          <rect x="14" y="3" width="7" height="7" rx="1.5" />
-          <rect x="3" y="14" width="7" height="7" rx="1.5" />
-          <rect x="14" y="14" width="7" height="7" rx="1.5" />
-        </svg>
-        {t.tabListings}
-      </button>
-      <button
-        type="button"
-        role="tab"
-        id="tab-map"
-        aria-selected={activeTab === 'map'}
-        aria-controls="tabpanel-map"
-        tabIndex={activeTab === 'map' ? 0 : -1}
-        onClick={() => onTabChange('map')}
-        className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-[background-color,color] duration-150 ${
-          activeTab === 'map'
-            ? 'bg-white/[0.15] text-white shadow-sm'
-            : 'text-surface-400 hover:text-surface-200'
-        }`}
-      >
-        {/* Map pin icon — represents geographic view */}
-        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-          <circle cx="12" cy="9" r="2.5" />
-        </svg>
-        {t.tabMap}
-      </button>
-    </div>
-  );
-}
-
 /** Apple Glass shimmer loading skeleton for the lazy-loaded MapPage */
 export function MapLoadingSkeleton() {
   const { t } = useLanguage();
@@ -202,13 +145,8 @@ export function BrowseLayout() {
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[9999] focus:rounded-lg focus:bg-brand focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white focus:shadow-lg">
         Skip to main content
       </a>
-      <Header />
+      <Header activeTab={activeTab} onTabChange={setActiveTab} />
       <NotificationPromptBanner />
-
-      {/* Top bar with view toggle — easily accessible */}
-      <div className="sticky top-0 z-40 flex items-center justify-center border-b border-white/[0.06] bg-brand/95 px-4 py-2 backdrop-blur-lg">
-        <ViewTogglePill activeTab={activeTab} onTabChange={setActiveTab} />
-      </div>
 
       {/* Main layout: shared filter sidebar + content area */}
       <div className="flex flex-1">

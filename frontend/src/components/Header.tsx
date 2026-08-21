@@ -56,7 +56,7 @@ function MenuIcon({ open }: { open: boolean }) {
   );
 }
 
-export function Header() {
+export function Header({ activeTab, onTabChange }: { activeTab?: 'listings' | 'map'; onTabChange?: (tab: 'listings' | 'map') => void } = {}) {
   const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -120,6 +120,46 @@ export function Header() {
             </span>
           </a>
 
+          {/* View toggle — Search/Map tabs (only on browse page) */}
+          {activeTab && onTabChange && (
+            <div role="tablist" className="ml-4 hidden items-center gap-0.5 rounded-full border border-white/[0.12] bg-white/[0.06] p-0.5 backdrop-blur-md sm:inline-flex">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'listings'}
+                onClick={() => onTabChange('listings')}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all duration-150 ${
+                  activeTab === 'listings'
+                    ? 'bg-white/[0.15] text-white shadow-sm'
+                    : 'text-surface-400 hover:text-surface-200'
+                }`}
+              >
+                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="M21 21l-4.35-4.35" />
+                </svg>
+                {t.tabListings}
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'map'}
+                onClick={() => onTabChange('map')}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all duration-150 ${
+                  activeTab === 'map'
+                    ? 'bg-white/[0.15] text-white shadow-sm'
+                    : 'text-surface-400 hover:text-surface-200'
+                }`}
+              >
+                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                  <circle cx="12" cy="9" r="2.5" />
+                </svg>
+                {t.tabMap}
+              </button>
+            </div>
+          )}
+
           {/* Search — hidden on mobile, shown inline on md+ */}
           <div className="hidden flex-1 max-w-md px-8 md:block">
             <SearchBar />
@@ -173,7 +213,23 @@ export function Header() {
 
       {/* Mobile search — glass panel below header, visible only on <768px */}
       <div className="border-b border-white/10 bg-white/50 px-4 py-2.5 backdrop-blur-lg md:hidden dark:bg-black/50 dark:border-white/[0.06]">
-        <SearchBar />
+        <div className="flex items-center gap-3">
+          {activeTab && onTabChange && (
+            <div role="tablist" className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-white/[0.12] bg-white/[0.06] p-0.5">
+              <button type="button" role="tab" aria-selected={activeTab === 'listings'} onClick={() => onTabChange('listings')}
+                className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-all ${activeTab === 'listings' ? 'bg-white/[0.15] text-white' : 'text-surface-400'}`}>
+                {t.tabListings}
+              </button>
+              <button type="button" role="tab" aria-selected={activeTab === 'map'} onClick={() => onTabChange('map')}
+                className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-all ${activeTab === 'map' ? 'bg-white/[0.15] text-white' : 'text-surface-400'}`}>
+                {t.tabMap}
+              </button>
+            </div>
+          )}
+          <div className="flex-1">
+            <SearchBar />
+          </div>
+        </div>
       </div>
 
       {/* Mobile navigation menu — glass panel overlay */}
