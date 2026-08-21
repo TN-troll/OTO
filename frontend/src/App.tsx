@@ -10,6 +10,7 @@ import { BrowseLayout } from './components/BrowseLayout';
 import { MarketplaceHealthBanner } from './components/MarketplaceHealthBanner';
 import { Header } from './components/Header';
 import { CompareTray } from './components/CompareTray';
+import { CookieConsent } from './components/CookieConsent';
 import { useLanguage } from './i18n';
 
 /** Error boundary to prevent full-page crashes */
@@ -199,6 +200,7 @@ export function App() {
         />
       </Routes>
       <CompareTray />
+      <CookieConsent />
     </div>
     </ErrorBoundary>
   );

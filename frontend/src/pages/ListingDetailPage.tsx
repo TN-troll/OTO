@@ -8,6 +8,7 @@ import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 import { ListingCard } from '../components/ListingCard';
 import { FinanceCalculator } from '../components/FinanceCalculator';
 import { DealerContactForm } from '../components/DealerContactForm';
+import { AffiliateLinks } from '../components/AffiliateLinks';
 import { getProxyImageUrls } from '../utils/imageProxy';
 import { useClickTracker } from '../hooks/useClickTracker';
 import { resolveTranslation } from '../utils/translation';
@@ -261,6 +262,9 @@ export function ListingDetailPage() {
           <div id="source-links" className="scroll-mt-4">
             <SourceLinksSection sourceUrls={listing.sourceUrls} listingId={listing.id} />
           </div>
+
+          {/* Affiliate Partner Links */}
+          <AffiliateLinks price={listing.price} make={listing.make} />
         </div>
       </div>
 

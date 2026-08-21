@@ -34,6 +34,7 @@ import { CATEGORY_CONTENT } from '../data/category-content';
 import { useCompare } from '../hooks/useCompare';
 import { formatPrice, formatNumber } from '../utils/formatNumber';
 import { SavedSearchPrompt } from '../components/SavedSearchPrompt';
+import { InFeedAd } from '../components/AdSlot';
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -312,6 +313,11 @@ export function BrowsePage() {
           </svg>
           0-100 Sprint Leaderboard
         </a>
+      </div>
+
+      {/* Sponsored content */}
+      <div className="my-4">
+        <InFeedAd />
       </div>
 
       {/* Search active banner */}
