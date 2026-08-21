@@ -178,4 +178,14 @@ export const api = {
   async getMapLocations(): Promise<MapLocationsResponse> {
     return fetchJson<MapLocationsResponse>(`${API_BASE}/map/locations`);
   },
+
+  /**
+   * Get map locations filtered by criteria
+   */
+  async getMapLocationsFiltered(criteria: FilterCriteria): Promise<MapLocationsResponse> {
+    return fetchJson<MapLocationsResponse>(`${API_BASE}/map/locations`, {
+      method: 'POST',
+      body: JSON.stringify(criteria),
+    });
+  },
 };

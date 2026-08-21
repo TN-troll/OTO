@@ -1,6 +1,8 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
+import { useFilterContext } from '../hooks/FilterContext';
+import { buildCriteria } from '../hooks/useFilters';
 import { InteractiveMap } from '../components/map/InteractiveMap';
 import { MarkerClusterGroup } from '../components/map/MarkerClusterGroup';
 import { LocationMarker } from '../components/map/LocationMarker';
@@ -54,6 +56,9 @@ export default function MapPage() {
   const [selectedLocation, setSelectedLocation] = useState<MapLocation | null>(null);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
+  const { debouncedFilters } = useFilterContext();
+  const criteria = useMemo(() => buildCriteria(debouncedFilters), [debouncedFilters]);
+
   const {
     data,
     isLoading,
@@ -61,9 +66,9 @@ export default function MapPage() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['mapLocations'],
-    queryFn: () => api.getMapLocations(),
-    staleTime: 300_000, // 5 minutes
+    queryKey: ['mapLocations', criteria],
+    queryFn: () => api.getMapLocationsFiltered(criteria),
+    staleTime: 60_000, // 1 minute
     gcTime: 600_000, // 10 minutes
     retry: 3,
   });

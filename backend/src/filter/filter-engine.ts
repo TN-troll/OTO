@@ -344,6 +344,17 @@ export class FilterEngine {
   }
 
   /**
+   * Build WHERE clause conditions and params from filter criteria.
+   * Public method for use by other endpoints (e.g. map) that need to apply
+   * the same filter logic without pagination/sorting.
+   */
+  buildFilterConditions(criteria: FilterCriteria): { conditions: string[]; params: unknown[] } {
+    const expandedCriteria = this.expandPerformancePreset(criteria);
+    const { whereClause, params } = this.buildWhereClause(expandedCriteria);
+    return { conditions: [whereClause], params };
+  }
+
+  /**
    * Execute a filtered query against the listings database.
    * Results are cached in Redis with a 5-minute TTL.
    */
