@@ -12,16 +12,13 @@ const LOCALE_MAP: Record<Locale, string> = {
 };
 
 /**
- * Formats a price with thousand separators and 2 decimal places.
- * - NL: €33.225,00
- * - EN: €33,225.00
+ * Formats a price with thousand separators (no decimal places).
+ * - NL: €33.225
+ * - EN: €33,225
  */
 export function formatPrice(amount: number, locale: Locale): string {
   const intlLocale = LOCALE_MAP[locale];
-  return `€${amount.toLocaleString(intlLocale, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
+  return `€${Math.round(amount).toLocaleString(intlLocale)}`;
 }
 
 /**

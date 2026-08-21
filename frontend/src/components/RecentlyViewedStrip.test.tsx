@@ -194,7 +194,7 @@ describe('RecentlyViewedStrip', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Ferrari F40')).toBeInTheDocument();
-        expect(screen.getByText(/€1,250,000\.00/)).toBeInTheDocument();
+        expect(screen.getByText(/€1,250,000/)).toBeInTheDocument();
       });
     });
   });
