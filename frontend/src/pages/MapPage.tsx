@@ -187,10 +187,10 @@ export default function MapPage() {
                   : 'border-white/[0.1] bg-surface-900/80 text-surface-300 hover:border-white/20 hover:text-white'
               }`}
             >
-              <svg className="h-4 w-8" viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
-                <circle cx="20" cy="16" r="4" opacity="0.6" />
-                <circle cx="32" cy="16" r="4" opacity="0.6" />
-                <circle cx="44" cy="16" r="4" opacity="0.6" />
+              <svg className="h-4 w-9" viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
+                <circle cx="25" cy="18" r="4" opacity="0.6" />
+                <circle cx="40" cy="18" r="4" opacity="0.6" />
+                <circle cx="55" cy="18" r="4" opacity="0.6" />
               </svg>
               {!isMobile && (
                 <span className="text-[10px] font-medium">
@@ -213,7 +213,7 @@ export default function MapPage() {
                       : 'border-white/[0.1] bg-surface-900/80 text-surface-300 hover:border-white/20 hover:text-white'
                   }`}
                 >
-                  <Icon className="h-4 w-8" />
+                  <Icon className="h-4 w-9" />
                   {!isMobile && (
                     <span className="text-[10px] font-medium">
                       {locale === 'nl' ? category.labelNl : category.label}

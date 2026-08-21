@@ -1,511 +1,146 @@
 /**
- * Premium filled silhouette icons for vehicle categories and performance presets.
- * Each icon has dramatically different proportions for instant recognition at small sizes.
- * 64x32 viewBox, fill-based for bold visual impact.
- * Enhanced with luxury detailing: chrome accents, wheel spokes, glass reflections,
- * body sculpting lines, and ground shadows.
+ * Clean single-path vehicle category silhouettes.
+ * Inspired by AutoScout24/Mobile.de body type filter icons.
+ * 80x36 viewBox, fill-based, optimized for small sizes (h-5 to h-6).
+ * Each shape has dramatically different proportions for instant recognition.
  */
 
 interface IconProps {
   className?: string;
 }
 
-/** Supercar — extremely low angular wedge, barely any cabin height (Lamborghini Aventador) */
+/** Supercar — ultra-low wedge, tiny greenhouse pushed far back (Lamborghini Huracán) */
 export function SupercarIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
-      {/* Ground shadow */}
-      <ellipse cx="32" cy="28.5" rx="28" ry="2" opacity="0.1" />
-      {/* Main body */}
-      <path d="M2 26h6.5c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2h25c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2H62v-3l-1.5-1.5-1-1.5-2-1.5L54 21l-3-2-1-3-2-2.5-4-1.5H38l-6-1H22l-5 .5-4 1.5-3 2-2.5 2.5L5 20l-2 2.5L2 24v2z" />
-      <path d="M56 17l6 2v-2l-2-2-4-1v3zM2 22l4-1.5v-2L3 20l-1 1v1z" opacity="0.6" />
-      {/* Chrome beltline accent */}
-      <path d="M8 20.5h48" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.4" />
-      {/* Glass reflection */}
-      <path d="M36 14l-4 4" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.18" />
-      {/* Body sculpting crease */}
-      <path d="M12 22h40" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.2" />
-      {/* Air intake scoops */}
-      <path d="M24 18l2-1.5v1.5h-2z" opacity="0.35" />
-      <path d="M40 17l2-1v1.5l-2-.5z" opacity="0.35" />
-      {/* Exhaust tips */}
-      <ellipse cx="3.5" cy="25" rx="1" ry="0.6" opacity="0.4" />
-      <ellipse cx="6" cy="25" rx="1" ry="0.6" opacity="0.4" />
-      {/* Wheel detailing - front */}
-      <circle cx="14" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="14" cy="26" r="2.2" opacity="0.2" />
-      <line x1="14" y1="23.5" x2="14" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="12.2" y1="24.8" x2="13" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="15.8" y1="24.8" x2="15" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="12.5" y1="27.2" x2="13.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="15.5" y1="27.2" x2="14.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      {/* Wheel detailing - rear */}
-      <circle cx="50" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="50" cy="26" r="2.2" opacity="0.2" />
-      <line x1="50" y1="23.5" x2="50" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="48.2" y1="24.8" x2="49" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="51.8" y1="24.8" x2="51" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="48.5" y1="27.2" x2="49.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="51.5" y1="27.2" x2="50.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+    <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
+      <path d="M2 29 L2 25 C2 24 3 23 5 22 L12 19 C14 18 18 17 22 16 L35 14.5 C40 14 44 13 48 12 C52 11 56 10 60 10 C64 10 67 11 70 12.5 C73 14 75 16 76 18 C77 20 78 22 78 24 L78 29 L70 29 C70 25.7 67.3 23 64 23 C60.7 23 58 25.7 58 29 L22 29 C22 25.7 19.3 23 16 23 C12.7 23 10 25.7 10 29 Z" />
+      <circle cx="16" cy="29" r="3.5" />
+      <circle cx="64" cy="29" r="3.5" />
     </svg>
   );
 }
 
-/** Luxury — very long body with tall formal upright greenhouse (Rolls-Royce Phantom) */
+/** Luxury — tall upright formal greenhouse, long hood, stately (Rolls-Royce Ghost) */
 export function LuxuryIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
-      {/* Ground shadow */}
-      <ellipse cx="33" cy="28.5" rx="26" ry="2" opacity="0.1" />
-      {/* Main body */}
-      <path d="M6 26h5.5c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2h22c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2H60v-4l-1-1.5V14l-.5-1.5-1-1L56 10V7.5L54 6h-6l-3-.5H22l-4 .5-3 1-2 1.5-1.5 2L10 13v3l-1 1.5-1 2v2L6 24v2z" />
-      <path d="M20 6v5.5h8V5.5L20 6zM36 5.5v6h8V6l-8-.5z" opacity="0.15" />
-      {/* Chrome beltline accent */}
-      <path d="M10 14h48" fill="none" stroke="currentColor" strokeWidth="0.7" opacity="0.4" />
-      {/* Glass reflection */}
-      <path d="M24 7l-3 4.5" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.18" />
-      <path d="M40 7l-3 4.5" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.18" />
-      {/* Body sculpting crease */}
-      <path d="M12 18h44" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.22" />
-      {/* Spirit of Ecstasy hood ornament */}
-      <rect x="12.5" y="9.5" width="0.8" height="3" rx="0.4" opacity="0.5" />
-      <path d="M12.2 9.5l.7-1.5.7 1.5h-1.4z" opacity="0.45" />
-      {/* Chrome grille lines */}
-      <line x1="9" y1="19" x2="9" y2="22" stroke="currentColor" strokeWidth="0.4" opacity="0.35" />
-      <line x1="10" y1="19" x2="10" y2="22" stroke="currentColor" strokeWidth="0.4" opacity="0.35" />
-      <line x1="11" y1="19" x2="11" y2="22" stroke="currentColor" strokeWidth="0.4" opacity="0.35" />
-      {/* Wheel detailing - front */}
-      <circle cx="17" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="17" cy="26" r="2.2" opacity="0.2" />
-      <line x1="17" y1="23.5" x2="17" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="15.2" y1="24.8" x2="16" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="18.8" y1="24.8" x2="18" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="15.5" y1="27.2" x2="16.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="18.5" y1="27.2" x2="17.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      {/* Wheel detailing - rear */}
-      <circle cx="50" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="50" cy="26" r="2.2" opacity="0.2" />
-      <line x1="50" y1="23.5" x2="50" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="48.2" y1="24.8" x2="49" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="51.8" y1="24.8" x2="51" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="48.5" y1="27.2" x2="49.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="51.5" y1="27.2" x2="50.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+    <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
+      <path d="M5 29 L5 24 C5 22 6 20 7 18 L10 15 L14 12 C16 11 18 10 20 9 L24 8 L30 7 L38 6.5 L48 7 L54 8 C56 8.5 58 9.5 60 11 L63 13 L65 15 L67 18 C68 20 69 22 70 24 L72 26 L74 28 L74 29 L65 29 C65 25.7 62.3 23 59 23 C55.7 23 53 25.7 53 29 L25 29 C25 25.7 22.3 23 19 23 C15.7 23 13 25.7 13 29 Z" />
+      <circle cx="19" cy="29" r="3.5" />
+      <circle cx="59" cy="29" r="3.5" />
     </svg>
   );
 }
 
-/** Performance Sedan — aggressive four-door, wide arches, lower than luxury (BMW M5) */
+/** Performance Sedan — sporty four-door with trunk step-down at rear (BMW M5) */
 export function PerformanceSedanIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
-      {/* Ground shadow */}
-      <ellipse cx="32" cy="28.5" rx="26" ry="2" opacity="0.1" />
-      {/* Main body */}
-      <path d="M5 26h5.5c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2h21c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2H59v-3.5l-1-2-2-2V15l-1.5-2-2-1.5L49 10l-2-1.5L44 8h-4l-3-1H24l-4 1h-3l-3 1.5L11 11l-2 1.5L7.5 15v3.5l-1 2-1 2v3.5z" />
-      <path d="M18 8l2-1.5h5V9l-7-1zM40 6.5h5L47 8l-7 1V6.5z" opacity="0.15" />
-      {/* Chrome beltline accent */}
-      <path d="M10 15h44" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.4" />
-      {/* Glass reflection */}
-      <path d="M28 7.5l-3 5" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.18" />
-      {/* Body sculpting crease */}
-      <path d="M10 19h44" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.22" />
-      {/* Aggressive lip spoiler */}
-      <path d="M52 12h7l.5.8H52v-.8z" opacity="0.35" />
-      {/* Quad exhaust tips */}
-      <ellipse cx="4.2" cy="25" rx="0.8" ry="0.5" opacity="0.4" />
-      <ellipse cx="6" cy="25" rx="0.8" ry="0.5" opacity="0.4" />
-      <ellipse cx="58" cy="25" rx="0.8" ry="0.5" opacity="0.4" />
-      <ellipse cx="59.8" cy="25" rx="0.8" ry="0.5" opacity="0.4" />
-      {/* Wheel detailing - front */}
-      <circle cx="16" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="16" cy="26" r="2.2" opacity="0.2" />
-      <line x1="16" y1="23.5" x2="16" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="14.2" y1="24.8" x2="15" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="17.8" y1="24.8" x2="17" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="14.5" y1="27.2" x2="15.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="17.5" y1="27.2" x2="16.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      {/* Wheel detailing - rear */}
-      <circle cx="48" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="48" cy="26" r="2.2" opacity="0.2" />
-      <line x1="48" y1="23.5" x2="48" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="46.2" y1="24.8" x2="47" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="49.8" y1="24.8" x2="49" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="46.5" y1="27.2" x2="47.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="49.5" y1="27.2" x2="48.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+    <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
+      <path d="M5 29 L5 24 C5 22 6 20 8 18 L11 15 L15 12.5 C18 11 21 10 24 9.5 L30 9 L36 8.5 L42 9 C45 9.5 48 10 50 11 L54 13 L58 15.5 L61 18 C62 19 63 20 64 21 L67 23 C69 24 71 25 73 26 L75 28 L75 29 L65 29 C65 25.7 62.3 23 59 23 C55.7 23 53 25.7 53 29 L27 29 C27 25.7 24.3 23 21 23 C17.7 23 15 25.7 15 29 Z" />
+      <circle cx="21" cy="29" r="3.5" />
+      <circle cx="59" cy="29" r="3.5" />
     </svg>
   );
 }
 
-/** Hot Hatch — SHORT body (~70% width), steep vertical rear hatchback (Golf GTI) */
+/** Hot Hatch — short compact body, steep near-vertical rear hatch (VW Golf GTI) */
 export function HotHatchIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
-      {/* Ground shadow */}
-      <ellipse cx="32" cy="28.5" rx="20" ry="1.8" opacity="0.1" />
-      {/* Main body */}
-      <path d="M12 26h5.5c.8-2.3 2.8-3.8 5-3.8s4.2 1.5 5 3.8h10c.8-2.3 2.8-3.8 5-3.8s4.2 1.5 5 3.8H51v-3l-1-2V17l.5-3-1-2-1.5-1.5-2-1L43 8h-4l-2-1H27l-4 1-3 1.5-2.5 2-1.5 2.5-1 2.5v3l-1 2v4.5z" />
-      <path d="M48 11l3 3v4l-1-1v-3l-2-3z" opacity="0.3" />
-      {/* Chrome beltline accent */}
-      <path d="M17 14h32" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.4" />
-      {/* Glass reflection */}
-      <path d="M30 9l-2.5 4" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.18" />
-      {/* Body sculpting crease */}
-      <path d="M17 18h32" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.22" />
-      {/* Roof-mounted spoiler lip */}
-      <path d="M47 9.5h4.5l.5.5v.5h-5v-1z" opacity="0.35" />
-      {/* Sporty exhaust */}
-      <ellipse cx="14" cy="25.2" rx="1.2" ry="0.7" opacity="0.4" />
-      {/* Wheel detailing - front */}
-      <circle cx="22.5" cy="26" r="3.4" opacity="0.15" />
-      <circle cx="22.5" cy="26" r="2" opacity="0.2" />
-      <line x1="22.5" y1="23.8" x2="22.5" y2="25" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="20.9" y1="25" x2="21.6" y2="25.7" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="24.1" y1="25" x2="23.4" y2="25.7" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="21.2" y1="27" x2="21.8" y2="26.4" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="23.8" y1="27" x2="23.2" y2="26.4" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      {/* Wheel detailing - rear */}
-      <circle cx="42.5" cy="26" r="3.4" opacity="0.15" />
-      <circle cx="42.5" cy="26" r="2" opacity="0.2" />
-      <line x1="42.5" y1="23.8" x2="42.5" y2="25" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="40.9" y1="25" x2="41.6" y2="25.7" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="44.1" y1="25" x2="43.4" y2="25.7" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="41.2" y1="27" x2="41.8" y2="26.4" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="43.8" y1="27" x2="43.2" y2="26.4" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+    <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
+      <path d="M17 29 L17 24 C17 22 18 20 20 18 L23 15 L27 12.5 C29 11.5 31 10.5 34 10 L38 9.5 L42 9.5 C44 9.5 46 10 48 11 L50 12 L52 14 L54 16 C55 17.5 56 19 57 21 L58 23 L59 25 L60 27 L60 29 L56 29 C56 25.7 53.3 23 50 23 C46.7 23 44 25.7 44 29 L33 29 C33 25.7 30.3 23 27 23 C23.7 23 21 25.7 21 29 Z" />
+      <circle cx="27" cy="29" r="3.5" />
+      <circle cx="50" cy="29" r="3.5" />
     </svg>
   );
 }
 
-/** Sports Car — 911 proportions: long hood, small cabin pushed back, rounded fastback */
+/** Sports Car — continuous sloping roofline, round organic curves, wide rear (Porsche 911) */
 export function SportsCarIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
-      {/* Ground shadow */}
-      <ellipse cx="32" cy="28.5" rx="27" ry="2" opacity="0.1" />
-      {/* Main body */}
-      <path d="M4 26h6c.8-2.5 3-4.2 5.5-4.2S20 23.5 20.8 26h22.4c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2H60v-3l-1-2-1.5-1.5-1.5-2-2-2-2.5-1.5-3-1.5L44 16l-4-2-3-1.5-4-1H26l-6 1-4 1.5-3.5 2L9 18.5 7 20.5l-1.5 2L4 24.5v1.5z" />
-      <path d="M42 11c3 1.5 5 3 7 5l2 2-1-.5-3-2.5-3-2.5-2-1.5V11z" opacity="0.2" />
-      {/* Chrome beltline accent */}
-      <path d="M9 18.5h46" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.4" />
-      {/* Glass reflection */}
-      <path d="M44 13l-3 4" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.18" />
-      {/* Body sculpting crease */}
-      <path d="M12 21h42" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.22" />
-      {/* Side vents */}
-      <path d="M26 18l3-.5v.8l-3-.3z" opacity="0.35" />
-      <path d="M26 19.2l3-.5v.8l-3-.3z" opacity="0.3" />
-      {/* Curved fender highlight */}
-      <path d="M48 20c2 .5 4 1.5 5.5 2.5" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      {/* Wheel detailing - front */}
-      <circle cx="15.5" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="15.5" cy="26" r="2.2" opacity="0.2" />
-      <line x1="15.5" y1="23.5" x2="15.5" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="13.7" y1="24.8" x2="14.5" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="17.3" y1="24.8" x2="16.5" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="14" y1="27.2" x2="14.7" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="17" y1="27.2" x2="16.3" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      {/* Wheel detailing - rear */}
-      <circle cx="48.7" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="48.7" cy="26" r="2.2" opacity="0.2" />
-      <line x1="48.7" y1="23.5" x2="48.7" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="46.9" y1="24.8" x2="47.7" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="50.5" y1="24.8" x2="49.7" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="47.2" y1="27.2" x2="47.9" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="50.2" y1="27.2" x2="49.5" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+    <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
+      <path d="M4 29 L4 25 C4 23 5 21 7 19 L10 17 L14 15 C17 13.5 20 12.5 24 12 L30 11.5 L36 11 C39 11 42 11 45 11.5 C48 12 51 13 54 14.5 C57 16 59 17.5 61 19.5 C63 21.5 65 23 67 24.5 C69 26 72 27.5 75 28.5 L75 29 L67 29 C67 25.7 64.3 23 61 23 C57.7 23 55 25.7 55 29 L25 29 C25 25.7 22.3 23 19 23 C15.7 23 13 25.7 13 29 Z" />
+      <circle cx="19" cy="29" r="3.5" />
+      <circle cx="61" cy="29" r="3.5" />
     </svg>
   );
 }
 
-/** Performance SUV — TALL, boxy, high ground clearance, large wheels (Urus / Cayenne) */
+/** Performance SUV — tall body, ground clearance, large wheels (Porsche Cayenne) */
 export function PerformanceSuvIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
-      {/* Ground shadow */}
-      <ellipse cx="32" cy="30.5" rx="24" ry="1.8" opacity="0.1" />
-      {/* Main body */}
-      <path d="M8 28h5c1-3 3.5-5 6.5-5s5.5 2 6.5 5h14c1-3 3.5-5 6.5-5s5.5 2 6.5 5H57v-4l-1-2-1-2V12l-1-2-1.5-1.5L50 7l-3-1.5L44 4.5H36l-4-.5H22l-4 .5-3 1.5L12 8l-2 2-1.5 2.5V18l-1 3v3l.5 2v2z" />
-      <path d="M8 22v-3h2v3H8zM54 21v-3h2v3h-2z" opacity="0.3" />
-      {/* Chrome beltline accent */}
-      <path d="M12 12h42" fill="none" stroke="currentColor" strokeWidth="0.7" opacity="0.4" />
-      {/* Glass reflection */}
-      <path d="M28 5.5l-3 5" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.18" />
-      {/* Body sculpting crease */}
-      <path d="M12 17h42" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.22" />
-      {/* Roof rails */}
-      <path d="M18 4h26" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.35" />
-      {/* Running board accent */}
-      <path d="M22 25h16" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.25" />
-      {/* Wheel detailing - front */}
-      <circle cx="19.5" cy="28" r="4.5" opacity="0.15" />
-      <circle cx="19.5" cy="28" r="2.8" opacity="0.2" />
-      <line x1="19.5" y1="25" x2="19.5" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="17.3" y1="26.5" x2="18.2" y2="27.4" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="21.7" y1="26.5" x2="20.8" y2="27.4" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="17.5" y1="29.5" x2="18.4" y2="28.7" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="21.5" y1="29.5" x2="20.6" y2="28.7" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      {/* Wheel detailing - rear */}
-      <circle cx="46.5" cy="28" r="4.5" opacity="0.15" />
-      <circle cx="46.5" cy="28" r="2.8" opacity="0.2" />
-      <line x1="46.5" y1="25" x2="46.5" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="44.3" y1="26.5" x2="45.2" y2="27.4" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="48.7" y1="26.5" x2="47.8" y2="27.4" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="44.5" y1="29.5" x2="45.4" y2="28.7" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="48.5" y1="29.5" x2="47.6" y2="28.7" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+    <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
+      <path d="M8 31 L8 23 C8 20 9 17 11 14 L14 11 L18 8.5 C21 7 24 6 28 5.5 L34 5 L40 5 L46 5.5 C50 6 53 7 56 8.5 L60 11 L63 14 C65 17 66 20 66 23 L67 25 L69 27 L71 29 L71 31 L63 31 C63 26.6 60 23 56 23 C52 23 49 26.6 49 31 L31 31 C31 26.6 28 23 24 23 C20 23 17 26.6 17 31 Z" />
+      <circle cx="24" cy="31" r="4.5" />
+      <circle cx="56" cy="31" r="4.5" />
+      <path d="M22 5 L58 5" fill="none" stroke="currentColor" strokeWidth="1.5" />
     </svg>
   );
 }
 
-/** Electric Performance — smooth teardrop/bubble aero shape, flush surfaces (Tesla/Taycan) */
+/** Electric Performance — smooth aerodynamic teardrop, flush surfaces (Tesla Model S / Taycan) */
 export function ElectricPerformanceIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
-      {/* Ground shadow */}
-      <ellipse cx="32" cy="28.5" rx="26" ry="2" opacity="0.1" />
-      {/* Main body */}
-      <path d="M6 26h5.5c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2h20c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2H58c2 0 3-1 3-2l-.5-2-1.5-2.5-2-2-3-2-3.5-2-4-1.5L42 13l-4-.5H24l-5 .5-4 1.5-3.5 2-3 2-2 2.5-1.5 2.5-.5 1.5c0 1 .5 2 1.5 2z" />
-      <path d="M30 15l-2.5 4.5h4L28 25" opacity="0.5" fill="currentColor" />
-      {/* Chrome beltline accent */}
-      <path d="M10 16.5h44" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.35" />
-      {/* Glass reflection */}
-      <path d="M34 13l-3 5" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.18" />
-      {/* Body sculpting crease */}
-      <path d="M10 20h44" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.2" />
-      {/* Rear light bar */}
-      <path d="M5 23h4" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.4" />
-      {/* Flush door handle indicators (no break — just subtle marks) */}
-      <rect x="25" y="17.5" width="2.5" height="0.5" rx="0.25" opacity="0.2" />
-      <rect x="36" y="17.5" width="2.5" height="0.5" rx="0.25" opacity="0.2" />
-      {/* Wheel detailing - front */}
-      <circle cx="17" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="17" cy="26" r="2.2" opacity="0.2" />
-      <line x1="17" y1="23.5" x2="17" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="15.2" y1="24.8" x2="16" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="18.8" y1="24.8" x2="18" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="15.5" y1="27.2" x2="16.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="18.5" y1="27.2" x2="17.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      {/* Wheel detailing - rear */}
-      <circle cx="48" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="48" cy="26" r="2.2" opacity="0.2" />
-      <line x1="48" y1="23.5" x2="48" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="46.2" y1="24.8" x2="47" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="49.8" y1="24.8" x2="49" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="46.5" y1="27.2" x2="47.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="49.5" y1="27.2" x2="48.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+    <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
+      <path d="M4 29 C4 27 5 25 7 22.5 C9 20 12 17.5 16 15.5 C20 13.5 24 12 29 11 C34 10 38 9.5 40 9.5 C42 9.5 46 10 51 11 C56 12 60 13.5 64 15.5 C68 17.5 71 20 73 22.5 C75 25 76 27 76 29 L66 29 C66 25.7 63.3 23 60 23 C56.7 23 54 25.7 54 29 L26 29 C26 25.7 23.3 23 20 23 C16.7 23 14 25.7 14 29 Z" />
+      <circle cx="20" cy="29" r="3.5" />
+      <circle cx="60" cy="29" r="3.5" />
     </svg>
   );
 }
 
-/** Classic — high waistline, separate fender bulges, round headlights, upright windshield (E-Type / 300SL) */
+/** Classic — very long hood, tiny cabin way back, flowing fenders (Jaguar E-Type / Ferrari 250 GTO) */
 export function ClassicIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
-      {/* Ground shadow */}
-      <ellipse cx="32" cy="28.5" rx="24" ry="2" opacity="0.1" />
-      {/* Main body */}
-      <path d="M8 26h4c.6-2.8 3-5 6-5s5.4 2.2 6 5h14c.6-2.8 3-5 6-5s5.4 2.2 6 5h4v-3l-1-2v-2l-2-2-2-1.5-1-2-2-2-3-1.5H38l-3-1H22l-4 1h-3l-3 1.5-2 2-1.5 2-1 1.5-1 2v2.5l-.5 2v2z" />
-      <circle cx="10" cy="16" r="2.5" opacity="0.5" />
-      <circle cx="10" cy="16" r="1.2" opacity="0.3" />
-      {/* Chrome beltline accent */}
-      <path d="M12 15h40" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.4" />
-      {/* Glass reflection */}
-      <path d="M28 10l-2.5 4" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.18" />
-      {/* Body sculpting crease */}
-      <path d="M14 19h34" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.22" />
-      {/* Chrome bumper bars */}
-      <rect x="6" y="22.5" width="4" height="1" rx="0.5" opacity="0.4" />
-      <rect x="52" y="22.5" width="4" height="1" rx="0.5" opacity="0.4" />
-      {/* Hood louvers */}
-      <line x1="13" y1="13" x2="16" y2="13" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      <line x1="13" y1="14" x2="16" y2="14" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      <line x1="13" y1="15" x2="16" y2="15" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      {/* Wheel detailing - front */}
-      <circle cx="18" cy="26" r="5" opacity="0.2" />
-      <circle cx="18" cy="26" r="3" opacity="0.15" />
-      <circle cx="18" cy="26" r="1.5" opacity="0.25" />
-      <line x1="18" y1="22.5" x2="18" y2="24" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      <line x1="15.5" y1="24" x2="16.5" y2="25" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      <line x1="20.5" y1="24" x2="19.5" y2="25" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      <line x1="15.5" y1="28" x2="16.5" y2="27" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      <line x1="20.5" y1="28" x2="19.5" y2="27" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      {/* Wheel detailing - rear */}
-      <circle cx="44" cy="26" r="5" opacity="0.2" />
-      <circle cx="44" cy="26" r="3" opacity="0.15" />
-      <circle cx="44" cy="26" r="1.5" opacity="0.25" />
-      <line x1="44" y1="22.5" x2="44" y2="24" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      <line x1="41.5" y1="24" x2="42.5" y2="25" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      <line x1="46.5" y1="24" x2="45.5" y2="25" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      <line x1="41.5" y1="28" x2="42.5" y2="27" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      <line x1="46.5" y1="28" x2="45.5" y2="27" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
+    <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
+      <path d="M3 29 L3 24 C3 22 4 20 5 18.5 L8 16 L12 14 L18 12 L26 10.5 L34 10 L42 10 C46 10 50 10.5 53 11.5 C56 12.5 59 14 61 16 C63 18 65 20 67 22 C69 24 71 26 73 27.5 L74 29 L67 29 C67 24.6 64 21 60.5 21 C57 21 54 24.6 54 29 L22 29 C22 24.6 19 21 15.5 21 C12 21 9 24.6 9 29 Z" />
+      <circle cx="15.5" cy="29" r="4.2" />
+      <circle cx="60.5" cy="29" r="4.2" />
     </svg>
   );
 }
 
-/** Grand Tourer — elegant, longest hood of all, smooth flowing fastback (Aston Martin DB11) */
+/** Grand Tourer — long elegant fastback, flowing roofline into tail (Aston Martin DB11) */
 export function GrandTourerIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
-      {/* Ground shadow */}
-      <ellipse cx="32" cy="28.5" rx="28" ry="2" opacity="0.1" />
-      {/* Main body */}
-      <path d="M3 26h6.5c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2h23c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2H60v-3l-1-1.5-.5-2-1-1.5-1.5-1.5-2-1.5-2.5-1.5L48 13l-3-1.5-3-1-3.5-1H32l-8 .5-6 1-4.5 1.5-4 2-3 2.5L5 19.5 4 22l-.5 2L3 25.5v.5z" />
-      <path d="M6 21c1-2.5 3-4.5 5.5-6l4-2.5 5-1.5-3 1.5-4 2.5-4 3.5L6 21z" opacity="0.15" />
-      {/* Chrome beltline accent */}
-      <path d="M8 17h48" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.4" />
-      {/* Glass reflection */}
-      <path d="M40 11l-3 5" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.18" />
-      {/* Body sculpting crease / fender crease */}
-      <path d="M10 20h46" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.22" />
-      {/* Side strake/gill vent */}
-      <path d="M24 16l3-.3v.6l-3-.3z" opacity="0.35" />
-      <path d="M24 17l3-.3v.6l-3-.3z" opacity="0.3" />
-      <path d="M24 18l3-.3v.6l-3-.3z" opacity="0.25" />
-      {/* Refined fender highlight curve */}
-      <path d="M48 19c2 .8 4 2 5.5 3.5" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      {/* Wheel detailing - front */}
-      <circle cx="15" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="15" cy="26" r="2.2" opacity="0.2" />
-      <line x1="15" y1="23.5" x2="15" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="13.2" y1="24.8" x2="14" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="16.8" y1="24.8" x2="16" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="13.5" y1="27.2" x2="14.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="16.5" y1="27.2" x2="15.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      {/* Wheel detailing - rear */}
-      <circle cx="50" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="50" cy="26" r="2.2" opacity="0.2" />
-      <line x1="50" y1="23.5" x2="50" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="48.2" y1="24.8" x2="49" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="51.8" y1="24.8" x2="51" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="48.5" y1="27.2" x2="49.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="51.5" y1="27.2" x2="50.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+    <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
+      <path d="M3 29 L3 24 C3 22 4 20 6 18 L9 15.5 L13 13 C16 11.5 20 10.5 24 10 L30 9.5 L36 9.5 L42 10 C46 10.5 49 11 52 12 C55 13 57 14.5 59 16.5 C61 18.5 63 20.5 65 22.5 C67 24.5 70 26.5 73 28 L76 29 L66 29 C66 25.7 63.3 23 60 23 C56.7 23 54 25.7 54 29 L25 29 C25 25.7 22.3 23 19 23 C15.7 23 13 25.7 13 29 Z" />
+      <circle cx="19" cy="29" r="3.5" />
+      <circle cx="60" cy="29" r="3.5" />
     </svg>
   );
 }
 
-/** Track Weapon — prominent TALL rear wing on pylons above body, front splitter (GT3 RS) */
+/** Track Weapon — sports car with prominent rear wing on pylons (Porsche 911 GT3 RS) */
 export function TrackWeaponIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
-      {/* Ground shadow */}
-      <ellipse cx="32" cy="28.5" rx="27" ry="2" opacity="0.1" />
-      {/* Main body */}
-      <path d="M5 26h5.5c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2h22c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2H60v-3l-1-2-1.5-1.5-2-2-2-1.5-2.5-1.5-3-1L44 13l-3-1.5-3-1H28l-5 1-4 1.5-3.5 2-3 2L10 20l-2 1.5-1.5 2-1 2v.5z" />
-      <rect x="48" y="4" width="10" height="2.5" rx="1" />
-      <rect x="49" y="6.5" width="1.5" height="7" />
-      <rect x="56" y="6.5" width="1.5" height="7" />
-      <rect x="1" y="22" width="6" height="2" rx="1" opacity="0.6" />
-      {/* Chrome beltline accent */}
-      <path d="M10 17h44" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.4" />
-      {/* Glass reflection */}
-      <path d="M36 12l-3 4.5" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.18" />
-      {/* Body sculpting crease */}
-      <path d="M12 20h42" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.22" />
-      {/* NACA ducts */}
-      <path d="M20 16l2.5-.8.5 1.2-3-.4z" opacity="0.35" />
-      <path d="M33 15l2.5-.8.5 1.2-3-.4z" opacity="0.35" />
-      {/* Canards on front */}
-      <path d="M58 19l3-1.5v1l-3 .5z" opacity="0.4" />
-      <path d="M58 21l3-1v.8l-3 .2z" opacity="0.35" />
-      {/* Wheel detailing - front */}
-      <circle cx="16" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="16" cy="26" r="2.2" opacity="0.2" />
-      <line x1="16" y1="23.5" x2="16" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="14.2" y1="24.8" x2="15" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="17.8" y1="24.8" x2="17" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="14.5" y1="27.2" x2="15.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="17.5" y1="27.2" x2="16.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      {/* Wheel detailing - rear */}
-      <circle cx="49" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="49" cy="26" r="2.2" opacity="0.2" />
-      <line x1="49" y1="23.5" x2="49" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="47.2" y1="24.8" x2="48" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="50.8" y1="24.8" x2="50" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="47.5" y1="27.2" x2="48.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="50.5" y1="27.2" x2="49.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+    <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
+      <path d="M4 29 L4 25 C4 23 5 21 7 19 L10 17 L14 15 C17 13.5 20 12.5 24 12 L30 11.5 L36 11 C39 11 42 11 45 11.5 C48 12 51 13 54 14.5 C57 16 59 17.5 61 19.5 C63 21.5 65 23 67 24.5 C69 26 72 27.5 75 28.5 L75 29 L67 29 C67 25.7 64.3 23 61 23 C57.7 23 55 25.7 55 29 L25 29 C25 25.7 22.3 23 19 23 C15.7 23 13 25.7 13 29 Z" />
+      <circle cx="19" cy="29" r="3.5" />
+      <circle cx="61" cy="29" r="3.5" />
+      <rect x="57" y="5" width="14" height="2.5" rx="1.2" />
+      <rect x="59.5" y="7.5" width="1.5" height="6" />
+      <rect x="69" y="7.5" width="1.5" height="6" />
     </svg>
   );
 }
 
-/** Daily Luxury — S-Class proportions: long, sleek modern sedan, sportier than formal Luxury */
+/** Daily Luxury — long flowing modern sedan, lower than formal Luxury (Mercedes S-Class) */
 export function DailyLuxuryIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
-      {/* Ground shadow */}
-      <ellipse cx="32" cy="28.5" rx="26" ry="2" opacity="0.1" />
-      {/* Main body */}
-      <path d="M5 26h5.5c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2h22c.8-2.5 3-4.2 5.5-4.2s4.7 1.7 5.5 4.2H59v-3.5l-1-2-1.5-1.5-1.5-2-1-1.5L52 13.5l-2-1.5-2.5-1-3-.5H36l-4-.5H24l-4 .5-3 1-2.5 1.5-2 2-1.5 2L9 19.5l-1.5 2-1 1.5-1 2v1z" />
-      <path d="M22 10.5l3-1h7v1.5h-7l-3-.5zM37 9.5h6l3 1-.5.5H37V9.5z" opacity="0.12" />
-      {/* Chrome beltline accent */}
-      <path d="M10 14h44" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.4" />
-      {/* Chrome window surround */}
-      <path d="M20 10.5c3-1 6-1.2 9-1.2h6c3 0 6 .3 9 1.2l2 1-1-.2c-3-.8-6-1-10-1h-6c-3 0-7 .2-10 1l1-.8z" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      {/* Glass reflection */}
-      <path d="M30 10l-3 4" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.18" />
-      {/* Body sculpting crease */}
-      <path d="M10 18h44" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.22" />
-      {/* Subtle pinstripe */}
-      <path d="M12 21h40" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.15" />
-      {/* Wheel detailing - front */}
-      <circle cx="16" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="16" cy="26" r="2.2" opacity="0.2" />
-      <line x1="16" y1="23.5" x2="16" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="14.2" y1="24.8" x2="15" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="17.8" y1="24.8" x2="17" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="14.5" y1="27.2" x2="15.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="17.5" y1="27.2" x2="16.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      {/* Wheel detailing - rear */}
-      <circle cx="48" cy="26" r="3.8" opacity="0.15" />
-      <circle cx="48" cy="26" r="2.2" opacity="0.2" />
-      <line x1="48" y1="23.5" x2="48" y2="24.8" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="46.2" y1="24.8" x2="47" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="49.8" y1="24.8" x2="49" y2="25.6" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="46.5" y1="27.2" x2="47.2" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-      <line x1="49.5" y1="27.2" x2="48.8" y2="26.5" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+    <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
+      <path d="M4 29 L4 24 C4 22 5 20 7 17.5 L10 14.5 L14 12 C17 10.5 20 9.5 24 9 L30 8.5 L36 8 L42 8 L48 8.5 C52 9 55 10 58 11.5 L62 14 L65 17 C66.5 19 67.5 21 68 23 L70 25 L73 27 L75 29 L65 29 C65 25.7 62.3 23 59 23 C55.7 23 53 25.7 53 29 L27 29 C27 25.7 24.3 23 21 23 C17.7 23 15 25.7 15 29 Z" />
+      <circle cx="21" cy="29" r="3.5" />
+      <circle cx="59" cy="29" r="3.5" />
     </svg>
   );
 }
 
-/** Classic Collectible — vintage sports car: extremely long nose, tiny cabin way back (Ferrari 250 GTO) */
+/** Classic Collectible — vintage long-hood sports car, same as ClassicIcon (Ferrari 250 GTO) */
 export function ClassicCollectibleIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
-      {/* Ground shadow */}
-      <ellipse cx="32" cy="28.5" rx="28" ry="2" opacity="0.1" />
-      {/* Main body */}
-      <path d="M4 26h5c.7-2.5 2.8-4.2 5.5-4.2s4.8 1.7 5.5 4.2h26c.7-2.5 2.8-4.2 5.5-4.2s4.8 1.7 5.5 4.2H61v-3l-.5-1.5-1-1.5-1.5-1.5-2-1.5-2-1-2.5-1-3-.5H44l-6-1.5-5-1-5.5-.5h-4l-5 .5-4 1-3 1.5-2.5 2-2 2-1.5 2L4 24v2z" />
-      <circle cx="7" cy="17" r="2.5" opacity="0.5" />
-      <circle cx="7" cy="17" r="1.2" opacity="0.3" />
-      {/* Chrome beltline accent */}
-      <path d="M10 16h44" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.4" />
-      {/* Glass reflection */}
-      <path d="M40 12l-2.5 4" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.18" />
-      {/* Body sculpting crease */}
-      <path d="M12 20h42" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.22" />
-      {/* Racing stripe hint */}
-      <path d="M16 12v10" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.12" />
-      <path d="M18 12v10" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.12" />
-      {/* Wire wheel spokes - front */}
-      <circle cx="14.5" cy="26" r="4.2" opacity="0.2" />
-      <circle cx="14.5" cy="26" r="2.5" opacity="0.15" />
-      <circle cx="14.5" cy="26" r="1" opacity="0.3" />
-      <line x1="14.5" y1="22.5" x2="14.5" y2="24" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="14.5" y1="28" x2="14.5" y2="29.5" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="11" y1="26" x2="12.5" y2="26" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="16.5" y1="26" x2="18" y2="26" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="12" y1="23.5" x2="13.2" y2="24.7" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="17" y1="23.5" x2="15.8" y2="24.7" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="12" y1="28.5" x2="13.2" y2="27.3" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="17" y1="28.5" x2="15.8" y2="27.3" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      {/* Wire wheel spokes - rear */}
-      <circle cx="51.5" cy="26" r="4.2" opacity="0.2" />
-      <circle cx="51.5" cy="26" r="2.5" opacity="0.15" />
-      <circle cx="51.5" cy="26" r="1" opacity="0.3" />
-      <line x1="51.5" y1="22.5" x2="51.5" y2="24" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="51.5" y1="28" x2="51.5" y2="29.5" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="48" y1="26" x2="49.5" y2="26" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="53.5" y1="26" x2="55" y2="26" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="49" y1="23.5" x2="50.2" y2="24.7" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="54" y1="23.5" x2="52.8" y2="24.7" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="49" y1="28.5" x2="50.2" y2="27.3" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
-      <line x1="54" y1="28.5" x2="52.8" y2="27.3" stroke="currentColor" strokeWidth="0.35" opacity="0.3" />
+    <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
+      <path d="M3 29 L3 24 C3 22 4 20 5 18.5 L8 16 L12 14 L18 12 L26 10.5 L34 10 L42 10 C46 10 50 10.5 53 11.5 C56 12.5 59 14 61 16 C63 18 65 20 67 22 C69 24 71 26 73 27.5 L74 29 L67 29 C67 24.6 64 21 60.5 21 C57 21 54 24.6 54 29 L22 29 C22 24.6 19 21 15.5 21 C12 21 9 24.6 9 29 Z" />
+      <circle cx="15.5" cy="29" r="4.2" />
+      <circle cx="60.5" cy="29" r="4.2" />
     </svg>
   );
 }
