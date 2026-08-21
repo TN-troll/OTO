@@ -23,6 +23,14 @@ export interface Category {
 
 export const CATEGORIES: Category[] = [
   {
+    id: 'hypercar',
+    label: 'Hypercars',
+    labelNl: 'Hypercars',
+    filter: {
+      horsepowerMin: 800,
+    },
+  },
+  {
     id: 'supercar',
     label: 'Supercars',
     labelNl: 'Supercars',

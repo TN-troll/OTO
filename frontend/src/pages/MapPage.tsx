@@ -29,6 +29,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.css';
 import '../components/map/map.css';
 
 const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  'hypercar': SupercarIcon,
   'supercar': SupercarIcon,
   'luxury': LuxuryIcon,
   'performance-sedan': PerformanceSedanIcon,
