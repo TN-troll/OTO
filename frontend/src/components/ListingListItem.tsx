@@ -4,6 +4,7 @@ import { useFavorites } from '../hooks/useFavorites';
 import { useCompare } from '../hooks/useCompare';
 import { getProxyImageUrl } from '../utils/imageProxy';
 import { formatPrice, formatNumber } from '../utils/formatNumber';
+import { getMakeLogo } from '../utils/makeLogos';
 import { useLanguage } from '../i18n';
 
 interface ListingListItemProps {
@@ -49,7 +50,7 @@ function ListingListItemInner({ listing }: ListingListItemProps) {
           <img
             src={getProxyImageUrl(images[imgIndex])}
             alt={`${listing.make} ${listing.model}`}
-            className={`h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 group-hover:brightness-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
             loading="lazy"
             onLoad={() => setImageLoaded(true)}
             onError={() => setImageError(true)}
@@ -96,7 +97,10 @@ function ListingListItemInner({ listing }: ListingListItemProps) {
       <div className="flex flex-1 flex-col justify-between p-4 sm:p-5">
         <div>
           {/* Title */}
-          <h3 className="text-base font-bold text-white group-hover:text-brand-accent sm:text-lg">
+          <h3 className="flex items-center gap-2 text-base font-bold text-white group-hover:text-brand-accent sm:text-lg">
+            {getMakeLogo(listing.make) && (
+              <img src={getMakeLogo(listing.make)!} alt="" className="h-5 w-5 object-contain" loading="lazy" />
+            )}
             {listing.make} <span className="font-medium text-surface-300">{listing.model}</span>
           </h3>
 

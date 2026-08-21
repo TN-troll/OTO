@@ -4,6 +4,7 @@ import { useFavorites } from '../hooks/useFavorites';
 import { useCompare } from '../hooks/useCompare';
 import { getProxyImageUrl } from '../utils/imageProxy';
 import { formatPrice, formatNumber } from '../utils/formatNumber';
+import { getMakeLogo } from '../utils/makeLogos';
 import { useLanguage } from '../i18n';
 
 // Track last visit time — set on first card render each session
@@ -162,7 +163,7 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
               className={[
                 'h-full w-full object-cover',
                 'transition-transform duration-500 ease-smooth',
-                'group-hover:scale-[1.05]',
+                'group-hover:scale-[1.05] group-hover:brightness-105',
                 'motion-reduce:transition-none motion-reduce:transform-none',
                 imageLoaded ? 'opacity-100' : 'opacity-0',
               ].join(' ')}
@@ -285,9 +286,12 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
         </div>
 
         {/* Make & Model — tracking-tight, 17px semibold */}
-        <h3 className="text-[17px] font-semibold tracking-tight text-surface-900 dark:text-white">
+        <h3 className="flex items-center gap-1.5 text-[17px] font-semibold tracking-tight text-surface-900 dark:text-white">
+          {getMakeLogo(listing.make) && (
+            <img src={getMakeLogo(listing.make)!} alt="" className="h-4 w-4 object-contain" loading="lazy" />
+          )}
           {listing.make}
-          <span className="ml-1.5 font-normal text-surface-500 dark:text-surface-400">
+          <span className="ml-1 font-normal text-surface-500 dark:text-surface-400">
             {listing.model}
           </span>
         </h3>
