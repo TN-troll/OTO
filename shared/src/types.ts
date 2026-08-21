@@ -202,6 +202,8 @@ export interface ListingSummary {
   isFeatured?: boolean;
   /** Whether this listing has an audio clip available */
   hasSoundClip?: boolean;
+  /** Short snippet from the ad description (first ~150 chars) */
+  snippet: string | null;
 }
 
 /** Result of validating filter criteria or other input */

@@ -343,6 +343,13 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
           )}
         </div>
 
+        {/* Ad snippet */}
+        {listing.snippet && (
+          <p className="mt-2 line-clamp-1 text-[11px] text-surface-400 dark:text-surface-500">
+            {listing.snippet}{listing.snippet.length >= 145 ? '…' : ''}
+          </p>
+        )}
+
         {/* Deal badge */}
         {listing.marketAvgPrice != null && listing.price < listing.marketAvgPrice && (
           <div className="mt-2 flex items-center gap-1.5">

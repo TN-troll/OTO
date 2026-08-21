@@ -121,6 +121,13 @@ function ListingListItemInner({ listing }: ListingListItemProps) {
             <span className="text-surface-400">{listing.year}</span>
           </div>
 
+          {/* Ad description snippet */}
+          {listing.snippet && (
+            <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-surface-400">
+              {listing.snippet}{listing.snippet.length >= 145 ? '…' : ''}
+            </p>
+          )}
+
           {/* Secondary details */}
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-surface-400">
             {listing.location && (

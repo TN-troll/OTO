@@ -34,6 +34,7 @@ function createMockListings(count: number): ListingSummary[] {
     sellerType: null,
     marketAvgPrice: null,
     dateAdded: new Date('2024-01-01'),
+    snippet: null,
   }));
 }
 

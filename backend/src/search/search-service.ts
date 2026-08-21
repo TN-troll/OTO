@@ -124,6 +124,7 @@ export class SearchService {
       engine_displacement_cc: number | null;
       image_urls: string[];
       date_added: Date;
+      snippet: string | null;
     }>(sql, params);
 
     const listings: ListingSummary[] = result.rows.map((row) => ({
@@ -138,6 +139,7 @@ export class SearchService {
       horsepower: row.horsepower,
       engineDisplacementCc: row.engine_displacement_cc,
       dateAdded: row.date_added,
+      snippet: row.snippet ? row.snippet.replace(/\n/g, ' ').trim() : null,
     }));
 
     // Generate suggestions when no results found
@@ -275,7 +277,7 @@ export class SearchService {
     }
 
     const whereClause = conditions.join(' AND ');
-    const sql = `SELECT id, title, make, model, year, price, horsepower, engine_displacement_cc, image_urls, date_added
+    const sql = `SELECT id, title, make, model, year, price, horsepower, engine_displacement_cc, image_urls, date_added, LEFT(description, 150) AS snippet
                  FROM listings
                  WHERE ${whereClause}
                  ORDER BY date_added DESC`;
