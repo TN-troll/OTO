@@ -3,6 +3,8 @@ import type { ListingSummary } from '@car-ads/shared';
 import { useFavorites } from '../hooks/useFavorites';
 import { useCompare } from '../hooks/useCompare';
 import { getProxyImageUrl } from '../utils/imageProxy';
+import { formatPrice, formatNumber } from '../utils/formatNumber';
+import { useLanguage } from '../i18n';
 
 interface ListingListItemProps {
   listing: ListingSummary;
@@ -23,6 +25,7 @@ export function ListingListItem({ listing }: ListingListItemProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { addToCompare, removeFromCompare, isInCompare } = useCompare();
+  const { locale } = useLanguage();
   const isNew = listing.dateAdded && (Date.now() - new Date(listing.dateAdded).getTime()) < 48 * 60 * 60 * 1000;
   const pricePerHp = listing.horsepower ? Math.round(listing.price / listing.horsepower) : null;
 
@@ -150,7 +153,7 @@ export function ListingListItem({ listing }: ListingListItemProps) {
             <span>{listing.year}</span>
             {pricePerHp != null && (
               <span className="inline-flex items-center rounded-md bg-surface-100 px-2 py-0.5 text-xs font-medium text-surface-700 dark:bg-surface-700 dark:text-surface-300">
-                €{pricePerHp.toLocaleString('nl-NL')}/HP
+                €{formatNumber(pricePerHp, locale)}/HP
               </span>
             )}
           </div>
@@ -159,7 +162,7 @@ export function ListingListItem({ listing }: ListingListItemProps) {
         {/* Price — bottom right */}
         <div className="mt-3 flex items-end justify-between">
           <span className="text-xl font-bold text-brand dark:text-brand-accent">
-            €{listing.price.toLocaleString('nl-NL')}
+            {formatPrice(listing.price, locale)}
           </span>
         </div>
       </div>

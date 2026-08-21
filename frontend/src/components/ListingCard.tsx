@@ -3,6 +3,8 @@ import type { ListingSummary } from '@car-ads/shared';
 import { useFavorites } from '../hooks/useFavorites';
 import { useCompare } from '../hooks/useCompare';
 import { getProxyImageUrl } from '../utils/imageProxy';
+import { formatPrice, formatNumber } from '../utils/formatNumber';
+import { useLanguage } from '../i18n';
 
 interface ListingCardProps {
   listing: ListingSummary;
@@ -43,6 +45,7 @@ export function ListingCard({ listing, featured = false, priority = false }: Lis
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { addToCompare, removeFromCompare, isInCompare } = useCompare();
+  const { locale } = useLanguage();
   const isNew = listing.dateAdded && (Date.now() - new Date(listing.dateAdded).getTime()) < 48 * 60 * 60 * 1000;
   const pricePerHp = listing.horsepower ? Math.round(listing.price / listing.horsepower) : null;
   const isFeaturedCard = featured || listing.isFeatured;
@@ -207,7 +210,7 @@ export function ListingCard({ listing, featured = false, priority = false }: Lis
         {/* Price badge — glass panel */}
         <div className="absolute bottom-4 right-4 rounded-2xl bg-white/80 px-4 py-2.5 shadow-glass backdrop-blur-xl dark:bg-black/60">
           <span className="text-lg font-bold tracking-tight text-surface-900 dark:text-white">
-            €{listing.price.toLocaleString('nl-NL')}
+            {formatPrice(listing.price, locale)}
           </span>
         </div>
       </div>
@@ -239,7 +242,7 @@ export function ListingCard({ listing, featured = false, priority = false }: Lis
           )}
           {pricePerHp != null && (
             <span className="inline-flex items-center rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
-              €{pricePerHp.toLocaleString('nl-NL')}/HP
+              €{formatNumber(pricePerHp, locale)}/HP
             </span>
           )}
         </div>

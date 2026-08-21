@@ -2,6 +2,8 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { useQueries } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { getProxyImageUrl } from '../utils/imageProxy';
+import { useLanguage } from '../i18n';
+import { formatPrice, formatNumber } from '../utils/formatNumber';
 
 interface ListingDetail {
   id: string;
@@ -20,6 +22,7 @@ interface ListingDetail {
 
 export function ComparePage() {
   const [searchParams] = useSearchParams();
+  const { locale } = useLanguage();
   const idsParam = searchParams.get('ids') || '';
   const ids = idsParam.split(',').filter(Boolean);
 
@@ -94,14 +97,14 @@ export function ComparePage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-surface-100 dark:divide-surface-700">
-            <CompareRow label="Price" listings={listings} render={l => `€${Math.round(l.price).toLocaleString('nl-NL')}`} />
+            <CompareRow label="Price" listings={listings} render={l => formatPrice(l.price, locale)} />
             <CompareRow label="Year" listings={listings} render={l => String(l.year)} />
             <CompareRow label="Horsepower" listings={listings} render={l => l.horsepower ? `${l.horsepower} HP` : '—'} />
             <CompareRow label="Engine" listings={listings} render={l => l.engineDisplacementCc ? `${l.engineDisplacementCc} cc` : '—'} />
-            <CompareRow label="Mileage" listings={listings} render={l => l.mileage != null ? `${l.mileage.toLocaleString('nl-NL')} km` : '—'} />
+            <CompareRow label="Mileage" listings={listings} render={l => l.mileage != null ? `${formatNumber(l.mileage, locale)} km` : '—'} />
             <CompareRow label="Transmission" listings={listings} render={l => l.transmissionType ? capitalize(l.transmissionType) : '—'} />
             <CompareRow label="Fuel Type" listings={listings} render={l => l.fuelType ? capitalize(l.fuelType) : '—'} />
-            <CompareRow label="€/HP" listings={listings} render={l => l.horsepower ? `€${Math.round(l.price / l.horsepower).toLocaleString('nl-NL')}` : '—'} />
+            <CompareRow label="€/HP" listings={listings} render={l => l.horsepower ? `€${formatNumber(Math.round(l.price / l.horsepower), locale)}` : '—'} />
           </tbody>
         </table>
       </div>

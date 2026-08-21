@@ -1,5 +1,6 @@
 import { useState } from 'react';
-
+import { useLanguage } from '../i18n';
+import { formatPrice } from '../utils/formatNumber';
 interface DealerContactFormProps {
   listingId: string;
   listingTitle: string;
@@ -38,6 +39,7 @@ export function DealerContactForm({
   sourceUrl,
   onClose,
 }: DealerContactFormProps) {
+  const { locale } = useLanguage();
   const [form, setForm] = useState<FormState>({
     name: '',
     email: '',
@@ -177,7 +179,7 @@ export function DealerContactForm({
         <div className="mt-4 rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
           <p className="text-sm font-medium text-surface-900 dark:text-white">{listingTitle}</p>
           <p className="mt-0.5 text-sm font-bold text-brand dark:text-brand-accent">
-            €{Math.round(listingPrice).toLocaleString('nl-NL')}
+            {formatPrice(Math.round(listingPrice), locale)}
           </p>
           <p className="mt-1 truncate text-xs text-surface-400 dark:text-surface-500">{sourceUrl}</p>
         </div>

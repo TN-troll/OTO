@@ -12,6 +12,7 @@ import { getProxyImageUrls } from '../utils/imageProxy';
 import { useClickTracker } from '../hooks/useClickTracker';
 import { resolveTranslation } from '../utils/translation';
 import { sanitizeHtmlDescription, escapeHtml } from '../utils/sanitizer';
+import { formatPrice, formatNumber, formatDecimal } from '../utils/formatNumber';
 
 /** Extended listing type as returned by the detail API (includes nested soundProfile) */
 interface ListingDetail {
@@ -44,7 +45,7 @@ interface ListingDetail {
 
 export function ListingDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const { addViewed } = useRecentlyViewed();
   const [showContactForm, setShowContactForm] = useState(false);
 
@@ -130,7 +131,7 @@ export function ListingDetailPage() {
             <div className="flex flex-col items-end gap-2">
               <div className="rounded-xl bg-surface-50 px-5 py-3 dark:bg-surface-700">
                 <p className="text-3xl font-bold text-brand dark:text-brand-accent">
-                  €{Math.round(listing.price).toLocaleString('nl-NL')}
+                  {formatPrice(listing.price, locale)}
                 </p>
               </div>
               <MarketValueBadge price={listing.price} marketAvgPrice={listing.marketAvgPrice} />
@@ -424,12 +425,12 @@ function ImageGallery({ imageUrls, alt }: { imageUrls: string[]; alt: string }) 
 
 /** All specifications displayed in a structured grid */
 function SpecificationsSection({ listing }: { listing: ListingDetail }) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
 
   const specs = [
     { label: t.horsepower, value: listing.horsepower ? `${listing.horsepower} HP` : null },
     { label: t.engineDisplacement, value: listing.engineDisplacementCc ? `${listing.engineDisplacementCc} cc` : null },
-    { label: t.mileage, value: listing.mileage != null ? `${listing.mileage.toLocaleString('nl-NL')} km` : null },
+    { label: t.mileage, value: listing.mileage != null ? `${formatNumber(listing.mileage, locale)} km` : null },
     { label: t.transmission, value: listing.transmissionType ? capitalize(listing.transmissionType) : null },
     { label: t.fuelType, value: listing.fuelType ? capitalize(listing.fuelType) : null },
     { label: t.location, value: listing.location },
@@ -676,6 +677,8 @@ function LightboxOverlay({
 /* ─── Price History Section ─── */
 
 function PriceHistorySection({ history }: { history?: { price: number; date: string }[] }) {
+  const { locale } = useLanguage();
+
   if (!history || history.length < 2) return null;
 
   return (
@@ -692,11 +695,11 @@ function PriceHistorySection({ history }: { history?: { price: number; date: str
               </span>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-surface-900 dark:text-white">
-                  €{Math.round(entry.price).toLocaleString('nl-NL')}
+                  {formatPrice(entry.price, locale)}
                 </span>
                 {diff !== null && diff !== 0 && (
                   <span className={`text-xs font-medium ${diff < 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                    {diff < 0 ? '▼' : '▲'} €{Math.abs(Math.round(diff)).toLocaleString('nl-NL')}
+                    {diff < 0 ? '▼' : '▲'} €{formatNumber(Math.abs(Math.round(diff)), locale)}
                   </span>
                 )}
               </div>
@@ -813,9 +816,9 @@ function DepreciationSection({ price, year, mileage, make }: { price: number; ye
         {projections.map(p => (
           <div key={p.years} className="rounded-lg bg-surface-50 p-3 text-center dark:bg-surface-700">
             <p className="text-[10px] font-medium text-surface-500 dark:text-surface-400">{inYears(p.years)}</p>
-            <p className="mt-1 text-sm font-bold text-surface-900 dark:text-white">€{p.price.toLocaleString('nl-NL')}</p>
+            <p className="mt-1 text-sm font-bold text-surface-900 dark:text-white">{formatPrice(p.price, locale)}</p>
             <p className={`text-[10px] ${p.price < price ? 'text-red-500' : 'text-green-500'}`}>
-              {p.price < price ? '▼' : '▲'} €{Math.abs(p.price - price).toLocaleString('nl-NL')}
+              {p.price < price ? '▼' : '▲'} €{formatNumber(Math.abs(p.price - price), locale)}
             </p>
           </div>
         ))}
@@ -823,7 +826,7 @@ function DepreciationSection({ price, year, mileage, make }: { price: number; ye
 
       <div className="mt-3 flex items-center gap-2 rounded-lg bg-surface-50 px-4 py-2.5 dark:bg-surface-700">
         <span className="text-xs text-surface-500 dark:text-surface-400">{monthlyLabel}</span>
-        <span className="text-sm font-bold text-surface-900 dark:text-white">€{monthlyDepreciation.toLocaleString('nl-NL')}/{isNl ? 'mnd' : 'mo'}</span>
+        <span className="text-sm font-bold text-surface-900 dark:text-white">€{formatDecimal(monthlyDepreciation, locale, 2)}/{isNl ? 'mnd' : 'mo'}</span>
       </div>
 
       <p className="mt-2 text-[10px] text-surface-400 dark:text-surface-500 italic">{disclaimer}</p>

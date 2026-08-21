@@ -14,6 +14,7 @@ import { CATEGORIES } from '../data/categories';
 import { CATEGORY_CONTENT } from '../data/category-content';
 import { useCompare } from '../hooks/useCompare';
 import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
+import { formatPrice, formatNumber } from '../utils/formatNumber';
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -238,7 +239,7 @@ export function BrowsePage() {
                 </div>
                 <div className="p-2">
                   <p className="truncate text-xs font-bold text-surface-900 dark:text-white">{item.make} {item.model}</p>
-                  <p className="text-xs font-semibold text-brand dark:text-brand-accent">€{Math.round(item.price).toLocaleString('nl-NL')}</p>
+                  <p className="text-xs font-semibold text-brand dark:text-brand-accent">{formatPrice(item.price, locale)}</p>
                 </div>
               </a>
             ))}
@@ -349,7 +350,7 @@ export function BrowsePage() {
         <div>
           {totalCount != null && totalCount > 0 && (
             <h1 className="text-2xl font-bold text-surface-900 dark:text-white">
-              <span className="text-brand-accent">{totalCount.toLocaleString('nl-NL')}</span>{' '}
+              <span className="text-brand-accent">{formatNumber(totalCount, locale)}</span>{' '}
               <span className="text-surface-600 font-normal text-lg dark:text-surface-300">{t.carsFound}</span>
             </h1>
           )}

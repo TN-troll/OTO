@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import { calculateMonthlyPayment, clamp } from '../utils/finance';
+import { useLanguage } from '../i18n';
+import { formatDecimal } from '../utils/formatNumber';
 
 interface FinanceCalculatorProps {
   listingPrice: number; // EUR
@@ -13,6 +15,7 @@ interface FinanceCalculatorProps {
  * Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6
  */
 export function FinanceCalculator({ listingPrice }: FinanceCalculatorProps) {
+  const { locale } = useLanguage();
   const [downPaymentPercent, setDownPaymentPercent] = useState(20);
   const [loanTermMonths, setLoanTermMonths] = useState(60);
   const [annualInterestRate, setAnnualInterestRate] = useState(4.5);
@@ -133,7 +136,7 @@ export function FinanceCalculator({ listingPrice }: FinanceCalculatorProps) {
                 Monthly Payment
               </p>
               <p className="mt-1 text-lg font-bold text-brand dark:text-brand-accent">
-                €{calculation.monthlyPayment.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                €{formatDecimal(calculation.monthlyPayment, locale, 2)}
               </p>
             </div>
             <div className="rounded-lg bg-surface-50 p-3 text-center dark:bg-surface-700">
@@ -141,7 +144,7 @@ export function FinanceCalculator({ listingPrice }: FinanceCalculatorProps) {
                 Total Interest
               </p>
               <p className="mt-1 text-sm font-bold text-surface-900 dark:text-white">
-                €{calculation.totalInterest.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                €{formatDecimal(calculation.totalInterest, locale, 2)}
               </p>
             </div>
             <div className="rounded-lg bg-surface-50 p-3 text-center dark:bg-surface-700">
@@ -149,7 +152,7 @@ export function FinanceCalculator({ listingPrice }: FinanceCalculatorProps) {
                 Total Cost
               </p>
               <p className="mt-1 text-sm font-bold text-surface-900 dark:text-white">
-                €{calculation.totalCost.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                €{formatDecimal(calculation.totalCost, locale, 2)}
               </p>
             </div>
           </div>

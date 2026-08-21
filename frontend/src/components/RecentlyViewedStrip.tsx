@@ -4,6 +4,7 @@ import { useLanguage } from '../i18n';
 import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 import { api, ApiError } from '../api/client';
 import { getProxyImageUrl } from '../utils/imageProxy';
+import { formatPrice } from '../utils/formatNumber';
 
 interface RecentlyViewedStripProps {
   /** Maximum number of listings to show */
@@ -11,7 +12,7 @@ interface RecentlyViewedStripProps {
 }
 
 export function RecentlyViewedStrip({ maxItems = 5 }: RecentlyViewedStripProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const { recentIds } = useRecentlyViewed();
   const idsToShow = recentIds.slice(0, maxItems);
 
@@ -98,7 +99,7 @@ export function RecentlyViewedStrip({ maxItems = 5 }: RecentlyViewedStripProps) 
                 {listing.make} {listing.model}
               </p>
               <p className="mt-1 text-sm font-bold text-surface-700 dark:text-surface-200">
-                €{listing.price.toLocaleString('nl-NL')}
+                {formatPrice(listing.price, locale)}
               </p>
             </div>
           </Link>

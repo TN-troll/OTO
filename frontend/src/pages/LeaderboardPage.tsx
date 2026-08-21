@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import { api } from '../api/client';
 import { getAcceleration } from '../data/performance';
 import { getProxyImageUrl } from '../utils/imageProxy';
+import { useLanguage } from '../i18n';
+import { formatPrice } from '../utils/formatNumber';
 
 export function LeaderboardPage() {
+  const { locale } = useLanguage();
   const { data, isLoading } = useQuery({
     queryKey: ['listings', { page: 1, pageSize: 100, sortBy: 'horsepower', sortOrder: 'desc' }],
     queryFn: () => api.getListings({ page: 1, pageSize: 100, sortBy: 'horsepower', sortOrder: 'desc' }),
@@ -64,7 +67,7 @@ export function LeaderboardPage() {
                   {listing.make} {listing.model}
                 </p>
                 <p className="text-xs text-surface-500 dark:text-surface-400">
-                  {listing.horsepower} HP • {listing.year} • €{Math.round(listing.price).toLocaleString('nl-NL')}
+                  {listing.horsepower} HP • {listing.year} • {formatPrice(listing.price, locale)}
                 </p>
               </div>
 

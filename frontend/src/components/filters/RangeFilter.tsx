@@ -1,4 +1,6 @@
 import { useState, useCallback } from 'react';
+import { useLanguage } from '../../i18n';
+import { formatNumber as formatLocaleNumber } from '../../utils/formatNumber';
 
 export interface RangeFilterProps {
   label: string;
@@ -13,14 +15,15 @@ export interface RangeFilterProps {
   noThousandsSeparator?: boolean;
 }
 
-/** Format number with dots as thousands separator (NL style) */
-function formatNumber(n: number, plain = false): string {
+/** Format number with locale-aware thousands separator */
+function formatNumber(n: number, plain = false, locale: 'nl' | 'en' = 'nl'): string {
   if (plain) return String(n);
-  return n.toLocaleString('nl-NL');
+  return formatLocaleNumber(n, locale);
 }
 
-/** Parse a formatted string back to a number (removes dots) */
+/** Parse a formatted string back to a number (removes locale separators) */
 function parseFormattedNumber(s: string): number | undefined {
+  // Remove both dots and commas used as thousands separators, keep decimal separator
   const cleaned = s.replace(/\./g, '').replace(/,/g, '.');
   if (cleaned === '') return undefined;
   const n = Number(cleaned);
@@ -38,16 +41,17 @@ export function RangeFilter({
   onChange,
   noThousandsSeparator = false,
 }: RangeFilterProps) {
+  const { locale } = useLanguage();
   const [error, setError] = useState<string | null>(null);
-  const [minInput, setMinInput] = useState(valueMin !== undefined ? formatNumber(valueMin, noThousandsSeparator) : '');
-  const [maxInput, setMaxInput] = useState(valueMax !== undefined ? formatNumber(valueMax, noThousandsSeparator) : '');
+  const [minInput, setMinInput] = useState(valueMin !== undefined ? formatNumber(valueMin, noThousandsSeparator, locale) : '');
+  const [maxInput, setMaxInput] = useState(valueMax !== undefined ? formatNumber(valueMax, noThousandsSeparator, locale) : '');
   const [minFocused, setMinFocused] = useState(false);
   const [maxFocused, setMaxFocused] = useState(false);
 
   const handleMinBlur = useCallback(() => {
     setMinFocused(false);
     const parsed = parseFormattedNumber(minInput);
-    const formatted = parsed !== undefined ? formatNumber(parsed, noThousandsSeparator) : '';
+    const formatted = parsed !== undefined ? formatNumber(parsed, noThousandsSeparator, locale) : '';
     setMinInput(formatted);
 
     if (parsed !== undefined && valueMax !== undefined && parsed > valueMax) {
@@ -56,12 +60,12 @@ export function RangeFilter({
       setError(null);
     }
     onChange(parsed, valueMax);
-  }, [minInput, valueMax, onChange]);
+  }, [minInput, valueMax, onChange, locale]);
 
   const handleMaxBlur = useCallback(() => {
     setMaxFocused(false);
     const parsed = parseFormattedNumber(maxInput);
-    const formatted = parsed !== undefined ? formatNumber(parsed, noThousandsSeparator) : '';
+    const formatted = parsed !== undefined ? formatNumber(parsed, noThousandsSeparator, locale) : '';
     setMaxInput(formatted);
 
     if (valueMin !== undefined && parsed !== undefined && valueMin > parsed) {
@@ -70,7 +74,7 @@ export function RangeFilter({
       setError(null);
     }
     onChange(valueMin, parsed);
-  }, [maxInput, valueMin, onChange]);
+  }, [maxInput, valueMin, onChange, locale]);
 
   return (
     <div className="space-y-2">
@@ -79,8 +83,8 @@ export function RangeFilter({
         <input
           type="text"
           inputMode="numeric"
-          placeholder={`${formatNumber(min, noThousandsSeparator)}${unit ? ` ${unit}` : ''}`}
-          value={minFocused ? minInput : (valueMin !== undefined ? formatNumber(valueMin, noThousandsSeparator) : minInput)}
+          placeholder={`${formatNumber(min, noThousandsSeparator, locale)}${unit ? ` ${unit}` : ''}`}
+          value={minFocused ? minInput : (valueMin !== undefined ? formatNumber(valueMin, noThousandsSeparator, locale) : minInput)}
           onChange={(e) => setMinInput(e.target.value)}
           onFocus={() => { setMinFocused(true); setMinInput(valueMin !== undefined ? String(valueMin) : ''); }}
           onBlur={handleMinBlur}
@@ -91,8 +95,8 @@ export function RangeFilter({
         <input
           type="text"
           inputMode="numeric"
-          placeholder={`${formatNumber(max, noThousandsSeparator)}${unit ? ` ${unit}` : ''}`}
-          value={maxFocused ? maxInput : (valueMax !== undefined ? formatNumber(valueMax, noThousandsSeparator) : maxInput)}
+          placeholder={`${formatNumber(max, noThousandsSeparator, locale)}${unit ? ` ${unit}` : ''}`}
+          value={maxFocused ? maxInput : (valueMax !== undefined ? formatNumber(valueMax, noThousandsSeparator, locale) : maxInput)}
           onChange={(e) => setMaxInput(e.target.value)}
           onFocus={() => { setMaxFocused(true); setMaxInput(valueMax !== undefined ? String(valueMax) : ''); }}
           onBlur={handleMaxBlur}
