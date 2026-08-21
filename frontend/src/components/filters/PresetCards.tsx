@@ -2,49 +2,12 @@ import { PERFORMANCE_PRESETS } from '@car-ads/shared';
 import type { PerformancePresetId } from '@car-ads/shared';
 import { useFilterContext } from '../../hooks/FilterContext';
 import { useLanguage } from '../../i18n/LanguageContext';
-
-/** Premium SVG icons for each preset — refined line art style */
-function GrandTourerIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 14.5h18M5.5 14.5l1-4h11l1 4M7.5 10.5l.5-2.5h8l.5 2.5" />
-      <circle cx="7.5" cy="14.5" r="2" />
-      <circle cx="16.5" cy="14.5" r="2" />
-      <path d="M9.5 14.5h5" />
-      <path d="M4 17.5h1M19 17.5h1" />
-    </svg>
-  );
-}
-
-function TrackWeaponIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 3v2M12 19v2M5.636 5.636l1.414 1.414M16.95 16.95l1.414 1.414M3 12h2M19 12h2M5.636 18.364l1.414-1.414M16.95 7.05l1.414-1.414" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="12" cy="12" r="1.5" />
-    </svg>
-  );
-}
-
-function DailyLuxuryIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2L9.5 8.5H3l5.25 4L6 19l6-4.5L18 19l-2.25-6.5L21 8.5h-6.5L12 2z" />
-    </svg>
-  );
-}
-
-function ClassicCollectibleIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 3h6l1.5 3H7.5L9 3z" />
-      <rect x="6" y="6" width="12" height="12" rx="2" />
-      <circle cx="12" cy="12" r="3.5" />
-      <path d="M12 8.5v1M12 14.5v1M8.5 12h1M14.5 12h1" />
-      <path d="M12 12l2-2" />
-    </svg>
-  );
-}
+import {
+  GrandTourerIcon,
+  TrackWeaponIcon,
+  DailyLuxuryIcon,
+  ClassicCollectibleIcon,
+} from '../icons/CategoryIcons';
 
 /** Maps preset IDs to their icon components */
 const PRESET_ICONS: Record<PerformancePresetId, React.FC<{ className?: string }>> = {
