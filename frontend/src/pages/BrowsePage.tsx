@@ -296,7 +296,7 @@ export function BrowsePage() {
               <div className="relative flex flex-col gap-2">
                 {IconComponent && (
                   <IconComponent
-                    className={`h-7 w-7 transition-colors duration-200 ${
+                    className={`h-6 w-12 transition-colors duration-200 ${
                       isActive
                         ? 'text-brand-accent'
                         : 'text-surface-400 group-hover:text-brand-accent/70 dark:text-surface-500'

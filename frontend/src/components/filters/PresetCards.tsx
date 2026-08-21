@@ -54,7 +54,7 @@ export function PresetCards() {
             aria-pressed={isActive}
           >
             <IconComponent
-              className={`h-5 w-5 transition-colors duration-200 ${
+              className={`h-6 w-12 transition-colors duration-200 ${
                 isActive
                   ? 'text-brand-accent'
                   : 'text-surface-400 group-hover:text-brand-accent/70 dark:text-surface-500'

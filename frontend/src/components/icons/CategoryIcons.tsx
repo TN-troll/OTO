@@ -1,198 +1,124 @@
 /**
- * Premium SVG icon library for vehicle categories and performance presets.
- * Line-art style, 24x24 viewBox, stroke-based (no fill), strokeWidth 1.5.
+ * Premium filled silhouette icons for vehicle categories and performance presets.
+ * Each icon is a recognizable car shape rendered as a solid silhouette.
+ * 24x24 viewBox, fill-based for bold visual impact.
  */
 
 interface IconProps {
   className?: string;
 }
 
-/** Angular mid-engine silhouette with sharp wedge shape */
+/** Supercar — low, wide mid-engine wedge (think Lamborghini Countach / Ferrari) */
 export function SupercarIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 15.5h20" />
-      <path d="M4 15.5l1.5-4.5h3L10 8.5h6l2 2.5h2.5l1.5 4.5" />
-      <path d="M3 15.5v1.5h2.5" />
-      <path d="M18.5 17h2.5v-1.5" />
-      <circle cx="7" cy="17" r="1.5" />
-      <circle cx="17" cy="17" r="1.5" />
-      <path d="M8.5 17h7" />
-      <path d="M10 11h4" />
+    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
+      <path d="M8 24c0-2.2 1.8-4 4-4s4 1.8 4 4H8zm40 0c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zM4 22h4.3c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4h24.6c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4H60c1.1 0 2-.5 2-1.5v-2c0-.5-.2-1-.5-1.2L56 13l-2-2-6-4h-2l-8-2H26l-10 3-6 3-4.5 3.5L3 14c-1 1-1.5 2-1.5 3v3.5c0 1 .7 1.5 2.5 1.5z" />
     </svg>
   );
 }
 
-/** Elegant crown emblem */
+/** Luxury — stately long-wheelbase sedan (Rolls-Royce / Bentley proportions) */
 export function LuxuryIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 17h16" />
-      <path d="M5 17l1-9 3.5 4L12 7l2.5 5L18 8l1 9" />
-      <circle cx="5" cy="7" r="1" />
-      <circle cx="12" cy="5.5" r="1" />
-      <circle cx="19" cy="7" r="1" />
-      <path d="M6 19h12" />
+    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
+      <path d="M10 24c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zm36 0c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zM4 22h6.3c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4h20.6c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4H60c1.1 0 2-.7 2-1.5V18l-1-2-3-3-2-1.5V9c0-.5-.2-1-.6-1.2L50 5H36l-8-1H20l-6 1.5L9 7.5 6 10 4 12.5 3 15v5.5c0 1 .5 1.5 1 1.5z" />
     </svg>
   );
 }
 
-/** Sleek four-door sedan profile with sport lines */
+/** Performance Sedan — aggressive four-door (M5 / RS6 / AMG proportions) */
 export function PerformanceSedanIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 14.5h20" />
-      <path d="M4 14.5l1-3h3.5l2-3h5l1.5 1.5H19l1.5 1.5h.5l1 3" />
-      <path d="M3 14.5v2h2" />
-      <path d="M19 16.5h2v-2" />
-      <circle cx="6.5" cy="16.5" r="1.5" />
-      <circle cx="17.5" cy="16.5" r="1.5" />
-      <path d="M8 16.5h9" />
-      <path d="M10.5 11.5l1-1.5" />
-      <path d="M7 11.5h8" />
+    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
+      <path d="M10 24c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zm34 0c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zM5 22h5.3c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4h20.6c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4H58c1.7 0 3-.7 3-1.5V18l-2-3-3-2V10l-4-3.5L46 5H38l-6-1H24l-7 1.5-5 2L8 10l-2.5 3L4 16v4.5c0 1 .5 1.5 1 1.5z" />
     </svg>
   );
 }
 
-/** Compact hatchback with aggressive stance */
+/** Hot Hatch — compact, aggressive hatchback (Golf GTI / Civic Type R) */
 export function HotHatchIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 15h20" />
-      <path d="M4.5 15l1-3.5h3L10 8h4.5l1.5 1.5 2 2H20l1.5 3.5" />
-      <path d="M10 11.5V8" />
-      <path d="M3 15v2h2.5" />
-      <path d="M18.5 17h2.5v-2" />
-      <circle cx="7" cy="17" r="1.5" />
-      <circle cx="17" cy="17" r="1.5" />
-      <path d="M8.5 17h7" />
-      <path d="M16 8.5l1.5 1" />
+    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
+      <path d="M12 24c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zm30 0c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zM6 22h6.3c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4h16.6c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4H56c1.5 0 3-.6 3-1.5V18l-1.5-2.5-3-2-1.5-2V8l-2-2.5L46 4H36l-4-1H22l-6 1.5-4 2.5-3 3L6 14v6.5c0 1 0 1.5 0 1.5z" />
     </svg>
   );
 }
 
-/** Classic front-engine sports car profile (911-like) */
+/** Sports Car — classic front-engine coupe (911 / Corvette proportions) */
 export function SportsCarIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 15.5h20" />
-      <path d="M4 15.5l1-3h2.5l1.5-2.5h5l2.5 1 2 1.5h2l1.5 3" />
-      <path d="M9 10l-1 2.5" />
-      <path d="M3 15.5v1.5h2" />
-      <path d="M19 17h2v-1.5" />
-      <circle cx="6.5" cy="17" r="1.5" />
-      <circle cx="17.5" cy="17" r="1.5" />
-      <path d="M8 17h8" />
-      <path d="M14 10l1.5.5" />
+    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
+      <path d="M10 24c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zm36 0c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zM4 22h6.3c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4h20.6c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4H60c1.5 0 2.5-.6 2.5-1.5V18l-1.5-2.5-2.5-2-1.5-2-3-2.5L48 7h-6L34 5.5H26l-8 2-5 2.5L9 13l-3 2.5-2 2v3c0 1 0 1.5 0 1.5z" />
     </svg>
   );
 }
 
-/** Muscular SUV silhouette with aggressive fenders */
+/** Performance SUV — tall, muscular stance (Urus / Cayenne) */
 export function PerformanceSuvIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 16h20" />
-      <path d="M4 16l.5-3h2l1.5-4h8l2 2.5H20l1.5 1.5v3" />
-      <path d="M9 9V7h6v2" />
-      <path d="M3 16v2h2.5" />
-      <path d="M18.5 18h2.5v-2" />
-      <circle cx="7" cy="18" r="2" />
-      <circle cx="17" cy="18" r="2" />
-      <path d="M9 18h6" />
+    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
+      <path d="M11 26c0-2.8 2.2-5 5-5s5 2.2 5 5h-10zm28 0c0-2.8 2.2-5 5-5s5 2.2 5 5h-10zM5 24h6.4c1-3 3.8-5 7.1-5s6 2 7 5h13c1-3 3.8-5 7.1-5s6 2 7 5H56c2 0 4-1 4-2v-4l-2-3-3-3v-3l-2-3-5-3H38l-4-1H22l-6 1-4 2-3 3-3 3-2 4v3c0 1.5 1 2 1 2z" />
     </svg>
   );
 }
 
-/** Stylized lightning bolt with speed lines */
+/** Electric Performance — sleek EV coupe/sedan shape with aerodynamic lines */
 export function ElectricPerformanceIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M13 2L4.5 13h6L9 22l9.5-12h-6L15 2" />
-      <path d="M18 5h3" />
-      <path d="M19 8h2.5" />
-      <path d="M18.5 11h2" />
+    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
+      <path d="M10 24c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zm36 0c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zM4 22h6.3c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4h20.6c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4H60c1.5 0 2.5-.5 2.5-1.5V18l-1-2-3-2.5-2-2.5-4-3L46 6H38l-4-.5H24l-8 1.5L11 9.5 7 13l-2.5 3L3 18v2.5c0 1 .5 1.5 1 1.5z" />
+      <path d="M30 10l-3 5h4l-3 6" fillRule="evenodd" opacity="0.4" />
     </svg>
   );
 }
 
-/** Vintage car silhouette with round headlights */
+/** Classic — vintage car with running boards and round forms (E-Type / 300SL era) */
 export function ClassicIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 15h20" />
-      <path d="M4.5 15l.5-2.5h2l1.5-3h7l1.5 1.5h2l1 1.5h1l.5 2.5" />
-      <circle cx="4.5" cy="12" r="1" />
-      <circle cx="19.5" cy="12.5" r="0.75" />
-      <path d="M3 15v2.5h2" />
-      <path d="M19 17.5h2v-2.5" />
-      <circle cx="7" cy="17.5" r="2" />
-      <circle cx="17" cy="17.5" r="2" />
-      <path d="M9 17.5h6" />
-      <path d="M9.5 9.5h4" />
+    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
+      <path d="M12 25c0-2.5 2-4.5 4.5-4.5S21 22.5 21 25h-9zm28 0c0-2.5 2-4.5 4.5-4.5S49 22.5 49 25h-9zM6 23h6.4c1-2.8 3.6-4.5 6.1-4.5s5 1.7 6 4.5h14.8c1-2.8 3.6-4.5 6.1-4.5s5 1.7 6 4.5H56c2 0 3-.7 3-1.5V20l-1-1.5-2-1.5-1-2-2-2.5-3-2.5-4-2H36l-3-.5H22l-6 1.5-4 2-3 2.5-2 3-1.5 2v1.5c0 1 .5 1.5.5 1.5z" />
+      <circle cx="10" cy="14" r="2.5" opacity="0.5" />
+      <circle cx="55" cy="15" r="2" opacity="0.5" />
     </svg>
   );
 }
 
-/** Long-hood GT coupe profile with elegant proportions */
+/** Grand Tourer — long-hood elegant GT coupe (DB11 / Continental GT) */
 export function GrandTourerIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 15h20" />
-      <path d="M4 15l1.5-4h4l1.5-2.5h4L17 10h2.5l1.5 2v3" />
-      <path d="M11 8.5l-.5 2.5" />
-      <path d="M3 15v2h2.5" />
-      <path d="M18.5 17h2.5v-2" />
-      <circle cx="7" cy="17" r="1.5" />
-      <circle cx="17" cy="17" r="1.5" />
-      <path d="M8.5 17h7" />
-      <path d="M5.5 11h4" />
+    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
+      <path d="M10 24c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zm36 0c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zM4 22h6.3c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4h20.6c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4H60c1.5 0 2.5-.6 2.5-1.5V18l-1-2-2.5-2-2-2.5-2-2L50 7h-4l-6-1.5H30l-6 .5-6 2-4 2.5-3.5 3L8 16l-3 2.5v2c0 1 0 1.5-.5 1.5h-.5z" />
     </svg>
   );
 }
 
-/** Racing crosshair with precision lines */
+/** Track Weapon — aggressive aero-kitted race car (GT3 RS / 765LT) */
 export function TrackWeaponIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="8" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="12" cy="12" r="1" />
-      <path d="M12 2v4" />
-      <path d="M12 18v4" />
-      <path d="M2 12h4" />
-      <path d="M18 12h4" />
+    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
+      <path d="M9 24c0-2.2 1.8-4 4-4s4 1.8 4 4H9zm38 0c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zM3 22h6.3c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4h22.6c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4H61c1.5 0 2-.5 2-1.5v-1.5l-1-2-3-2.5-2-2-3-2.5L49 7h-5l-7-3H28l-8 2-6 3-4.5 3-3 2.5L4 17l-1.5 2v1.5c0 1 .5 1.5.5 1.5z" />
+      <rect x="2" y="12" width="5" height="2" rx="1" opacity="0.5" />
+      <rect x="57" y="11" width="5" height="3" rx="1" opacity="0.5" />
     </svg>
   );
 }
 
-/** Five-pointed star with laurel wreath (luxury emblem) */
+/** Daily Luxury — premium sedan/GT (S-Class / 7-Series comfort) */
 export function DailyLuxuryIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 3l2 5h5.5l-4.5 3.5 1.5 5.5-4.5-3-4.5 3 1.5-5.5L4.5 8H10l2-5z" />
-      <path d="M5 18c1.5 1.5 3.5 3 7 3s5.5-1.5 7-3" />
-      <path d="M4 15.5c-.5-.5-1.5-2-2-3.5" />
-      <path d="M20 15.5c.5-.5 1.5-2 2-3.5" />
+    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
+      <path d="M10 24c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zm34 0c0-2.2 1.8-4 4-4s4 1.8 4 4h-8zM5 22h5.3c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4h20.6c.9-2.4 3.2-4 5.7-4s4.8 1.6 5.7 4H58c1.5 0 2.5-.6 2.5-1.5V18l-1-2-2.5-2V11l-3-3-5-2.5H40l-5-.5H24l-6 1L13 8l-3.5 2.5L7 13.5 5 16v4.5c0 1 0 1.5 0 1.5z" />
     </svg>
   );
 }
 
-/** Vintage steering wheel / classic gauge cluster */
+/** Classic Collectible — rare vintage sports car (classic Ferrari / Jaguar E-Type) */
 export function ClassicCollectibleIcon({ className }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="9" />
-      <circle cx="12" cy="12" r="5" />
-      <circle cx="12" cy="12" r="1.5" />
-      <path d="M12 7v-1.5" />
-      <path d="M15.5 9l1-1" />
-      <path d="M17 12h1.5" />
-      <path d="M15.5 15l1 1" />
-      <path d="M12 17v1.5" />
-      <path d="M8.5 15l-1 1" />
-      <path d="M7 12H5.5" />
-      <path d="M8.5 9l-1-1" />
+    <svg className={className} viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
+      <path d="M11 25c0-2.5 2-4.5 4.5-4.5S20 22.5 20 25h-9zm30 0c0-2.5 2-4.5 4.5-4.5S50 22.5 50 25h-9zM5 23h6.4c1-2.8 3.6-4.5 6.1-4.5s5 1.7 6 4.5h16.8c1-2.8 3.6-4.5 6.1-4.5s5 1.7 6 4.5H57c2 0 3-.7 3-1.5V20l-1.5-2-2-2-2-2.5-3-2L47 9h-6l-4-2H28l-5.5 1-5 2-4 2.5-3.5 3L8 18l-2 2v1.5c0 1 0 1.5-.5 1.5h-.5z" />
+      <circle cx="9" cy="15" r="2" opacity="0.4" />
+      <circle cx="56" cy="16" r="1.5" opacity="0.4" />
     </svg>
   );
 }
