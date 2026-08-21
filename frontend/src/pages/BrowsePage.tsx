@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useQueries } from '@tanstack/react-query';
 import type { SortField, SortOrder } from '@car-ads/shared';
-import { api } from '../api/client';
 import { ListingGrid } from '../components/ListingGrid';
 import { InfiniteScrollTrigger } from '../components/InfiniteScrollTrigger';
 import { SortControls } from '../components/SortControls';
@@ -9,7 +7,6 @@ import { ViewToggle } from '../components/ViewToggle';
 import { useFilterContext } from '../hooks/FilterContext';
 import { useInfiniteListings } from '../hooks/useInfiniteListings';
 import { useLanguage } from '../i18n';
-import { getProxyImageUrl } from '../utils/imageProxy';
 import { CATEGORIES } from '../data/categories';
 import {
   SupercarIcon,
@@ -35,7 +32,6 @@ const CATEGORY_ICONS: Record<string, React.FC<{ className?: string }>> = {
 };
 import { CATEGORY_CONTENT } from '../data/category-content';
 import { useCompare } from '../hooks/useCompare';
-import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 import { formatPrice, formatNumber } from '../utils/formatNumber';
 
 const DEFAULT_PAGE_SIZE = 20;
@@ -92,7 +88,6 @@ export function BrowsePage() {
   } = useFilterContext();
 
   const { compareIds, removeFromCompare, clearCompare } = useCompare();
-  const { recentIds } = useRecentlyViewed();
 
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -100,19 +95,6 @@ export function BrowsePage() {
   const [timedOut, setTimedOut] = useState(false);
   const loadingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const timeoutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Fetch recently viewed listings (up to 5)
-  const recentIdsToShow = recentIds.slice(0, 5);
-  const recentQueries = useQueries({
-    queries: recentIdsToShow.map(rid => ({
-      queryKey: ['listing-summary', rid],
-      queryFn: () => api.getListing(rid),
-      enabled: recentIdsToShow.length > 0,
-    })),
-  });
-  const recentListings = recentQueries
-    .filter(q => q.data)
-    .map(q => q.data!);
 
   // Determine if search is active
   const isSearchActive = searchQuery.length >= 2 && searchResult !== null;
@@ -240,34 +222,6 @@ export function BrowsePage() {
           )}
         </button>
       </div>
-
-      {/* Recently Viewed */}
-      {recentListings.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-sm font-bold text-surface-700 dark:text-surface-300">Recently Viewed</h2>
-          <div className="mt-2 flex gap-3 overflow-x-auto pb-2">
-            {recentListings.map(item => (
-              <a
-                key={item.id}
-                href={`/listing/${item.id}`}
-                className="flex w-44 flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-surface-800"
-              >
-                <div className="aspect-[3/2] overflow-hidden bg-surface-100 dark:bg-surface-700">
-                  {(item as any).imageUrls?.[0] ? (
-                    <img src={getProxyImageUrl((item as any).imageUrls[0])} alt={`${item.make} ${item.model}`} className="h-full w-full object-cover" loading="lazy" />
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-xs text-surface-400">No image</div>
-                  )}
-                </div>
-                <div className="p-2">
-                  <p className="truncate text-xs font-bold text-surface-900 dark:text-white">{item.make} {item.model}</p>
-                  <p className="text-xs font-semibold text-brand dark:text-brand-accent">{formatPrice(item.price, locale)}</p>
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Category filter buttons */}
       <div className="mb-6 grid grid-cols-2 gap-2.5 sm:grid-cols-4 lg:grid-cols-7">
