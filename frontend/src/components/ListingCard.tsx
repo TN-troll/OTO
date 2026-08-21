@@ -212,7 +212,7 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
             <button
               type="button"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setImgIndex((imgIndex + 1) % images.length); }}
-              className="absolute right-14 top-1/2 z-[8] flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100"
+              className="absolute right-2 top-1/2 z-[8] flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100"
               aria-label="Next image"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
@@ -265,72 +265,25 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
           </div>
         )}
 
-        {/* Favorite button — 44x44px touch target */}
-        <button
-          type="button"
-          onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavorite(listing.id); }}
-          className="absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/80 shadow-glass backdrop-blur-xl transition-all duration-200 ease-smooth hover:scale-110 hover:bg-white/90 dark:bg-black/60 motion-reduce:transition-none motion-reduce:transform-none"
-          aria-label={isFavorite(listing.id) ? 'Remove from favorites' : 'Add to favorites'}
-        >
-          <svg className={`h-4 w-4 ${isFavorite(listing.id) ? 'fill-red-500 text-red-500' : 'fill-none text-surface-700 dark:text-surface-200'}`} stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-          </svg>
-        </button>
 
-        {/* Compare button — 44x44px touch target, 8px gap from favorite */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (isInCompare(listing.id)) {
-              removeFromCompare(listing.id);
-            } else {
-              addToCompare(listing.id);
-            }
-          }}
-          className={[
-            'absolute right-3 top-[3.75rem] z-10 flex h-11 w-11 items-center justify-center rounded-full shadow-glass backdrop-blur-xl transition-all duration-200 ease-smooth hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none',
-            isInCompare(listing.id)
-              ? 'bg-accent-gold/90 text-white'
-              : 'bg-white/80 dark:bg-black/60',
-          ].join(' ')}
-          aria-label={isInCompare(listing.id) ? 'Remove from compare' : 'Add to compare'}
-        >
-          <svg className={`h-4 w-4 ${isInCompare(listing.id) ? 'text-white' : 'text-surface-700 dark:text-surface-200'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
-          </svg>
-        </button>
 
-        {/* Share via WhatsApp — 44x44px touch target */}
-        <a
-          href={`https://wa.me/?text=${encodeURIComponent(`${listing.make} ${listing.model} ${listing.year} - ${formatPrice(listing.price, locale)}: ${window.location.origin}/listing/${listing.id}`)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="absolute right-3 top-[7.5rem] z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/80 shadow-glass backdrop-blur-xl transition-all duration-200 ease-smooth hover:scale-110 hover:bg-green-500 hover:text-white dark:bg-black/60 motion-reduce:transition-none motion-reduce:transform-none"
-          aria-label="Share via WhatsApp"
-        >
-          <svg className="h-4 w-4 text-surface-700 dark:text-surface-200 group-hover:text-white" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-          </svg>
-        </a>
 
-        {/* Price badge — glass panel */}
-        <div className="absolute bottom-4 right-4 rounded-2xl bg-white/80 px-4 py-2.5 shadow-glass backdrop-blur-xl dark:bg-black/60">
-          <span className="text-lg font-bold tracking-tight text-surface-900 dark:text-white">
-            {formatPrice(listing.price, locale)}
-          </span>
-          {listing.price > 5000 && (
-            <p className="text-[10px] text-surface-500 dark:text-surface-400">
-              ~€{formatNumber(Math.round(listing.price / 60), locale)}/mnd
-            </p>
-          )}
-        </div>
       </div>
 
       {/* Content — generous padding, clean hierarchy */}
       <div className="flex flex-1 flex-col p-5 sm:p-6">
+        {/* Price + financing */}
+        <div className="flex items-baseline justify-between">
+          <span className="text-xl font-bold text-brand dark:text-brand-accent">
+            {formatPrice(listing.price, locale)}
+          </span>
+          {listing.price > 5000 && (
+            <span className="text-[11px] text-surface-400">
+              ~€{formatNumber(Math.round(listing.price / 60), locale)}/mnd
+            </span>
+          )}
+        </div>
+
         {/* Make & Model — tracking-tight, 17px semibold */}
         <h3 className="text-[17px] font-semibold tracking-tight text-surface-900 dark:text-white">
           {listing.make}
@@ -421,6 +374,42 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
             )}
           </div>
         )}
+
+        {/* Action buttons row */}
+        <div className="mt-3 flex items-center gap-2 border-t border-surface-100 pt-3 dark:border-white/[0.06]">
+          <button
+            type="button"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavorite(listing.id); }}
+            className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${isFavorite(listing.id) ? 'bg-red-500/10 text-red-500' : 'bg-surface-100 text-surface-400 hover:text-red-500 dark:bg-white/[0.06]'}`}
+            aria-label={isFavorite(listing.id) ? 'Remove from favorites' : 'Add to favorites'}
+          >
+            <svg className={`h-4 w-4 ${isFavorite(listing.id) ? 'fill-red-500' : 'fill-none'}`} stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); isInCompare(listing.id) ? removeFromCompare(listing.id) : addToCompare(listing.id); }}
+            className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${isInCompare(listing.id) ? 'bg-brand-accent/15 text-brand-accent' : 'bg-surface-100 text-surface-400 hover:text-brand-accent dark:bg-white/[0.06]'}`}
+            aria-label={isInCompare(listing.id) ? 'Remove from compare' : 'Add to compare'}
+          >
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+            </svg>
+          </button>
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(`${listing.make} ${listing.model} ${listing.year} - ${formatPrice(listing.price, locale)}: ${window.location.origin}/listing/${listing.id}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-100 text-surface-400 transition-colors hover:bg-green-500/10 hover:text-green-500 dark:bg-white/[0.06]"
+            aria-label="Share via WhatsApp"
+          >
+            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg>
+          </a>
+        </div>
       </div>
     </a>
   );

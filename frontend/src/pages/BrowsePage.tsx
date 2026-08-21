@@ -90,7 +90,7 @@ export function BrowsePage() {
 
   const { compareIds, removeFromCompare, clearCompare } = useCompare();
 
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [showLoading, setShowLoading] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
