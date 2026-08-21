@@ -165,7 +165,7 @@ export function FilterContent() {
       {/* ══════════════════════════════════════════════════════════════════════════
           1. Quick Presets (top)
          ══════════════════════════════════════════════════════════════════════════ */}
-      <div className="animate-fade-in border-b border-glass-border py-3 dark:border-white/[0.06]">
+      <div className="border-b border-glass-border py-3 dark:border-white/[0.06]">
         <span className="mb-2 block text-sm font-semibold text-surface-800 dark:text-surface-200">
           {t.filterSectionPresets}
         </span>

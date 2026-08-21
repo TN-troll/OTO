@@ -101,7 +101,7 @@ export function ListingDetailPage() {
   }
 
   return (
-    <div className="animate-fade-in space-y-8">
+    <div className="animate-fade-in scroll-smooth space-y-8">
       <Link to="/" className="inline-flex items-center gap-1 text-sm font-medium text-surface-600 transition-colors hover:text-brand-accent dark:text-surface-400 dark:hover:text-brand-accent">
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -141,8 +141,8 @@ export function ListingDetailPage() {
           {/* Share Buttons */}
           <ShareButtons listing={listing} />
 
-          {/* Request Info Button */}
-          <div className="mt-4">
+          {/* Request Info Button + Compare Button */}
+          <div className="mt-4 flex flex-wrap gap-3">
             <button
               onClick={() => setShowContactForm(true)}
               className="inline-flex items-center gap-2 rounded-lg bg-brand px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-brand/90 hover:shadow-md"
@@ -152,7 +152,45 @@ export function ListingDetailPage() {
               </svg>
               Request Info
             </button>
+            <Link
+              to={`/compare?ids=${listing.id}`}
+              className="inline-flex items-center gap-2 rounded-lg border border-brand-accent/40 bg-brand-accent/10 px-5 py-2.5 text-sm font-medium text-brand-accent shadow-sm transition-all hover:bg-brand-accent/20 hover:shadow-md dark:border-brand-accent/30 dark:bg-brand-accent/5"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+              </svg>
+              {locale === 'nl' ? 'Vergelijk' : 'Compare'}
+            </Link>
           </div>
+
+          {/* Quick Jump Navigation */}
+          <nav className="mt-6 flex flex-wrap gap-2 border-t border-surface-200 pt-4 dark:border-surface-700" aria-label="Jump to section">
+            <a href="#specifications" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+              {t.specifications}
+            </a>
+            <a href="#finance" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+              {locale === 'nl' ? 'Financiering' : 'Finance'}
+            </a>
+            <a href="#depreciation" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+              {locale === 'nl' ? 'Afschrijving' : 'Depreciation'}
+            </a>
+            <a href="#price-history" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+              {locale === 'nl' ? 'Prijshistorie' : 'Price History'}
+            </a>
+            {listing.description && (
+              <a href="#description" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+                {locale === 'nl' ? 'Beschrijving' : 'Description'}
+              </a>
+            )}
+            {listing.soundProfile && (
+              <a href="#sound" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+                {locale === 'nl' ? 'Geluid' : 'Sound'}
+              </a>
+            )}
+            <a href="#source-links" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+              {t.originalAdvertisements}
+            </a>
+          </nav>
 
           {/* Dealer Contact Form Modal */}
           {showContactForm && (
@@ -166,33 +204,47 @@ export function ListingDetailPage() {
           )}
 
           {/* Finance Calculator */}
-          <FinanceCalculator listingPrice={listing.price} />
+          <div id="finance" className="scroll-mt-4">
+            <FinanceCalculator listingPrice={listing.price} />
+          </div>
 
           {/* Specifications Grid */}
-          <SpecificationsSection listing={listing} />
+          <div id="specifications" className="scroll-mt-4">
+            <SpecificationsSection listing={listing} />
+          </div>
 
           {/* Price History */}
-          <PriceHistorySection history={priceHistoryData?.history} />
+          <div id="price-history" className="scroll-mt-4">
+            <PriceHistorySection history={priceHistoryData?.history} />
+          </div>
 
           {/* Depreciation Calculator */}
-          <DepreciationSection price={listing.price} year={listing.year} mileage={listing.mileage} make={listing.make} />
+          <div id="depreciation" className="scroll-mt-4">
+            <DepreciationSection price={listing.price} year={listing.year} mileage={listing.mileage} make={listing.make} />
+          </div>
 
           {/* Description */}
           {listing.description && (
-            <DescriptionSection
-              description={listing.description}
-              descriptionEn={listing.descriptionEn}
-            />
+            <div id="description" className="scroll-mt-4">
+              <DescriptionSection
+                description={listing.description}
+                descriptionEn={listing.descriptionEn}
+              />
+            </div>
           )}
 
           {/* Sound Profile Section */}
-          <SoundProfileSection soundProfile={listing.soundProfile} />
+          <div id="sound" className="scroll-mt-4">
+            <SoundProfileSection soundProfile={listing.soundProfile} />
+          </div>
 
           {/* YouTube Engine Sound */}
           <YouTubeSoundSection make={listing.make} model={listing.model} />
 
           {/* Source Links */}
-          <SourceLinksSection sourceUrls={listing.sourceUrls} listingId={listing.id} />
+          <div id="source-links" className="scroll-mt-4">
+            <SourceLinksSection sourceUrls={listing.sourceUrls} listingId={listing.id} />
+          </div>
         </div>
       </div>
 
