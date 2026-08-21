@@ -11,12 +11,32 @@ import { LocationMarker } from '../components/map/LocationMarker';
 import { LocationPopup } from '../components/map/LocationPopup';
 import { MobileBottomSheet } from '../components/map/MobileBottomSheet';
 import { formatNumber } from '../utils/formatNumber';
+import { CATEGORIES } from '../data/categories';
+import {
+  SupercarIcon,
+  LuxuryIcon,
+  PerformanceSedanIcon,
+  HotHatchIcon,
+  SportsCarIcon,
+  PerformanceSuvIcon,
+  ElectricPerformanceIcon,
+} from '../components/icons/CategoryIcons';
 import type { MapLocation } from '@car-ads/shared';
 
 // Leaflet core CSS
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import '../components/map/map.css';
+
+const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  'supercar': SupercarIcon,
+  'luxury': LuxuryIcon,
+  'performance-sedan': PerformanceSedanIcon,
+  'hot-hatch': HotHatchIcon,
+  'sports-car': SportsCarIcon,
+  'suv': PerformanceSuvIcon,
+  'electric': ElectricPerformanceIcon,
+};
 
 /**
  * MapPage — Interactive map with filter integration, result counts,
@@ -27,8 +47,9 @@ export default function MapPage() {
   const { locale } = useLanguage();
   const [selectedLocation, setSelectedLocation] = useState<MapLocation | null>(null);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
-  const { debouncedFilters, filtersActive } = useFilterContext();
+  const { debouncedFilters, filtersActive, setCategory } = useFilterContext();
   const criteria = useMemo(() => buildCriteria(debouncedFilters), [debouncedFilters]);
 
   const {
@@ -57,6 +78,19 @@ export default function MapPage() {
     setIsBottomSheetOpen(false);
     setSelectedLocation(null);
   }, []);
+
+  const handleCategoryClick = useCallback((categoryId: string | null) => {
+    if (categoryId === null) {
+      setActiveCategory(null);
+      setCategory([], []);
+    } else {
+      const category = CATEGORIES.find((c) => c.id === categoryId);
+      if (category) {
+        setActiveCategory(categoryId);
+        setCategory(category.filter.makes || [], category.filter.models || []);
+      }
+    }
+  }, [setCategory]);
 
   const locations = data?.locations ?? [];
   const totalListings = data?.totalListings ?? 0;
@@ -137,6 +171,72 @@ export default function MapPage() {
                 {locale === 'nl' ? 'Gefilterd' : 'Filtered'}
               </span>
             )}
+          </div>
+        </div>
+
+        {/* Category quick-filter strip — top-right */}
+        <div className="absolute right-4 top-4 z-[900] animate-fade-in">
+          <div className={`flex gap-1.5 ${isMobile ? 'max-w-[calc(100vw-200px)] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden' : ''}`}>
+            {/* "All" button */}
+            <button
+              onClick={() => handleCategoryClick(null)}
+              className={`flex flex-shrink-0 flex-col items-center gap-0.5 rounded-xl border px-2.5 py-1.5 shadow-lg backdrop-blur-xl transition-all duration-200 ${
+                activeCategory === null
+                  ? 'border-brand-accent/50 bg-brand-accent/15 text-brand-accent'
+                  : 'border-white/[0.1] bg-surface-900/80 text-surface-300 hover:border-white/20 hover:text-white'
+              }`}
+            >
+              <svg className="h-4 w-8" viewBox="0 0 64 32" fill="currentColor" aria-hidden="true">
+                <circle cx="20" cy="16" r="4" opacity="0.6" />
+                <circle cx="32" cy="16" r="4" opacity="0.6" />
+                <circle cx="44" cy="16" r="4" opacity="0.6" />
+              </svg>
+              {!isMobile && (
+                <span className="text-[10px] font-medium">
+                  {locale === 'nl' ? 'Alles' : 'All'}
+                </span>
+              )}
+            </button>
+
+            {/* Category buttons */}
+            {CATEGORIES.filter((c) => CATEGORY_ICONS[c.id]).map((category) => {
+              const Icon = CATEGORY_ICONS[category.id];
+              const isActive = activeCategory === category.id;
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => handleCategoryClick(isActive ? null : category.id)}
+                  className={`flex flex-shrink-0 flex-col items-center gap-0.5 rounded-xl border px-2.5 py-1.5 shadow-lg backdrop-blur-xl transition-all duration-200 ${
+                    isActive
+                      ? 'border-brand-accent/50 bg-brand-accent/15 text-brand-accent'
+                      : 'border-white/[0.1] bg-surface-900/80 text-surface-300 hover:border-white/20 hover:text-white'
+                  }`}
+                >
+                  <Icon className="h-4 w-8" />
+                  {!isMobile && (
+                    <span className="text-[10px] font-medium">
+                      {locale === 'nl' ? category.labelNl : category.label}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Map legend — bottom-left */}
+        <div className="absolute left-4 bottom-8 z-[900] animate-fade-in">
+          <div className="flex items-center gap-3 rounded-2xl border border-white/[0.1] bg-surface-900/80 px-3 py-1.5 shadow-lg backdrop-blur-xl">
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: '#d4a853' }} />
+              <span className="text-[11px] font-medium text-surface-300">Dealer</span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-2 w-2 rounded-full bg-surface-400" />
+              <span className="text-[11px] font-medium text-surface-300">
+                {locale === 'nl' ? 'Particulier' : 'Private sale'}
+              </span>
+            </span>
           </div>
         </div>
 
