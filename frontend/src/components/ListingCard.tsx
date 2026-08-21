@@ -67,6 +67,7 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
   const { locale } = useLanguage();
   const isNew = listing.dateAdded && (Date.now() - new Date(listing.dateAdded).getTime()) < 48 * 60 * 60 * 1000;
   const pricePerHp = listing.horsepower ? Math.round(listing.price / listing.horsepower) : null;
+  const pricePerKm = listing.mileage && listing.mileage > 0 ? (listing.price / listing.mileage).toFixed(1) : null;
   const isFeaturedCard = featured || listing.isFeatured;
 
   const images = listing.imageUrls?.length > 0 ? listing.imageUrls.slice(0, 4) : (listing.primaryImageUrl ? [listing.primaryImageUrl] : []);
@@ -380,6 +381,11 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
           {pricePerHp != null && (
             <span className="inline-flex items-center rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
               €{formatNumber(pricePerHp, locale)}/HP
+            </span>
+          )}
+          {pricePerKm != null && (
+            <span className="inline-flex items-center rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
+              €{pricePerKm}/km
             </span>
           )}
         </div>

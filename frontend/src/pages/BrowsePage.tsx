@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import type { SortField, SortOrder } from '@car-ads/shared';
 import { ListingGrid } from '../components/ListingGrid';
 import { InfiniteScrollTrigger } from '../components/InfiniteScrollTrigger';
@@ -33,6 +33,7 @@ const CATEGORY_ICONS: Record<string, React.FC<{ className?: string }>> = {
 import { CATEGORY_CONTENT } from '../data/category-content';
 import { useCompare } from '../hooks/useCompare';
 import { formatPrice, formatNumber } from '../utils/formatNumber';
+import { SavedSearchPrompt } from '../components/SavedSearchPrompt';
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -95,6 +96,18 @@ export function BrowsePage() {
   const [timedOut, setTimedOut] = useState(false);
   const loadingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const timeoutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Build human-readable filter summary for saved search prompt
+  const filterSummary = useMemo(() => {
+    const parts: string[] = [];
+    if (filters.makes.length > 0) parts.push(filters.makes.join(', '));
+    if (filters.bodyType.length > 0) parts.push(filters.bodyType.join(', '));
+    if (filters.horsepowerMin) parts.push(`${filters.horsepowerMin}+ HP`);
+    if (filters.priceMax) parts.push(`≤ €${Math.round(filters.priceMax / 1000)}k`);
+    if (filters.fuelType.length > 0) parts.push(filters.fuelType.join(', '));
+    if (filters.yearMin) parts.push(`≥ ${filters.yearMin}`);
+    return parts.length > 0 ? parts.join(' • ') : 'Custom filters';
+  }, [filters]);
 
   // Determine if search is active
   const isSearchActive = searchQuery.length >= 2 && searchResult !== null;
@@ -409,6 +422,8 @@ export function BrowsePage() {
           </div>
         </div>
       )}
+
+      <SavedSearchPrompt filtersActive={filtersActive} filterSummary={filterSummary} />
     </div>
   );
 }
