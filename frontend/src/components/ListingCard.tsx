@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import type { ListingSummary } from '@car-ads/shared';
 import { useFavorites } from '../hooks/useFavorites';
 import { useCompare } from '../hooks/useCompare';
@@ -38,7 +38,7 @@ function ImagePlaceholder({ loading = false }: { loading?: boolean }) {
   );
 }
 
-export function ListingCard({ listing, featured = false, priority = false }: ListingCardProps) {
+function ListingCardInner({ listing, featured = false, priority = false }: ListingCardProps) {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageTimedOut, setImageTimedOut] = useState(false);
@@ -135,7 +135,7 @@ export function ListingCard({ listing, featured = false, priority = false }: Lis
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
 
         {/* Year badge — glass pill */}
-        <div className="absolute left-4 top-4 rounded-full bg-black/30 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
+        <div className="absolute left-4 top-4 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
           {listing.year}
         </div>
 
@@ -250,3 +250,5 @@ export function ListingCard({ listing, featured = false, priority = false }: Lis
     </a>
   );
 }
+
+export const ListingCard = memo(ListingCardInner);

@@ -161,7 +161,7 @@ export default {
           '100%': { opacity: '1', transform: 'scale(1)' },
         },
         spring: {
-          '0%': { transform: 'scale(0.9)' },
+          '0%': { transform: 'scale(0.95)' },
           '50%': { transform: 'scale(1.05)' },
           '100%': { transform: 'scale(1)' },
         },
@@ -182,8 +182,8 @@ export default {
           '50%': { boxShadow: '0 0 24px rgba(212, 168, 83, 0.4)' },
         },
         blurIn: {
-          '0%': { opacity: '0', filter: 'blur(8px)', transform: 'scale(0.95)' },
-          '100%': { opacity: '1', filter: 'blur(0)', transform: 'scale(1)' },
+          '0%': { opacity: '0', transform: 'scale(0.97) translateY(4px)' },
+          '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
         },
         reveal: {
           '0%': { opacity: '0', transform: 'translateY(20px) scale(0.97)', filter: 'blur(4px)' },

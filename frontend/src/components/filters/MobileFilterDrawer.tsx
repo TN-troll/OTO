@@ -41,6 +41,44 @@ export function MobileFilterDrawer({ children }: MobileFilterDrawerProps) {
     };
   }, [mobileFilterOpen]);
 
+  // ─── Focus trap + Escape to close ─────────────────────────────────────────
+  useEffect(() => {
+    if (!mobileFilterOpen || !drawerRef.current) return;
+
+    const container = drawerRef.current;
+    const focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const previouslyFocused = document.activeElement as HTMLElement;
+
+    // Focus close button
+    const firstFocusable = container.querySelector<HTMLElement>(focusableSelector);
+    firstFocusable?.focus();
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setMobileFilterOpen(false);
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const focusables = container.querySelectorAll<HTMLElement>(focusableSelector);
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      previouslyFocused?.focus();
+    };
+  }, [mobileFilterOpen, setMobileFilterOpen]);
+
   // ─── Swipe-down gesture handlers ───────────────────────────────────────────
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
@@ -141,7 +179,7 @@ export function MobileFilterDrawer({ children }: MobileFilterDrawerProps) {
         </div>
 
         {/* Scrollable content area */}
-        <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4">
+        <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4 pb-[env(safe-area-inset-bottom)]">
           {children}
         </div>
       </div>

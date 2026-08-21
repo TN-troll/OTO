@@ -260,7 +260,7 @@ export function BrowsePage() {
                 <p className={`text-[11px] font-semibold leading-tight tracking-tight ${
                   isActive ? 'text-brand-accent' : 'text-surface-800 dark:text-surface-200'
                 }`}>
-                  {category.labelNl}
+                  {locale === 'nl' ? category.labelNl : category.label}
                 </p>
               </div>
             </button>
@@ -328,7 +328,7 @@ export function BrowsePage() {
 
       {/* Results header */}
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+        <div aria-live="polite" aria-atomic="true">
           {totalCount != null && totalCount > 0 && (
             <h1 className="text-2xl font-bold text-surface-900 dark:text-white">
               <span className="text-brand-accent">{formatNumber(totalCount, locale)}</span>{' '}
@@ -372,7 +372,7 @@ export function BrowsePage() {
 
       {/* Floating Compare Bar */}
       {compareIds.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-surface-200 bg-white/95 px-4 py-3 shadow-premium backdrop-blur-sm dark:border-white/[0.08] dark:bg-black/80 dark:shadow-glass-dark">
+        <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-surface-200 bg-white/95 px-4 py-3 pb-[env(safe-area-inset-bottom)] shadow-premium backdrop-blur-sm dark:border-white/[0.08] dark:bg-black/80 dark:shadow-glass-dark">
           <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               {compareIds.map(cid => (
@@ -380,7 +380,7 @@ export function BrowsePage() {
                   <button
                     type="button"
                     onClick={() => removeFromCompare(cid)}
-                    className="absolute -right-1 -top-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white"
+                    className="absolute -right-2 -top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white shadow-sm"
                     aria-label="Remove from compare"
                   >
                     ×

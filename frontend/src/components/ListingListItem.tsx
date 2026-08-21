@@ -97,7 +97,7 @@ export function ListingListItem({ listing }: ListingListItemProps) {
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavorite(listing.id); }}
-          className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 shadow-md backdrop-blur-sm transition-all hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none dark:bg-black/60"
+          className="absolute right-2 top-2 z-10 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-white/90 p-2 shadow-md backdrop-blur-sm transition-all hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none dark:bg-black/60"
           aria-label={isFavorite(listing.id) ? 'Remove from favorites' : 'Add to favorites'}
         >
           <svg className={`h-4 w-4 ${isFavorite(listing.id) ? 'fill-red-500 text-red-500' : 'fill-none text-surface-600 dark:text-surface-300'}`} stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -117,7 +117,7 @@ export function ListingListItem({ listing }: ListingListItemProps) {
               addToCompare(listing.id);
             }
           }}
-          className={`absolute right-2 top-12 z-10 rounded-full p-2 shadow-md backdrop-blur-sm transition-all hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none ${
+          className={`absolute right-2 top-12 z-10 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full p-2 shadow-md backdrop-blur-sm transition-all hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none ${
             isInCompare(listing.id) ? 'bg-brand-accent/90 text-white' : 'bg-white/90 dark:bg-black/60'
           }`}
           aria-label={isInCompare(listing.id) ? 'Remove from compare' : 'Add to compare'}

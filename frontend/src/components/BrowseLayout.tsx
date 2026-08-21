@@ -41,16 +41,20 @@ function ViewTogglePill({ activeTab, onTabChange }: { activeTab: 'listings' | 'm
   const { t } = useLanguage();
 
   return (
-    <div className="inline-flex items-center gap-0.5 rounded-full border border-white/[0.12] bg-white/[0.06] p-0.5 backdrop-blur-md">
+    <div role="tablist" className="inline-flex items-center gap-0.5 rounded-full border border-white/[0.12] bg-white/[0.06] p-0.5 backdrop-blur-md">
       <button
         type="button"
+        role="tab"
+        id="tab-listings"
+        aria-selected={activeTab === 'listings'}
+        aria-controls="tabpanel-listings"
+        tabIndex={activeTab === 'listings' ? 0 : -1}
         onClick={() => onTabChange('listings')}
         className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-[background-color,color] duration-150 ${
           activeTab === 'listings'
             ? 'bg-white/[0.15] text-white shadow-sm'
             : 'text-surface-400 hover:text-surface-200'
         }`}
-        aria-pressed={activeTab === 'listings'}
       >
         {/* Grid/cards icon — represents listing overview */}
         <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
@@ -63,13 +67,17 @@ function ViewTogglePill({ activeTab, onTabChange }: { activeTab: 'listings' | 'm
       </button>
       <button
         type="button"
+        role="tab"
+        id="tab-map"
+        aria-selected={activeTab === 'map'}
+        aria-controls="tabpanel-map"
+        tabIndex={activeTab === 'map' ? 0 : -1}
         onClick={() => onTabChange('map')}
         className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-[background-color,color] duration-150 ${
           activeTab === 'map'
             ? 'bg-white/[0.15] text-white shadow-sm'
             : 'text-surface-400 hover:text-surface-200'
         }`}
-        aria-pressed={activeTab === 'map'}
       >
         {/* Map pin icon — represents geographic view */}
         <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
@@ -190,6 +198,9 @@ export function BrowseLayout() {
 
   return (
     <FilterProvider>
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[9999] focus:rounded-lg focus:bg-brand focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white focus:shadow-lg">
+        Skip to main content
+      </a>
       <Header />
       <NotificationPromptBanner />
 
@@ -204,7 +215,7 @@ export function BrowseLayout() {
         <MobileFilterOverlay />
 
         {/* Content area — switches between listings and map */}
-        <div className="flex-1 overflow-auto">
+        <main id="main-content" className="flex-1 overflow-auto">
           {/* Listings view */}
           <div
             id="tabpanel-listings"
@@ -233,7 +244,7 @@ export function BrowseLayout() {
               </MapErrorBoundary>
             </div>
           )}
-        </div>
+        </main>
       </div>
 
       <Footer />

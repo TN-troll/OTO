@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  /* Safe area for notched devices */
+  :root {
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
   html {
     scroll-behavior: smooth;
   }
@@ -19,7 +24,6 @@
     -moz-osx-font-smoothing: grayscale;
     background-color: #f5f5f7;
     color: #171717;
-    transition: background-color 0.3s, color 0.3s;
   }
 
   html.dark body {

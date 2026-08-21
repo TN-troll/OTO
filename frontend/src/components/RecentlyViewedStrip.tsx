@@ -117,8 +117,9 @@ export function RecentlyViewedStrip({ maxItems = 5 }: RecentlyViewedStripProps) 
       {/* ═══ Compact mini-bar (fixed bottom, appears on scroll) ═══ */}
       <div
         className={[
-          'fixed bottom-0 left-0 right-0 z-50 md:left-80',
+          'fixed bottom-0 left-0 right-0 z-40 md:left-80',
           'border-t border-white/[0.1] bg-surface-950/80 backdrop-blur-lg',
+          'pb-[env(safe-area-inset-bottom)]',
           'transition-transform duration-300 ease-smooth',
           'motion-reduce:transition-none',
           showMiniBar ? 'translate-y-0' : 'translate-y-full',

@@ -18,21 +18,21 @@ function OtoLogo({ className = '' }: { className?: string }) {
       role="img"
     >
       <defs>
-        <linearGradient id="oto-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="oto-gold-header" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#C9A84C" />
           <stop offset="50%" stopColor="#F2D680" />
           <stop offset="100%" stopColor="#C9A84C" />
         </linearGradient>
       </defs>
       {/* Left exhaust pipe (O) */}
-      <ellipse cx="50" cy="40" rx="35" ry="28" stroke="url(#oto-gold)" strokeWidth="6" />
-      <ellipse cx="50" cy="40" rx="22" ry="17" stroke="url(#oto-gold)" strokeWidth="2.5" opacity="0.4" />
+      <ellipse cx="50" cy="40" rx="35" ry="28" stroke="url(#oto-gold-header)" strokeWidth="6" />
+      <ellipse cx="50" cy="40" rx="22" ry="17" stroke="url(#oto-gold-header)" strokeWidth="2.5" opacity="0.4" />
       {/* Center bridge (T) */}
-      <rect x="85" y="28" width="30" height="6" rx="3" fill="url(#oto-gold)" />
-      <rect x="97" y="28" width="6" height="30" rx="3" fill="url(#oto-gold)" />
+      <rect x="85" y="28" width="30" height="6" rx="3" fill="url(#oto-gold-header)" />
+      <rect x="97" y="28" width="6" height="30" rx="3" fill="url(#oto-gold-header)" />
       {/* Right exhaust pipe (O) */}
-      <ellipse cx="150" cy="40" rx="35" ry="28" stroke="url(#oto-gold)" strokeWidth="6" />
-      <ellipse cx="150" cy="40" rx="22" ry="17" stroke="url(#oto-gold)" strokeWidth="2.5" opacity="0.4" />
+      <ellipse cx="150" cy="40" rx="35" ry="28" stroke="url(#oto-gold-header)" strokeWidth="6" />
+      <ellipse cx="150" cy="40" rx="22" ry="17" stroke="url(#oto-gold-header)" strokeWidth="2.5" opacity="0.4" />
     </svg>
   );
 }
@@ -177,6 +177,8 @@ export function Header() {
       </div>
 
       {/* Mobile navigation menu — glass panel overlay */}
+      {/* TODO: Add focus trap to mobile navigation menu (trap Tab/Shift+Tab within
+         the menu panel when open, return focus to toggle button on close) */}
       {/* Backdrop */}
       <div
         className={`fixed inset-0 z-40 bg-black/30 backdrop-blur-sm transition-opacity duration-300 motion-reduce:transition-none md:hidden ${

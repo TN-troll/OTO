@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../i18n';
 import { formatPrice } from '../utils/formatNumber';
 interface DealerContactFormProps {
@@ -48,6 +48,33 @@ export function DealerContactForm({
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Escape to close + focus trap
+  useEffect(() => {
+    const container = modalRef.current;
+    if (!container) return;
+
+    const focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const previouslyFocused = document.activeElement as HTMLElement;
+    const firstFocusable = container.querySelector<HTMLElement>(focusableSelector);
+    firstFocusable?.focus();
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') { onClose(); return; }
+      if (e.key !== 'Tab') return;
+      const focusables = container!.querySelectorAll<HTMLElement>(focusableSelector);
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => { document.removeEventListener('keydown', handleKeyDown); previouslyFocused?.focus(); };
+  }, [onClose]);
 
   function validateForm(): boolean {
     const newErrors: FormErrors = {};
@@ -153,6 +180,7 @@ export function DealerContactForm({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
       <div
+        ref={modalRef}
         className="mx-4 w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-surface-900/90 dark:border dark:border-white/[0.08]"
         onClick={(e) => e.stopPropagation()}
         role="dialog"

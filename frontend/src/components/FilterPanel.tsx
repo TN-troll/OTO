@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { DEFAULT_RANGES } from '@car-ads/shared';
 import { RangeFilter } from './filters/RangeFilter';
 import { MultiSelect } from './filters/MultiSelect';
@@ -16,27 +15,8 @@ import { EnginePerformanceSection } from './filters/EnginePerformanceSection';
 import { HeritageEditionSection } from './filters/HeritageEditionSection';
 import { MobileFilterDrawer } from './filters/MobileFilterDrawer';
 import { useFilterContext } from '../hooks/FilterContext';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { useLanguage } from '../i18n';
-
-/**
- * Hook to track viewport width for responsive rendering.
- * Returns true when viewport is below 768px (mobile breakpoint).
- */
-function useIsMobile(): boolean {
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== 'undefined' ? window.innerWidth < 768 : false
-  );
-
-  useEffect(() => {
-    const mql = window.matchMedia('(max-width: 767px)');
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mql.addEventListener('change', handler);
-    setIsMobile(mql.matches);
-    return () => mql.removeEventListener('change', handler);
-  }, []);
-
-  return isMobile;
-}
 
 /**
  * The core filter content rendered in both mobile drawer and desktop sidebar.
@@ -147,17 +127,19 @@ export function FilterContent() {
       )}
 
       {/* Result count — shimmer animation while loading */}
-      {filtersActive && isValid && isFetching && (
-        <div className="mb-4 rounded-lg bg-surface-100 px-3 py-2 dark:bg-surface-700">
-          <div className="h-4 w-32 animate-shimmer rounded bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] dark:from-surface-600 dark:via-surface-700 dark:to-surface-600" />
-        </div>
-      )}
-      {filtersActive && isValid && filterResult && !isFetching && (
-        <div className="mb-4 rounded-lg bg-surface-100 px-3 py-2 text-xs font-medium text-surface-700 dark:bg-surface-700 dark:text-surface-200">
-          <span className="font-bold text-brand-accent">{filterResult.totalCount}</span>{' '}
-          {filterResult.totalCount === 1 ? t.carFound : t.carsFound}
-        </div>
-      )}
+      <div aria-live="polite" aria-atomic="true">
+        {filtersActive && isValid && isFetching && (
+          <div className="mb-4 rounded-lg bg-surface-100 px-3 py-2 dark:bg-surface-700">
+            <div className="h-4 w-32 animate-shimmer rounded bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] dark:from-surface-600 dark:via-surface-700 dark:to-surface-600" />
+          </div>
+        )}
+        {filtersActive && isValid && filterResult && !isFetching && (
+          <div className="mb-4 rounded-lg bg-surface-100 px-3 py-2 text-xs font-medium text-surface-700 dark:bg-surface-700 dark:text-surface-200">
+            <span className="font-bold text-brand-accent">{filterResult.totalCount}</span>{' '}
+            {filterResult.totalCount === 1 ? t.carFound : t.carsFound}
+          </div>
+        )}
+      </div>
 
       {/* Filter Summary Bar — shows active filter chips above results */}
       <FilterSummaryBar />

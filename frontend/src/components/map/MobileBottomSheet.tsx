@@ -15,6 +15,10 @@ export interface MobileBottomSheetProps {
  * Slides up from the bottom of the viewport with a backdrop overlay.
  * Includes a drag handle and close button for dismissal.
  * Visibility is controlled by the parent via the `isOpen` prop.
+ *
+ * TODO: Add swipe-down gesture support to dismiss the bottom sheet
+ * (track touch start/move/end on the drag handle area, dismiss when
+ * the user swipes down beyond a threshold).
  */
 export function MobileBottomSheet({ children, isOpen, onClose }: MobileBottomSheetProps) {
   return (

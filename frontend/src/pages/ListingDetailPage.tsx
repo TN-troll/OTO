@@ -646,6 +646,14 @@ function LightboxOverlay({
 }) {
   const touchStart = useRef<number>(0);
 
+  // Lock body scroll while lightbox is open
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();

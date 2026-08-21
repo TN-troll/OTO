@@ -1,8 +1,9 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { useFilterContext } from '../hooks/FilterContext';
 import { buildCriteria, hasActiveFilters } from '../hooks/useFilters';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { useLanguage } from '../i18n';
 import { InteractiveMap } from '../components/map/InteractiveMap';
 import { MarkerClusterGroup } from '../components/map/MarkerClusterGroup';
@@ -16,25 +17,6 @@ import type { MapLocation } from '@car-ads/shared';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import '../components/map/map.css';
-
-const MOBILE_BREAKPOINT = 768;
-
-function useIsMobile(): boolean {
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth < MOBILE_BREAKPOINT;
-  });
-
-  useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
-    const handleChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    setIsMobile(mql.matches);
-    mql.addEventListener('change', handleChange);
-    return () => mql.removeEventListener('change', handleChange);
-  }, []);
-
-  return isMobile;
-}
 
 /**
  * MapPage — Interactive map with filter integration, result counts,
