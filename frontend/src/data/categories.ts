@@ -1,6 +1,7 @@
 /**
- * Vehicle categories for OTO — defines which makes/models belong to each segment.
- * Models listed here must match EXACTLY what's stored in the database.
+ * Vehicle categories for OTO — broad segment filters based on body type,
+ * power output, and fuel type. No specific model restrictions — categories
+ * capture everything that fits the segment profile.
  */
 
 export interface CategoryFilter {
@@ -10,6 +11,7 @@ export interface CategoryFilter {
   fuelType?: string[];
   horsepowerMin?: number;
   transmissionType?: string[];
+  yearMax?: number;
 }
 
 export interface Category {
@@ -25,8 +27,8 @@ export const CATEGORIES: Category[] = [
     label: 'Supercars',
     labelNl: 'Supercars',
     filter: {
-      makes: ['Ferrari', 'Lamborghini', 'McLaren', 'Bugatti', 'Pagani', 'Koenigsegg'],
       bodyType: ['coupe', 'cabriolet'],
+      horsepowerMin: 500,
     },
   },
   {
@@ -34,8 +36,8 @@ export const CATEGORIES: Category[] = [
     label: 'Luxury',
     labelNl: 'Luxe',
     filter: {
-      makes: ['Rolls-Royce', 'Bentley', 'Aston Martin', 'Maserati'],
-      bodyType: ['sedan', 'coupe', 'cabriolet'],
+      makes: ['Rolls-Royce', 'Bentley', 'Mercedes-Benz', 'BMW', 'Audi', 'Aston Martin', 'Maserati', 'Jaguar', 'Lexus', 'Genesis', 'Porsche'],
+      bodyType: ['sedan'],
     },
   },
   {
@@ -43,9 +45,7 @@ export const CATEGORIES: Category[] = [
     label: 'Performance Sedans',
     labelNl: 'Performance Sedans',
     filter: {
-      makes: ['BMW', 'Mercedes-Benz', 'Audi', 'Alfa Romeo'],
-      models: ['M3', 'M5', 'M8', 'RS3', 'RS5', 'RS6', 'RS7', 'S 63 AMG', 'S 65 AMG', 'Giulia', 'Maybach S-Klasse', 'S 580', 'S 450', 'CLS', 'AMG GT 4-Door', 'C 63 AMG', 'E 63 AMG'],
-      bodyType: ['sedan', 'stationwagon'],
+      bodyType: ['sedan'],
       horsepowerMin: 300,
     },
   },
@@ -54,8 +54,6 @@ export const CATEGORIES: Category[] = [
     label: 'Hot Hatches',
     labelNl: 'Hot Hatches',
     filter: {
-      makes: ['Volkswagen', 'Honda', 'Hyundai', 'Toyota', 'Ford', 'MINI', 'Renault', 'Peugeot', 'CUPRA', 'SEAT', 'Mercedes-Benz', 'Audi', 'BMW'],
-      models: ['Golf', 'Civic', 'i30', 'i20', 'Yaris', 'Focus', 'Cooper', 'Megane', '308', 'Leon', 'Formentor', 'A 35 AMG', 'A 45 AMG', 'CLA 45 AMG', 'S3', '128ti', '135i', 'M135i'],
       bodyType: ['hatchback', 'compact'],
     },
   },
@@ -64,9 +62,8 @@ export const CATEGORIES: Category[] = [
     label: 'Sports Cars',
     labelNl: 'Sportwagens',
     filter: {
-      makes: ['Porsche', 'Lotus', 'Jaguar', 'Nissan', 'Toyota', 'Chevrolet', 'Dodge', 'Lexus', 'BMW', 'Mercedes-Benz'],
-      models: ['911', '991', '992', '997', '718', 'Carrera GT', 'Cayman', 'Boxster', 'Emira', 'Evora', 'Elise', 'Exige', 'F-Type', 'GT-R', 'Supra', 'Corvette', 'Challenger', 'LC 500', 'LC 500h', 'LFA', 'Z4', 'M4', 'M2', 'AMG GT', 'SL'],
       bodyType: ['coupe', 'cabriolet', 'roadster'],
+      horsepowerMin: 200,
     },
   },
   {
@@ -74,18 +71,15 @@ export const CATEGORIES: Category[] = [
     label: 'Performance SUVs',
     labelNl: 'Performance SUVs',
     filter: {
-      makes: ['Porsche', 'Lamborghini', 'Bentley', 'Aston Martin', 'Maserati', 'BMW', 'Mercedes-Benz', 'Audi', 'Land Rover', 'Range Rover'],
-      models: ['Cayenne', 'Macan', 'Urus', 'Bentayga', 'DBX', 'Levante', 'Grecale', 'X3 M', 'X4 M', 'X5 M', 'X6 M', 'GLE 53 AMG', 'GLE 63 AMG', 'GLE 450', 'G 63 AMG', 'G 500', 'G 650', 'SQ7', 'SQ8', 'RSQ8', 'Range Rover Sport', 'Defender'],
       bodyType: ['suv', 'offroad'],
+      horsepowerMin: 300,
     },
   },
   {
     id: 'electric',
-    label: 'Electric Performance',
+    label: 'Electric',
     labelNl: 'Elektrisch',
     filter: {
-      makes: ['Porsche', 'Audi', 'Lotus', 'Mercedes-Benz', 'BMW', 'Hyundai', 'Tesla', 'Rimac', 'Lucid', 'Polestar', 'NIO'],
-      models: ['Taycan', 'e-tron GT', 'Eletre', 'Emeya', 'EQS', 'EQE', 'i4', 'iX', 'IONIQ 5', 'IONIQ 6', 'Spectre', 'Model S', 'Model 3', 'Model X', 'Model Y', 'Nevera', 'Air', '2'],
       fuelType: ['electric'],
     },
   },
@@ -94,7 +88,7 @@ export const CATEGORIES: Category[] = [
     label: 'Classics',
     labelNl: 'Klassiekers',
     filter: {
-      makes: [],
+      yearMax: 2000,
     },
   },
 ];
