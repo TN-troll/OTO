@@ -29,7 +29,12 @@ export function LeaderboardPage() {
         ← Back to listings
       </Link>
       
-      <h1 className="mt-6 text-2xl font-bold text-surface-900 dark:text-white">🏁 0-100 km/h Leaderboard</h1>
+      <h1 className="mt-6 text-2xl font-bold text-surface-900 dark:text-white">
+        <svg className="mr-2 inline-block h-6 w-6 text-brand-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M13 2L4.5 13h6L9 22l9.5-12h-6L15 2" />
+        </svg>
+        0-100 km/h Sprint Leaderboard
+      </h1>
       <p className="mt-2 text-sm text-surface-500 dark:text-surface-400">The fastest cars currently listed on OTO, ranked by acceleration</p>
 
       {isLoading ? (

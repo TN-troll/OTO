@@ -17,7 +17,7 @@ const MapPage = lazy(() => import('../pages/MapPage'));
 /** Desktop sidebar containing the FilterPanel (visible at md breakpoint, ≥768px) */
 function FilterSidebar() {
   return (
-    <aside className="hidden w-80 shrink-0 overflow-y-auto border-r border-surface-200 bg-white p-6 md:block dark:bg-surface-800 dark:border-surface-700">
+    <aside className="sticky top-0 hidden h-screen w-80 shrink-0 overflow-y-auto border-r border-surface-200 bg-white p-6 md:block dark:bg-surface-800 dark:border-surface-700">
       <FilterPanel />
     </aside>
   );
