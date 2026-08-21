@@ -696,11 +696,15 @@ export function useFilters(options: UseFiltersOptions = {}) {
     }));
   }, [updateState]);
 
-  const setCategory = useCallback((makes: string[], models: string[]) => {
+  const setCategory = useCallback((categoryFilter: { makes?: string[]; models?: string[]; bodyType?: string[]; fuelType?: string[]; horsepowerMin?: number; transmissionType?: string[] }) => {
     updateState((prev) => ({
       ...prev,
-      makes,
-      models,
+      makes: categoryFilter.makes ?? [],
+      models: categoryFilter.models ?? [],
+      bodyType: (categoryFilter.bodyType ?? []) as BodyType[],
+      fuelType: (categoryFilter.fuelType ?? []) as FuelType[],
+      horsepowerMin: categoryFilter.horsepowerMin,
+      transmissionType: (categoryFilter.transmissionType ?? []) as TransmissionType[],
     }));
   }, [updateState]);
 

@@ -82,12 +82,12 @@ export default function MapPage() {
   const handleCategoryClick = useCallback((categoryId: string | null) => {
     if (categoryId === null) {
       setActiveCategory(null);
-      setCategory([], []);
+      setCategory({});
     } else {
       const category = CATEGORIES.find((c) => c.id === categoryId);
       if (category) {
         setActiveCategory(categoryId);
-        setCategory(category.filter.makes || [], category.filter.models || []);
+        setCategory(category.filter);
       }
     }
   }, [setCategory]);

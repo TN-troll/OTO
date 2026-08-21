@@ -235,10 +235,10 @@ export function BrowsePage() {
               onClick={() => {
                 if (isActive) {
                   setActiveCategory(null);
-                  setCategory([], []);
+                  setCategory({});
                 } else {
                   setActiveCategory(category.id);
-                  setCategory(category.filter.makes || [], category.filter.models || []);
+                  setCategory(category.filter);
                 }
               }}
               className={`group relative min-h-[72px] overflow-hidden rounded-2xl px-3.5 py-4 text-left backdrop-blur-[20px] transition-[transform,box-shadow,border-color,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] border ${
