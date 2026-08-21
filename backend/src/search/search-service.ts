@@ -130,6 +130,7 @@ export class SearchService {
       id: row.id,
       title: row.title,
       primaryImageUrl: row.image_urls.length > 0 ? row.image_urls[0] : null,
+      imageUrls: (row.image_urls ?? []).slice(0, 4),
       make: row.make,
       model: row.model,
       year: row.year,

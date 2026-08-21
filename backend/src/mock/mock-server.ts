@@ -207,6 +207,7 @@ function toSummary(l: MockListing) {
     id: l.id,
     title: l.title,
     primaryImageUrl: l.imageUrls[0] || null,
+    imageUrls: (l.imageUrls ?? []).slice(0, 4),
     make: l.make,
     model: l.model,
     year: l.year,

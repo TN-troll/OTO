@@ -278,6 +278,7 @@ listingsRouter.get('/:id/similar', async (req: Request, res: Response): Promise<
       horsepower: row.horsepower,
       engineDisplacementCc: row.engine_displacement_cc,
       primaryImageUrl: row.image_urls?.[0] || null,
+      imageUrls: (row.image_urls ?? []).slice(0, 4),
       dateAdded: row.date_added,
     }));
 

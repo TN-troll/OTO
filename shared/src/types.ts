@@ -181,6 +181,8 @@ export interface ListingSummary {
   id: string;
   title: string;
   primaryImageUrl: string | null;
+  /** First 4 image URLs for card carousel (subset of full gallery) */
+  imageUrls: string[];
   make: string;
   model: string;
   year: number;

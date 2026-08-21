@@ -28,6 +28,7 @@ function createMockListing(overrides: Partial<ListingSummary> = {}): ListingSumm
     id: 'test-123',
     title: 'Test Car',
     primaryImageUrl: 'https://example.com/car.jpg',
+    imageUrls: ['https://example.com/car.jpg'],
     make: 'Porsche',
     model: '911',
     year: 2023,

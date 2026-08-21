@@ -21,6 +21,7 @@ function createMockListings(count: number): ListingSummary[] {
     id: `listing-${i}`,
     title: `Car ${i}`,
     primaryImageUrl: `https://example.com/car-${i}.jpg`,
+    imageUrls: [`https://example.com/car-${i}.jpg`],
     make: `Make${i}`,
     model: `Model${i}`,
     year: 2020 + i,

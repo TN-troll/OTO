@@ -54,6 +54,7 @@ smartSearchRouter.get('/', async (req: Request, res: Response): Promise<void> =>
       id: row.id,
       title: row.title,
       primaryImageUrl: row.image_urls?.[0] || null,
+      imageUrls: (row.image_urls ?? []).slice(0, 4),
       make: row.make,
       model: row.model,
       year: row.year,

@@ -1,10 +1,27 @@
-import { useState, useEffect, useRef, memo } from 'react';
+import { useState, useEffect, useRef, useCallback, memo } from 'react';
 import type { ListingSummary } from '@car-ads/shared';
 import { useFavorites } from '../hooks/useFavorites';
 import { useCompare } from '../hooks/useCompare';
 import { getProxyImageUrl } from '../utils/imageProxy';
 import { formatPrice, formatNumber } from '../utils/formatNumber';
 import { useLanguage } from '../i18n';
+
+// Track last visit time — set on first card render each session
+if (typeof window !== 'undefined') {
+  const SESSION_KEY = 'oto-visit-session';
+  if (!sessionStorage.getItem(SESSION_KEY)) {
+    // Only update lastVisit if this is a new session (tab/window)
+    sessionStorage.setItem(SESSION_KEY, '1');
+    const prev = localStorage.getItem('oto-last-visit');
+    if (prev) {
+      // Keep the previous visit timestamp as reference for "new since last visit"
+      // Update it AFTER reading, so cards rendered in this session compare against the OLD value
+      setTimeout(() => localStorage.setItem('oto-last-visit', new Date().toISOString()), 5000);
+    } else {
+      localStorage.setItem('oto-last-visit', new Date().toISOString());
+    }
+  }
+}
 
 interface ListingCardProps {
   listing: ListingSummary;
@@ -39,10 +56,12 @@ function ImagePlaceholder({ loading = false }: { loading?: boolean }) {
 }
 
 function ListingCardInner({ listing, featured = false, priority = false }: ListingCardProps) {
+  const [imgIndex, setImgIndex] = useState(0);
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageTimedOut, setImageTimedOut] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const touchStartX = useRef(0);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { addToCompare, removeFromCompare, isInCompare } = useCompare();
   const { locale } = useLanguage();
@@ -50,9 +69,32 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
   const pricePerHp = listing.horsepower ? Math.round(listing.price / listing.horsepower) : null;
   const isFeaturedCard = featured || listing.isFeatured;
 
+  const images = listing.imageUrls?.length > 0 ? listing.imageUrls.slice(0, 4) : (listing.primaryImageUrl ? [listing.primaryImageUrl] : []);
+  const hasMultiple = images.length > 1;
+
+  const isNewSinceLastVisit = (() => {
+    try {
+      const lastVisit = localStorage.getItem('oto-last-visit');
+      if (!lastVisit) return false;
+      return new Date(listing.dateAdded) > new Date(lastVisit);
+    } catch { return false; }
+  })();
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  }, []);
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!hasMultiple) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) setImgIndex((prev) => (prev + 1) % images.length);
+      else setImgIndex((prev) => (prev - 1 + images.length) % images.length);
+    }
+  }, [hasMultiple, images.length]);
+
   // 10-second timeout: if image hasn't loaded, show pulsing placeholder
   useEffect(() => {
-    if (listing.primaryImageUrl && !imageLoaded && !imageError) {
+    if (images.length > 0 && !imageLoaded && !imageError) {
       timeoutRef.current = setTimeout(() => {
         setImageTimedOut(true);
       }, 10000);
@@ -62,7 +104,7 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [listing.primaryImageUrl, imageLoaded, imageError]);
+  }, [images.length, imageLoaded, imageError]);
 
   // Clear timeout when image loads or errors
   useEffect(() => {
@@ -102,15 +144,19 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
       aria-label={`${listing.make} ${listing.model} ${listing.year}`}
     >
       {/* Image container with fixed aspect ratio */}
-      <div className={`relative overflow-hidden ${isFeaturedCard ? 'aspect-[16/9]' : 'aspect-[3/2]'}`}>
-        {listing.primaryImageUrl && !imageError && !imageTimedOut ? (
+      <div
+        className={`relative overflow-hidden ${isFeaturedCard ? 'aspect-[16/9]' : 'aspect-[3/2]'}`}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        {images.length > 0 && !imageError && !imageTimedOut ? (
           <>
             {/* Shimmer skeleton while loading */}
             {!imageLoaded && (
               <div className="absolute inset-0 animate-shimmer motion-reduce:animate-none bg-gradient-to-r from-surface-100 via-surface-200 to-surface-100 bg-[length:200%_100%] dark:from-surface-800 dark:via-surface-700 dark:to-surface-800" />
             )}
             <img
-              src={getProxyImageUrl(listing.primaryImageUrl)}
+              src={getProxyImageUrl(images[imgIndex])}
               alt={`${listing.make} ${listing.model}`}
               className={[
                 'h-full w-full object-cover',
@@ -133,6 +179,47 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
 
         {/* Gradient overlay — bottom fade from-black/50 */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+
+        {/* Carousel dots */}
+        {hasMultiple && (
+          <div className="absolute bottom-12 left-1/2 z-[8] flex -translate-x-1/2 gap-1.5">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setImgIndex(i); }}
+                className={`h-1.5 rounded-full transition-all duration-200 ${i === imgIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/50'}`}
+                aria-label={`Image ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Carousel prev/next arrows (visible on hover) */}
+        {hasMultiple && (
+          <>
+            <button
+              type="button"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setImgIndex((imgIndex - 1 + images.length) % images.length); }}
+              className="absolute left-2 top-1/2 z-[8] flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100"
+              aria-label="Previous image"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setImgIndex((imgIndex + 1) % images.length); }}
+              className="absolute right-14 top-1/2 z-[8] flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100"
+              aria-label="Next image"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </>
+        )}
 
         {/* Year badge — glass pill */}
         <div className="absolute left-4 top-4 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
@@ -158,6 +245,13 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
         {isNew && isFeaturedCard && (
           <div className="absolute left-4 top-[4.5rem] rounded-full bg-green-500/90 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm">
             NIEUW
+          </div>
+        )}
+
+        {/* New since last visit (but not brand new) */}
+        {!isNew && isNewSinceLastVisit && !isFeaturedCard && (
+          <div className="absolute left-4 top-11 rounded-full bg-blue-500/90 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm">
+            RECENT
           </div>
         )}
 
@@ -294,14 +388,23 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
           </div>
         )}
 
-        {/* Location */}
-        {listing.location && (
-          <div className="mt-auto pt-3 flex items-center gap-1 text-xs text-surface-400">
-            <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            {listing.location}
+        {/* Location + Seller type */}
+        {(listing.location || listing.sellerType) && (
+          <div className="mt-auto pt-3 flex items-center gap-2 text-xs text-surface-400">
+            {listing.location && (
+              <span className="flex items-center gap-1">
+                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {listing.location}
+              </span>
+            )}
+            {listing.sellerType && (
+              <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${listing.sellerType === 'dealer' ? 'bg-brand-accent/10 text-brand-accent' : 'bg-surface-100 text-surface-500 dark:bg-white/[0.06] dark:text-surface-400'}`}>
+                {listing.sellerType === 'dealer' ? 'Dealer' : 'Particulier'}
+              </span>
+            )}
           </div>
         )}
       </div>
