@@ -6,6 +6,7 @@ import { getProxyImageUrl } from '../utils/imageProxy';
 import { formatPrice, formatNumber } from '../utils/formatNumber';
 import { getMakeLogo } from '../utils/makeLogos';
 import { useLanguage } from '../i18n';
+import { getMarketTrend } from '../data/market-trends';
 
 interface ListingListItemProps {
   listing: ListingSummary;
@@ -20,6 +21,7 @@ function ListingListItemInner({ listing }: ListingListItemProps) {
   const { addToCompare, removeFromCompare, isInCompare } = useCompare();
   const { locale } = useLanguage();
   const isNew = listing.dateAdded && (Date.now() - new Date(listing.dateAdded).getTime()) < 48 * 60 * 60 * 1000;
+  const marketTrend = getMarketTrend(listing.make, listing.model);
 
   const images = listing.imageUrls?.length > 0 ? listing.imageUrls.slice(0, 4) : (listing.primaryImageUrl ? [listing.primaryImageUrl] : []);
   const hasMultiple = images.length > 1;
@@ -150,6 +152,15 @@ function ListingListItemInner({ listing }: ListingListItemProps) {
             )}
             {listing.price > 5000 && (
               <span className="text-surface-500">~€{formatNumber(Math.round(listing.price / 60), locale)}/mnd</span>
+            )}
+            {marketTrend && (
+              <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
+                marketTrend.trend < 0
+                  ? 'bg-green-500/10 text-green-500'
+                  : 'bg-red-500/10 text-red-500'
+              }`}>
+                {marketTrend.trend < 0 ? '↓' : '↑'}{Math.abs(marketTrend.trend)}% {marketTrend.period}
+              </span>
             )}
           </div>
         </div>

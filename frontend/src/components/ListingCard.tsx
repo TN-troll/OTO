@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, memo } from 'react';
 import type { ListingSummary } from '@car-ads/shared';
 import { useFavorites } from '../hooks/useFavorites';
 import { useCompare } from '../hooks/useCompare';
+import { usePriceDrops } from '../hooks/usePriceDrops';
 import { getProxyImageUrl } from '../utils/imageProxy';
 import { formatPrice, formatNumber } from '../utils/formatNumber';
 import { getMakeLogo } from '../utils/makeLogos';
@@ -65,7 +66,11 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
   const touchStartX = useRef(0);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { addToCompare, removeFromCompare, isInCompare } = useCompare();
+  const { trackPrice, getDropAmount } = usePriceDrops();
   const { locale } = useLanguage();
+
+  // Track price for price-drop detection
+  useEffect(() => { trackPrice(listing.id, listing.price); }, [listing.id, listing.price]);
   const isNew = listing.dateAdded && (Date.now() - new Date(listing.dateAdded).getTime()) < 48 * 60 * 60 * 1000;
   const pricePerHp = listing.horsepower ? Math.round(listing.price / listing.horsepower) : null;
   const pricePerKm = listing.mileage && listing.mileage > 0 ? (listing.price / listing.mileage).toFixed(1) : null;
@@ -266,9 +271,12 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
           </div>
         )}
 
-
-
-
+        {/* Image counter badge */}
+        {hasMultiple && (
+          <div className="absolute left-4 bottom-4 z-[8] rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white/80 backdrop-blur-sm">
+            {imgIndex + 1}/{images.length}
+          </div>
+        )}
       </div>
 
       {/* Content — generous padding, clean hierarchy */}
@@ -278,6 +286,11 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
           <span className="text-xl font-bold text-brand dark:text-brand-accent">
             {formatPrice(listing.price, locale)}
           </span>
+          {getDropAmount(listing.id) && (
+            <span className="ml-2 inline-flex items-center gap-0.5 rounded-full bg-green-500/10 px-2 py-0.5 text-[10px] font-bold text-green-500">
+              ↓ €{formatNumber(getDropAmount(listing.id)!, locale)}
+            </span>
+          )}
           {listing.price > 5000 && (
             <span className="text-[11px] text-surface-400">
               ~€{formatNumber(Math.round(listing.price / 60), locale)}/mnd
