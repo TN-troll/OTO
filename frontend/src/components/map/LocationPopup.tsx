@@ -122,7 +122,7 @@ export function LocationPopup({ location }: LocationPopupProps) {
 
       {/* View all listings link */}
       <Link
-        to={`/browse?location=${encodeURIComponent(city)}`}
+        to={`/?location=${encodeURIComponent(city)}`}
         className="mt-3 flex items-center justify-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-surface-200 transition-all duration-200 hover:border-brand-accent/30 hover:bg-brand-accent/10 hover:text-brand-accent"
       >
         View all listings

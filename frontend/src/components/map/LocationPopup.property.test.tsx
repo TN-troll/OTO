@@ -152,8 +152,8 @@ describe('Property 7: Browse link construction from city name', () => {
         );
         expect(viewAllLink).not.toBeUndefined();
 
-        // The href should contain /browse?location=<encodedCity>
-        const expectedHref = `/browse?location=${encodeURIComponent(location.city)}`;
+        // The href should contain /?location=<encodedCity>
+        const expectedHref = `/?location=${encodeURIComponent(location.city)}`;
         expect(viewAllLink!.getAttribute('href')).toBe(expectedHref);
 
         unmount();

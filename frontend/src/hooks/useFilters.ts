@@ -61,6 +61,7 @@ export interface FilterState {
   isSpecialEdition: boolean;
   accelerationMax?: number;
   topSpeedMin?: number;
+  location?: string;
 }
 
 export const INITIAL_FILTER_STATE: FilterState = {
@@ -95,6 +96,7 @@ export const INITIAL_FILTER_STATE: FilterState = {
   isSpecialEdition: false,
   accelerationMax: undefined,
   topSpeedMin: undefined,
+  location: undefined,
 };
 
 /**
@@ -255,6 +257,7 @@ export function buildCriteria(
   if (state.isSpecialEdition) criteria.isSpecialEdition = true;
   if (state.accelerationMax !== undefined) criteria.accelerationMax = state.accelerationMax;
   if (state.topSpeedMin !== undefined) criteria.topSpeedMin = state.topSpeedMin;
+  if (state.location) criteria.location = state.location;
 
   // Sorting
   if (sorting) {
@@ -300,7 +303,8 @@ export function hasActiveFilters(state: FilterState): boolean {
     state.heritageEra.length > 0 ||
     state.isSpecialEdition ||
     state.accelerationMax !== undefined ||
-    state.topSpeedMin !== undefined
+    state.topSpeedMin !== undefined ||
+    state.location !== undefined
   );
 }
 
@@ -485,6 +489,10 @@ export function useFilters(options: UseFiltersOptions = {}) {
       if (legacyMakes && legacyMakes.length > 0 && initial.makes.length === 0) initial.makes = legacyMakes;
       if (legacyModels && legacyModels.length > 0 && initial.models.length === 0) initial.models = legacyModels;
 
+      // Location param (from map "View all listings" link)
+      const locationParam = params.get('location');
+      if (locationParam) initial.location = locationParam;
+
       // Legacy range params — discard NaN values
       const legacyNumber = (key: string) => {
         const v = params.get(key);
@@ -557,6 +565,7 @@ export function useFilters(options: UseFiltersOptions = {}) {
     if (filters.fuelType.length > 0) params.set('fuelType', filters.fuelType.join(','));
     if (filters.bodyType.length > 0) params.set('bodyType', filters.bodyType.join(','));
     if (filters.showSold) params.set('showSold', 'true');
+    if (filters.location) params.set('location', filters.location);
 
     const search = params.toString();
     const newUrl = search ? `${window.location.pathname}?${search}` : window.location.pathname;
@@ -772,6 +781,10 @@ export function useFilters(options: UseFiltersOptions = {}) {
     updateState((prev) => ({ ...prev, topSpeedMin: value }));
   }, [updateState]);
 
+  const updateLocation = useCallback((location: string | undefined) => {
+    updateState((prev) => ({ ...prev, location }));
+  }, [updateState]);
+
   // ─── Section Clear ────────────────────────────────────────────────────────────
   const clearFilterSection = useCallback((section: string) => {
     setFilters((prev) => clearSection(prev, section));
@@ -814,6 +827,7 @@ export function useFilters(options: UseFiltersOptions = {}) {
     updateIsSpecialEdition,
     updateAccelerationMax,
     updateTopSpeedMin,
+    updateLocation,
     // Presets
     applyPreset: applyPresetAction,
     deactivatePreset,

@@ -128,6 +128,8 @@ export interface FilterCriteria {
   // New filter fields
   drivetrain?: DrivetrainType[];
   color?: string[];
+  /** Filter listings by city/location name (exact match, case-insensitive) */
+  location?: string;
   sellerType?: SellerType[];
   doors?: number[];
   seats?: number[];

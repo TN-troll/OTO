@@ -715,6 +715,12 @@ export class FilterEngine {
       }
     }
 
+    // Location (case-insensitive exact match)
+    if (criteria.location) {
+      params.push(criteria.location);
+      conditions.push(`LOWER(l.location) = LOWER($${params.length})`);
+    }
+
     // New premium filter fields
     this.buildNewFieldClauses(criteria, conditions, params);
 
