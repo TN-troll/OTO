@@ -23,28 +23,44 @@ function formatPrice(price: number): string {
 /**
  * Popup content for a map marker showing location details and listing previews.
  *
- * Renders:
- * - City name and total listing count header
- * - Up to 3 listing previews with image, title, and formatted price
- * - Link per listing to its detail page
- * - "View all listings" link to browse page filtered by location
+ * Premium dark glass design with:
+ * - Gold-accented city name header
+ * - Up to 3 listing previews with rounded thumbnails and overlay gradients
+ * - Formatted prices in gold
+ * - Glass background and subtle borders matching OTO dark theme
  *
  * Used inside both a Leaflet Popup (desktop) and MobileBottomSheet (mobile).
  */
 export function LocationPopup({ location }: LocationPopupProps) {
-  const { city, totalCount, previews } = location;
+  const { city, totalCount, dealerCount, privateCount, previews } = location;
   const displayPreviews = previews.slice(0, 3);
 
   return (
     <div className="w-64 sm:w-72">
       {/* Header: city name + listing count */}
       <div className="mb-3 flex items-baseline justify-between">
-        <h3 className="text-base font-semibold tracking-tight text-surface-900 dark:text-white">
+        <h3 className="text-base font-semibold tracking-tight text-brand-accent">
           {city}
         </h3>
-        <span className="ml-2 rounded-full bg-surface-100/80 px-2.5 py-0.5 text-xs font-medium text-surface-600 dark:bg-white/[0.06] dark:text-surface-300">
+        <span className="ml-2 rounded-full bg-white/[0.06] px-2.5 py-0.5 text-xs font-medium text-surface-300">
           {totalCount} {totalCount === 1 ? 'listing' : 'listings'}
         </span>
+      </div>
+
+      {/* Seller type breakdown */}
+      <div className="mb-3 flex gap-2">
+        {dealerCount > 0 && (
+          <span className="flex items-center gap-1 rounded-lg bg-brand-accent/10 px-2 py-1 text-[10px] font-medium text-brand-accent">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-brand-accent" />
+            {dealerCount} dealer
+          </span>
+        )}
+        {privateCount > 0 && (
+          <span className="flex items-center gap-1 rounded-lg bg-white/[0.06] px-2 py-1 text-[10px] font-medium text-surface-400">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-surface-400" />
+            {privateCount} private
+          </span>
+        )}
       </div>
 
       {/* Listing previews */}
@@ -54,21 +70,25 @@ export function LocationPopup({ location }: LocationPopupProps) {
             <li key={preview.id}>
               <Link
                 to={`/listing/${preview.id}`}
-                className="group flex gap-3 rounded-xl p-1.5 transition-colors hover:bg-surface-100/60 dark:hover:bg-white/[0.04]"
+                className="group flex gap-3 rounded-xl p-1.5 transition-all duration-200 hover:bg-white/[0.06]"
               >
                 {/* Thumbnail */}
-                <div className="h-12 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-surface-100 dark:bg-surface-800">
+                <div className="relative h-12 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-surface-800">
                   {preview.primaryImageUrl ? (
-                    <img
-                      src={getProxyImageUrl(preview.primaryImageUrl)}
-                      alt={`${preview.make} ${preview.model}`}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                    />
+                    <>
+                      <img
+                        src={getProxyImageUrl(preview.primaryImageUrl)}
+                        alt={`${preview.make} ${preview.model}`}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                      {/* Subtle overlay gradient on thumbnail */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                    </>
                   ) : (
                     <div className="flex h-full w-full items-center justify-center">
                       <svg
-                        className="h-5 w-5 text-surface-300 dark:text-surface-600"
+                        className="h-5 w-5 text-surface-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -87,10 +107,10 @@ export function LocationPopup({ location }: LocationPopupProps) {
 
                 {/* Title + price */}
                 <div className="flex min-w-0 flex-1 flex-col justify-center">
-                  <span className="truncate text-sm font-medium text-surface-900 group-hover:text-accent dark:text-white">
+                  <span className="truncate text-sm font-medium text-white transition-colors duration-150 group-hover:text-brand-accent">
                     {preview.title}
                   </span>
-                  <span className="text-xs font-semibold text-accent-gold">
+                  <span className="text-xs font-semibold text-brand-accent">
                     {formatPrice(preview.price)}
                   </span>
                 </div>
@@ -103,7 +123,7 @@ export function LocationPopup({ location }: LocationPopupProps) {
       {/* View all listings link */}
       <Link
         to={`/browse?location=${encodeURIComponent(city)}`}
-        className="mt-3 flex items-center justify-center gap-1 rounded-xl bg-surface-100/80 px-4 py-2 text-sm font-medium text-surface-700 transition-colors hover:bg-surface-200/80 dark:bg-white/[0.06] dark:text-surface-200 dark:hover:bg-white/[0.1]"
+        className="mt-3 flex items-center justify-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-surface-200 transition-all duration-200 hover:border-brand-accent/30 hover:bg-brand-accent/10 hover:text-brand-accent"
       >
         View all listings
         <svg

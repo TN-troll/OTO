@@ -20,7 +20,7 @@ import '../components/map/map.css';
 
 /**
  * MapPage — Interactive map with filter integration, result counts,
- * and smooth transitions when filters update.
+ * and smooth transitions when filters update. Premium dark theme.
  */
 export default function MapPage() {
   const isMobile = useIsMobile();
@@ -75,16 +75,16 @@ export default function MapPage() {
   if (isError) {
     return (
       <div className="flex min-h-[500px] flex-col items-center justify-center gap-4 px-4">
-        <div className="rounded-xl bg-red-50 p-6 text-center dark:bg-red-900/20">
-          <p className="text-sm font-medium text-red-700 dark:text-red-400">
+        <div className="rounded-2xl border border-white/[0.08] bg-surface-900/90 p-6 text-center backdrop-blur-lg">
+          <p className="text-sm font-medium text-red-400">
             Failed to load map
           </p>
-          <p className="mt-1 text-xs text-red-500 dark:text-red-300">
+          <p className="mt-1 text-xs text-red-300/70">
             {error instanceof Error ? error.message : 'An unexpected error occurred'}
           </p>
           <button
             onClick={() => refetch()}
-            className="mt-4 rounded-lg bg-red-100 px-4 py-2 text-sm font-medium text-red-700 transition-colors duration-150 hover:bg-red-200 dark:bg-red-900/40 dark:text-red-300 dark:hover:bg-red-900/60"
+            className="mt-4 rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-2 text-sm font-medium text-surface-200 transition-all duration-200 hover:border-brand-accent/30 hover:bg-brand-accent/10 hover:text-brand-accent"
           >
             Try again
           </button>
@@ -109,31 +109,31 @@ export default function MapPage() {
           </MarkerClusterGroup>
         </InteractiveMap>
 
-        {/* Refetching overlay — subtle pulse when filters change */}
+        {/* Refetching overlay — subtle pill when filters change */}
         {isFetching && !isLoading && (
           <div className="absolute inset-0 z-[900] flex items-start justify-center pt-4 pointer-events-none animate-fade-in">
-            <div className="flex items-center gap-2 rounded-full bg-brand/90 px-4 py-2 shadow-lg backdrop-blur-md">
-              <div className="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-              <span className="text-xs font-medium text-white">Updating map...</span>
+            <div className="flex items-center gap-2 rounded-full border border-white/[0.1] bg-surface-900/90 px-4 py-2 shadow-lg backdrop-blur-xl">
+              <div className="h-3 w-3 animate-spin rounded-full border-2 border-brand-accent/30 border-t-brand-accent" />
+              <span className="text-xs font-medium text-surface-200">Updating map...</span>
             </div>
           </div>
         )}
 
         {/* Results count badge — top-left floating */}
         <div className="absolute left-4 top-4 z-[900] animate-fade-in">
-          <div className="flex items-center gap-2 rounded-2xl border border-white/20 bg-surface-900/80 px-4 py-2 shadow-lg backdrop-blur-lg">
+          <div className="flex items-center gap-2 rounded-2xl border border-white/[0.1] bg-surface-900/80 px-4 py-2 shadow-lg backdrop-blur-xl">
             <svg className="h-4 w-4 text-brand-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
               <circle cx="12" cy="9" r="2.5" />
             </svg>
             <div>
               <span className="text-sm font-bold text-white">{formatNumber(totalListings, locale)}</span>
-              <span className="ml-1.5 text-xs text-surface-300">
+              <span className="ml-1.5 text-xs text-surface-400">
                 {locale === 'nl' ? 'auto\'s' : 'cars'}
               </span>
             </div>
             {filtersActive && (
-              <span className="ml-1 flex h-5 items-center rounded-full bg-brand-accent/20 px-2 text-[10px] font-semibold text-brand-accent">
+              <span className="ml-1 flex h-5 items-center rounded-full bg-brand-accent/15 px-2 text-[10px] font-semibold text-brand-accent">
                 {locale === 'nl' ? 'Gefilterd' : 'Filtered'}
               </span>
             )}
@@ -143,8 +143,8 @@ export default function MapPage() {
         {/* Empty state overlay */}
         {locations.length === 0 && !isFetching && (
           <div className="absolute inset-0 z-[800] flex items-center justify-center bg-surface-900/40 backdrop-blur-sm animate-fade-in">
-            <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface-900/80 px-8 py-6 shadow-xl backdrop-blur-lg">
-              <svg className="h-10 w-10 text-surface-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+            <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/[0.08] bg-surface-900/80 px-8 py-6 shadow-xl backdrop-blur-xl">
+              <svg className="h-10 w-10 text-surface-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
                 <circle cx="12" cy="9" r="2.5" />
                 <path d="M3 3l18 18" strokeWidth={2} />
@@ -152,7 +152,7 @@ export default function MapPage() {
               <p className="text-sm font-medium text-surface-200">
                 {locale === 'nl' ? 'Geen resultaten voor deze filters' : 'No results for these filters'}
               </p>
-              <p className="text-xs text-surface-400">
+              <p className="text-xs text-surface-500">
                 {locale === 'nl' ? 'Pas je filters aan om meer te zien' : 'Adjust your filters to see more'}
               </p>
             </div>
@@ -162,10 +162,10 @@ export default function MapPage() {
 
       {/* Desktop: popup overlay */}
       {!isMobile && selectedLocation && (
-        <div className="absolute right-4 top-16 z-[1000] animate-scale-in rounded-2xl border border-white/[0.1] bg-surface-900/90 p-4 shadow-xl backdrop-blur-xl">
+        <div className="absolute right-4 top-16 z-[1000] animate-scale-in rounded-2xl border border-white/[0.08] bg-surface-900/90 p-4 shadow-premium-lg backdrop-blur-xl">
           <button
             onClick={() => setSelectedLocation(null)}
-            className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full text-surface-400 transition-colors duration-150 hover:bg-white/10 hover:text-white"
+            className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full text-surface-400 transition-all duration-150 hover:bg-white/[0.08] hover:text-white"
             aria-label="Close popup"
           >
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">

@@ -29,8 +29,8 @@ export function useClusterGroup(): L.MarkerClusterGroup | null {
 }
 
 /**
- * Creates a custom cluster icon showing the total listing count.
- * Uses gold/amber colors consistent with the dealer marker theme.
+ * Creates a premium cluster icon showing the total listing count.
+ * Uses the OTO brand gold gradient with glass border and glow effects.
  *
  * Validates: Requirement 4.2 — Display total listing count on cluster icons
  */
@@ -41,30 +41,32 @@ function createClusterIcon(cluster: L.MarkerCluster): L.DivIcon {
   let size: number;
   let fontSize: number;
   if (childCount < 10) {
-    size = 36;
+    size = 40;
     fontSize = 12;
   } else if (childCount < 50) {
-    size = 44;
+    size = 48;
     fontSize = 13;
   } else {
-    size = 52;
+    size = 56;
     fontSize = 14;
   }
 
   return L.divIcon({
-    html: `<div style="
+    html: `<div class="oto-cluster" style="
       display: flex;
       align-items: center;
       justify-content: center;
       width: ${size}px;
       height: ${size}px;
       border-radius: 50%;
-      background-color: #f59e0b;
-      border: 3px solid #d97706;
+      background: linear-gradient(135deg, #d4a853 0%, #b8922f 100%);
+      border: 2.5px solid rgba(255, 255, 255, 0.3);
       color: #fff;
       font-weight: 700;
       font-size: ${fontSize}px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      letter-spacing: -0.02em;
+      box-shadow: 0 6px 20px rgba(212, 168, 83, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      cursor: pointer;
     ">${childCount}</div>`,
     className: 'marker-cluster-custom',
     iconSize: L.point(size, size),

@@ -9,10 +9,11 @@ const NL_ZOOM = 7;
 /** Mobile breakpoint in pixels */
 const MOBILE_BREAKPOINT = 768;
 
-/** OpenStreetMap attribution */
-const OSM_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-const OSM_TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+/** CartoDB Dark Matter — premium dark map tiles */
+const CARTO_DARK_ATTRIBUTION =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+const CARTO_DARK_TILE_URL =
+  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 
 export interface InteractiveMapProps {
   /** Location data for markers (rendered by children or future integration) */
@@ -69,11 +70,12 @@ function ScrollZoomController({ isMobile }: { isMobile: boolean }) {
 /**
  * Interactive Leaflet map component centered on the Netherlands.
  *
- * Renders an OpenStreetMap-based map with:
+ * Renders a CartoDB Dark Matter map with:
  * - Initial center on NL (52.2, 5.3) at zoom level 7
  * - Responsive height filling viewport below the header (min 400px)
  * - Scroll zoom disabled on mobile viewports (< 768px)
  * - Full support for zoom, pan, and keyboard interactions
+ * - Glass border frame matching the premium dark theme
  *
  * Accepts children for rendering markers, clusters, and overlays.
  */
@@ -82,11 +84,8 @@ export function InteractiveMap({ locations, children }: InteractiveMapProps) {
 
   return (
     <div
-      className="w-full"
+      className="oto-map-frame w-full overflow-hidden rounded-2xl border border-white/[0.08] shadow-glass-dark"
       style={{
-        // Header is h-14 (56px) on mobile + mobile search bar (~44px) = ~100px on mobile
-        // Header is h-16 (64px) on sm+
-        // Using a conservative estimate that works for both
         height: 'calc(100vh - 6rem)',
         minHeight: '400px',
       }}
@@ -99,7 +98,7 @@ export function InteractiveMap({ locations, children }: InteractiveMapProps) {
         keyboard={true}
         zoomControl={true}
       >
-        <TileLayer attribution={OSM_ATTRIBUTION} url={OSM_TILE_URL} />
+        <TileLayer attribution={CARTO_DARK_ATTRIBUTION} url={CARTO_DARK_TILE_URL} />
         <ScrollZoomController isMobile={isMobile} />
         {children}
       </MapContainer>
