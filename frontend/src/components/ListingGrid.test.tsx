@@ -27,6 +27,11 @@ function createMockListings(count: number): ListingSummary[] {
     price: 50000 + i * 10000,
     horsepower: 200 + i * 50,
     engineDisplacementCc: 2000 + i * 500,
+    mileage: null,
+    fuelType: null,
+    location: null,
+    sellerType: null,
+    marketAvgPrice: null,
     dateAdded: new Date('2024-01-01'),
   }));
 }

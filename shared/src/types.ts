@@ -187,6 +187,12 @@ export interface ListingSummary {
   price: number;
   horsepower: number | null;
   engineDisplacementCc: number | null;
+  mileage: number | null;
+  fuelType: string | null;
+  location: string | null;
+  sellerType: string | null;
+  /** Market average price for similar cars (null if unavailable) */
+  marketAvgPrice: number | null;
   dateAdded: Date;
   /** Listing status — present so the frontend can display badges (e.g. "Sold") */
   status?: 'active' | 'sold' | 'stale';

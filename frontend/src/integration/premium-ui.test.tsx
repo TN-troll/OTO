@@ -107,6 +107,11 @@ function createMockListing(overrides: Partial<ListingSummary> = {}): ListingSumm
     price: 89000,
     horsepower: 450,
     engineDisplacementCc: 3000,
+    mileage: null,
+    fuelType: null,
+    location: null,
+    sellerType: null,
+    marketAvgPrice: null,
     dateAdded: new Date('2023-01-01'),
     ...overrides,
   };
@@ -123,6 +128,11 @@ function createMockListings(count: number): ListingSummary[] {
     price: 50000 + i * 10000,
     horsepower: 200 + i * 50,
     engineDisplacementCc: 2000 + i * 500,
+    mileage: null,
+    fuelType: null,
+    location: null,
+    sellerType: null,
+    marketAvgPrice: null,
     dateAdded: new Date('2024-01-01'),
   }));
 }

@@ -240,12 +240,51 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
               {(listing.engineDisplacementCc / 1000).toFixed(1)}L
             </span>
           )}
+          {listing.mileage != null && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
+              <svg className="h-3 w-3 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+              {formatNumber(listing.mileage, locale)} km
+            </span>
+          )}
+          {listing.fuelType === 'electric' && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-3 py-1.5 text-xs font-medium text-blue-600 dark:bg-blue-500/15 dark:text-blue-400">
+              <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              EV
+            </span>
+          )}
           {pricePerHp != null && (
             <span className="inline-flex items-center rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
               €{formatNumber(pricePerHp, locale)}/HP
             </span>
           )}
         </div>
+
+        {/* Deal badge */}
+        {listing.marketAvgPrice != null && listing.price < listing.marketAvgPrice && (
+          <div className="mt-2 flex items-center gap-1.5">
+            <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2.5 py-1 text-[11px] font-semibold text-green-600 dark:bg-green-500/15 dark:text-green-400">
+              <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+              </svg>
+              €{formatNumber(Math.round(listing.marketAvgPrice - listing.price), locale)} {locale === 'nl' ? 'onder markt' : 'below market'}
+            </span>
+          </div>
+        )}
+
+        {/* Location */}
+        {listing.location && (
+          <div className="mt-auto pt-3 flex items-center gap-1 text-xs text-surface-400">
+            <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            {listing.location}
+          </div>
+        )}
       </div>
     </a>
   );

@@ -391,7 +391,7 @@ export class FilterEngine {
     const sortColumn = SORT_COLUMN_MAP[sortBy];
     const orderDirection = sortOrder.toUpperCase();
 
-    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.date_added, l.status, l.is_featured FROM listings l${this.needsSoundJoin(expandedCriteria) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.mileage, l.fuel_type, l.location, l.seller_type, l.date_added, l.status, l.is_featured FROM listings l${this.needsSoundJoin(expandedCriteria) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
 
     const dataResult = await query<{
       id: string;
@@ -403,6 +403,10 @@ export class FilterEngine {
       price: string | number;
       horsepower: number | null;
       engine_displacement_cc: number | null;
+      mileage: number | null;
+      fuel_type: string | null;
+      location: string | null;
+      seller_type: string | null;
       date_added: Date;
       status: 'active' | 'sold' | 'stale';
       is_featured: boolean;
@@ -418,6 +422,11 @@ export class FilterEngine {
       price: typeof row.price === 'string' ? parseFloat(row.price) : row.price,
       horsepower: row.horsepower,
       engineDisplacementCc: row.engine_displacement_cc,
+      mileage: row.mileage,
+      fuelType: row.fuel_type,
+      location: row.location,
+      sellerType: row.seller_type,
+      marketAvgPrice: null,
       dateAdded: row.date_added,
       status: row.status,
       isFeatured: row.is_featured,
@@ -471,7 +480,7 @@ export class FilterEngine {
     const orderDirection = sortOrder.toUpperCase();
     const fetchCount = limit + 1;
 
-    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.date_added, l.status, l.is_featured FROM listings l${this.needsSoundJoin(expandedFilters) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
+    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.mileage, l.fuel_type, l.location, l.seller_type, l.date_added, l.status, l.is_featured FROM listings l${this.needsSoundJoin(expandedFilters) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
 
     const dataResult = await query<{
       id: string;
@@ -483,6 +492,10 @@ export class FilterEngine {
       price: string | number;
       horsepower: number | null;
       engine_displacement_cc: number | null;
+      mileage: number | null;
+      fuel_type: string | null;
+      location: string | null;
+      seller_type: string | null;
       date_added: Date;
       status: 'active' | 'sold' | 'stale';
       is_featured: boolean;
@@ -501,6 +514,11 @@ export class FilterEngine {
       price: typeof row.price === 'string' ? parseFloat(row.price) : row.price,
       horsepower: row.horsepower,
       engineDisplacementCc: row.engine_displacement_cc,
+      mileage: row.mileage,
+      fuelType: row.fuel_type,
+      location: row.location,
+      sellerType: row.seller_type,
+      marketAvgPrice: null,
       dateAdded: row.date_added,
       status: row.status,
       isFeatured: row.is_featured,
