@@ -16,6 +16,7 @@ import { featuredRouter } from './featured.js';
 import { notificationsRouter } from './notifications.js';
 import { premiumSignupRouter } from './premium-signup.js';
 import { mapRouter } from './map.js';
+import { favoritesRouter } from './favorites.js';
 import { cacheMiddleware } from './middleware/cache.js';
 import { env } from '../config/env.js';
 
@@ -30,7 +31,7 @@ export function createApp(): express.Application {
   app.use((_req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, X-Device-Token');
     if (_req.method === 'OPTIONS') { res.sendStatus(204); return; }
     next();
   });
@@ -57,6 +58,7 @@ export function createApp(): express.Application {
   app.use('/api/notifications', notificationsRouter);
   app.use('/api/premium-signup', premiumSignupRouter);
   app.use('/api/map', mapRouter);
+  app.use('/api/favorites', favoritesRouter);
 
   return app;
 }
