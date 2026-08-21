@@ -5,6 +5,7 @@ import { ComparePage } from './pages/ComparePage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { PremiumPage } from './pages/PremiumPage';
 import { NotificationsPage } from './pages/NotificationsPage';
+import { SellerPage } from './pages/SellerPage';
 import { BrowseLayout } from './components/BrowseLayout';
 import { MarketplaceHealthBanner } from './components/MarketplaceHealthBanner';
 import { Header } from './components/Header';
@@ -113,6 +114,22 @@ export function App() {
                 <main className="flex-1 overflow-auto">
                   <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
                     <ListingDetailPage />
+                  </div>
+                </main>
+              </div>
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/seller"
+          element={
+            <>
+              <Header />
+              <div className="flex flex-1">
+                <main className="flex-1 overflow-auto">
+                  <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+                    <SellerPage />
                   </div>
                 </main>
               </div>
