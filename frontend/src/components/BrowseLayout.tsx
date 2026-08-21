@@ -207,8 +207,8 @@ export function BrowseLayout() {
             className={activeTab === 'listings' ? 'block animate-blur-in' : 'hidden'}
           >
             <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-              <BrowsePage />
               <RecentlyViewedStrip />
+              <BrowsePage />
             </div>
           </div>
 
