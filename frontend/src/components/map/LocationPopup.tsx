@@ -120,9 +120,10 @@ export function LocationPopup({ location }: LocationPopupProps) {
         </ul>
       )}
 
-      {/* View all listings link */}
-      <Link
-        to={`/?location=${encodeURIComponent(city)}`}
+      {/* View all listings link — uses <a> instead of <Link> to force full page
+         navigation, ensuring useFilters re-initializes from URL params */}
+      <a
+        href={`/?location=${encodeURIComponent(city)}`}
         className="mt-3 flex items-center justify-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-surface-200 transition-all duration-200 hover:border-brand-accent/30 hover:bg-brand-accent/10 hover:text-brand-accent"
       >
         View all listings
@@ -140,7 +141,7 @@ export function LocationPopup({ location }: LocationPopupProps) {
             d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
           />
         </svg>
-      </Link>
+      </a>
     </div>
   );
 }
