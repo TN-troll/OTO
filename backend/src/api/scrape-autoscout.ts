@@ -6,6 +6,7 @@
 import { Router, Request, Response } from 'express';
 import { query } from '../db/connection.js';
 import { MAX_IMAGES_PER_LISTING, CURATION_HP_THRESHOLD } from '@car-ads/shared';
+import { isDutchLocation } from '../map/location-validator.js';
 
 export const scrapeAutoscoutRouter = Router();
 
@@ -179,6 +180,12 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
               [currentPrice, existingId]
             );
           }
+          skipped++;
+          continue;
+        }
+
+        // Skip non-Dutch listings
+        if (!isDutchLocation(listing.location)) {
           skipped++;
           continue;
         }

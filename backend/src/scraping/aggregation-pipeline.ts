@@ -4,6 +4,7 @@ import { validateMandatoryFields } from '../validation/mandatory-field-validator
 import { CurationEngine } from '../curation/curation-engine.js';
 import { DeduplicationService, QualifiedListing } from '../deduplication/dedup-service.js';
 import { query } from '../db/connection.js';
+import { isDutchLocation } from '../map/location-validator.js';
 
 /** Maximum number of import attempts before permanently skipping an advertisement. */
 const MAX_IMPORT_ATTEMPTS = 3;
@@ -14,7 +15,7 @@ const STALENESS_THRESHOLD_MS = 120 * 60 * 1000;
 /** Result of processing a single advertisement through the pipeline. */
 export interface PipelineItemResult {
   sourceUrl: string;
-  outcome: 'inserted' | 'merged' | 'skipped_validation' | 'skipped_curation' | 'skipped_max_attempts' | 'error';
+  outcome: 'inserted' | 'merged' | 'skipped_validation' | 'skipped_curation' | 'skipped_max_attempts' | 'skipped_location' | 'error';
   listingId?: string;
   error?: string;
 }
@@ -27,6 +28,7 @@ export interface PipelineRunResult {
   skippedValidation: number;
   skippedCuration: number;
   skippedMaxAttempts: number;
+  skippedLocation: number;
   errors: number;
   results: PipelineItemResult[];
 }
@@ -61,6 +63,7 @@ export class AggregationPipeline {
     let skippedValidation = 0;
     let skippedCuration = 0;
     let skippedMaxAttempts = 0;
+    let skippedLocation = 0;
     let errors = 0;
 
     for (const ad of advertisements) {
@@ -83,6 +86,9 @@ export class AggregationPipeline {
         case 'skipped_max_attempts':
           skippedMaxAttempts++;
           break;
+        case 'skipped_location':
+          skippedLocation++;
+          break;
         case 'error':
           errors++;
           break;
@@ -96,6 +102,7 @@ export class AggregationPipeline {
       skippedValidation,
       skippedCuration,
       skippedMaxAttempts,
+      skippedLocation,
       errors,
       results,
     };
@@ -113,6 +120,11 @@ export class AggregationPipeline {
       const attemptCount = await this.getAttemptCount(ad.sourceUrl, marketplace);
       if (attemptCount >= MAX_IMPORT_ATTEMPTS) {
         return { sourceUrl: ad.sourceUrl, outcome: 'skipped_max_attempts' };
+      }
+
+      // Skip non-Dutch listings
+      if (!isDutchLocation(ad.location)) {
+        return { sourceUrl: ad.sourceUrl, outcome: 'skipped_location' };
       }
 
       // Step 1: Validate mandatory fields

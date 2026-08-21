@@ -247,6 +247,11 @@ async function start() {
       const SIX_HOURS = 6 * 60 * 60 * 1000;
       const ONE_HOUR = 60 * 60 * 1000;
 
+      // Clean up any non-Dutch listings on startup (one-time)
+      import('./map/cleanup-foreign-listings.js')
+        .then(({ cleanupForeignListings }) => cleanupForeignListings())
+        .catch(err => console.error('[OTO] Foreign listing cleanup failed:', err));
+
       console.log('[OTO] Cron schedule: scrape every 6h, enrich every 1h');
 
       // Full scrape every 6 hours
