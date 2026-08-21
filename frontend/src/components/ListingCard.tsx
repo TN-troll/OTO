@@ -84,7 +84,7 @@ export function ListingCard({ listing, featured = false, priority = false }: Lis
         'border border-white/20 dark:border-white/[0.08]',
         'shadow-glass dark:shadow-glass-dark',
         // Transition — spring-based with reduced motion support
-        'transition-all duration-300 ease-smooth',
+        'will-change-transform transition-[transform,opacity,box-shadow] duration-300 ease-smooth',
         'motion-reduce:transition-none motion-reduce:transform-none',
         // Hover — lift with elevated shadow
         'hover:-translate-y-1 hover:shadow-glass-elevated',

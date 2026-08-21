@@ -24,7 +24,7 @@ export function ListingGrid({ listings, view = 'grid' }: ListingGridProps) {
         {listings.map((listing, index) => (
           <div
             key={listing.id}
-            className={index < STAGGER_CLASSES.length ? STAGGER_CLASSES[index] : 'animate-fade-in'}
+            className={index < STAGGER_CLASSES.length ? `${STAGGER_CLASSES[index]} motion-reduce:animate-none` : 'animate-fade-in motion-reduce:animate-none'}
           >
             <ListingListItem listing={listing} />
           </div>
@@ -38,7 +38,7 @@ export function ListingGrid({ listings, view = 'grid' }: ListingGridProps) {
       {listings.map((listing, index) => (
         <div
           key={listing.id}
-          className={index < STAGGER_CLASSES.length ? STAGGER_CLASSES[index] : 'animate-fade-in'}
+          className={index < STAGGER_CLASSES.length ? `${STAGGER_CLASSES[index]} motion-reduce:animate-none` : 'animate-fade-in motion-reduce:animate-none'}
         >
           <ListingCard listing={listing} featured={index === 0} priority={index === 0} />
         </div>

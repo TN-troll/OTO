@@ -45,7 +45,7 @@ function ViewTogglePill({ activeTab, onTabChange }: { activeTab: 'listings' | 'm
       <button
         type="button"
         onClick={() => onTabChange('listings')}
-        className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-all duration-200 ${
+        className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-[background-color,color] duration-150 ${
           activeTab === 'listings'
             ? 'bg-white/[0.15] text-white shadow-sm'
             : 'text-surface-400 hover:text-surface-200'
@@ -60,7 +60,7 @@ function ViewTogglePill({ activeTab, onTabChange }: { activeTab: 'listings' | 'm
       <button
         type="button"
         onClick={() => onTabChange('map')}
-        className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-all duration-200 ${
+        className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-[background-color,color] duration-150 ${
           activeTab === 'map'
             ? 'bg-white/[0.15] text-white shadow-sm'
             : 'text-surface-400 hover:text-surface-200'
@@ -115,7 +115,7 @@ export function MapErrorFallback({ onRetry }: { onRetry: () => void }) {
         <button
           type="button"
           onClick={onRetry}
-          className="rounded-button bg-brand px-5 py-2.5 text-sm font-medium text-white shadow-glass transition-all duration-200 ease-smooth hover:bg-brand-light hover:shadow-glass-hover active:scale-95 dark:bg-white/[0.12] dark:hover:bg-white/[0.18]"
+          className="rounded-button bg-brand px-5 py-2.5 text-sm font-medium text-white shadow-glass transition-[transform,background-color,box-shadow] duration-200 ease-smooth hover:bg-brand-light hover:shadow-glass-hover active:scale-95 dark:bg-white/[0.12] dark:hover:bg-white/[0.18]"
         >
           {t.retry}
         </button>

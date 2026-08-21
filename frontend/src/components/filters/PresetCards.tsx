@@ -43,7 +43,7 @@ export function PresetCards() {
             onClick={() => applyPreset(preset.id)}
             className={`
               group flex min-h-[56px] flex-col items-start gap-1.5 rounded-2xl px-3.5 py-3
-              backdrop-blur-[20px] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+              backdrop-blur-[20px] will-change-transform transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
               border text-left hover:-translate-y-0.5 active:scale-[0.97]
               ${
                 isActive

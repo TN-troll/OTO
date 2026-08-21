@@ -287,7 +287,7 @@ export function BrowsePage() {
                   setCategory(category.filter.makes || [], category.filter.models || []);
                 }
               }}
-              className={`group relative min-h-[72px] overflow-hidden rounded-2xl px-3.5 py-4 text-left backdrop-blur-[20px] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] border ${
+              className={`group relative min-h-[72px] overflow-hidden rounded-2xl px-3.5 py-4 text-left backdrop-blur-[20px] transition-[transform,box-shadow,border-color,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] border ${
                 isActive
                   ? 'border-brand-accent/60 bg-gradient-to-br from-brand-accent/15 to-brand-accent/5 shadow-[0_0_20px_rgba(var(--color-accent-rgb),0.2)] scale-[1.02] dark:from-brand-accent/20 dark:to-brand-accent/5'
                   : 'border-white/[0.15] bg-white/60 hover:border-brand-accent/30 hover:bg-white/80 hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 dark:border-white/[0.08] dark:bg-[rgba(30,30,30,0.60)] dark:hover:border-white/[0.15] dark:hover:bg-[rgba(30,30,30,0.80)]'

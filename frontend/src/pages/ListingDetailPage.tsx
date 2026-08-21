@@ -165,29 +165,29 @@ export function ListingDetailPage() {
 
           {/* Quick Jump Navigation */}
           <nav className="mt-6 flex flex-wrap gap-2 border-t border-surface-200 pt-4 dark:border-surface-700" aria-label="Jump to section">
-            <a href="#specifications" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+            <a href="#specifications" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
               {t.specifications}
             </a>
-            <a href="#finance" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+            <a href="#finance" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
               {locale === 'nl' ? 'Financiering' : 'Finance'}
             </a>
-            <a href="#depreciation" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+            <a href="#depreciation" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
               {locale === 'nl' ? 'Afschrijving' : 'Depreciation'}
             </a>
-            <a href="#price-history" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+            <a href="#price-history" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
               {locale === 'nl' ? 'Prijshistorie' : 'Price History'}
             </a>
             {listing.description && (
-              <a href="#description" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+              <a href="#description" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
                 {locale === 'nl' ? 'Beschrijving' : 'Description'}
               </a>
             )}
             {listing.soundProfile && (
-              <a href="#sound" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+              <a href="#sound" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
                 {locale === 'nl' ? 'Geluid' : 'Sound'}
               </a>
             )}
-            <a href="#source-links" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+            <a href="#source-links" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
               {t.originalAdvertisements}
             </a>
           </nav>

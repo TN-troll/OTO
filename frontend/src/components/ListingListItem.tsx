@@ -32,7 +32,7 @@ export function ListingListItem({ listing }: ListingListItemProps) {
   return (
     <a
       href={`/listing/${listing.id}`}
-      className="group flex overflow-hidden rounded-xl bg-white shadow-card transition-all duration-200 motion-reduce:transition-none hover:shadow-card-hover dark:bg-white/[0.04] dark:border dark:border-white/[0.08]"
+      className="group flex overflow-hidden rounded-xl bg-white shadow-card transition-[transform,box-shadow] duration-200 motion-reduce:transition-none hover:shadow-card-hover dark:bg-white/[0.04] dark:border dark:border-white/[0.08]"
       aria-label={`${listing.make} ${listing.model} ${listing.year}`}
     >
       {/* Image — left side */}
