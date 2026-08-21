@@ -38,11 +38,11 @@ export function RecentlyViewedStrip({ maxItems = 5 }: RecentlyViewedStripProps) 
   if (listings.length === 0) return null;
 
   return (
-    <section className="mt-8">
-      <h2 className="mb-4 text-lg font-semibold tracking-tight text-surface-900 dark:text-white">
+    <section className="sticky bottom-0 z-30 mt-8 animate-slide-up rounded-t-2xl border-t border-white/20 bg-white/80 px-4 py-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur-glass dark:border-white/[0.08] dark:bg-surface-900/80 dark:shadow-[0_-8px_30px_rgba(0,0,0,0.3)]">
+      <h2 className="mb-3 text-sm font-semibold tracking-tight text-surface-900 dark:text-white">
         {t.recentlyViewed}
       </h2>
-      <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-surface-300 dark:scrollbar-thumb-surface-600">
+      <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-surface-300 dark:scrollbar-thumb-surface-600">
         {listings.map(listing => (
           <Link
             key={listing.id}
