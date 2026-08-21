@@ -251,13 +251,41 @@ export function ListingDetailPage() {
       {/* Similar Cars Section */}
       {similarListings && similarListings.length > 0 && (
         <div className="mt-8">
-          <h2 className="text-lg font-bold text-surface-900 dark:text-white">Similar Cars</h2>
-          <div className="mt-4 flex gap-4 overflow-x-auto pb-4">
-            {similarListings.map((similar, index) => (
-              <div key={similar.id} className="w-72 flex-shrink-0">
-                <ListingCard listing={similar} featured={false} />
-              </div>
-            ))}
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-lg font-bold text-surface-900 dark:text-white">
+              {locale === 'nl' ? 'Vergelijkbare auto\'s' : 'Similar Cars'}
+            </h2>
+            <span className="text-xs text-surface-400">
+              {locale === 'nl' ? 'Op basis van merk, prijs & vermogen' : 'Based on make, price & power'}
+            </span>
+          </div>
+          <div className="mt-4 flex gap-4 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {similarListings.map((similar) => {
+              // Determine similarity reasons
+              const reasons: string[] = [];
+              if (similar.make === listing.make) reasons.push(locale === 'nl' ? 'Zelfde merk' : 'Same make');
+              if (similar.horsepower && listing.horsepower && Math.abs(similar.horsepower - listing.horsepower) < 50) {
+                reasons.push(locale === 'nl' ? '≈ Vermogen' : '≈ Power');
+              }
+              if (Math.abs(similar.price - listing.price) / listing.price < 0.2) {
+                reasons.push(locale === 'nl' ? '≈ Prijs' : '≈ Price');
+              }
+
+              return (
+                <div key={similar.id} className="w-72 flex-shrink-0">
+                  {reasons.length > 0 && (
+                    <div className="mb-1.5 flex gap-1.5">
+                      {reasons.map((reason, i) => (
+                        <span key={i} className="rounded-full bg-brand-accent/10 px-2 py-0.5 text-[10px] font-medium text-brand-accent">
+                          {reason}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <ListingCard listing={similar} featured={false} />
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -768,9 +796,80 @@ function PriceHistorySection({ history }: { history?: { price: number; date: str
 
   if (!history || history.length < 2) return null;
 
+  // Build sparkline SVG path
+  const prices = history.map(h => h.price);
+  const minPrice = Math.min(...prices);
+  const maxPrice = Math.max(...prices);
+  const range = maxPrice - minPrice || 1;
+  const width = 280;
+  const height = 60;
+  const padding = 4;
+
+  const points = prices.map((price, i) => {
+    const x = padding + (i / (prices.length - 1)) * (width - padding * 2);
+    const y = padding + (1 - (price - minPrice) / range) * (height - padding * 2);
+    return `${x},${y}`;
+  });
+  const linePath = `M${points.join(' L')}`;
+  const areaPath = `${linePath} L${width - padding},${height - padding} L${padding},${height - padding} Z`;
+
+  const firstPrice = prices[0];
+  const lastPrice = prices[prices.length - 1];
+  const totalDiff = lastPrice - firstPrice;
+  const isDown = totalDiff < 0;
+
   return (
     <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
-      <h2 className="text-lg font-bold text-surface-900 dark:text-white">Price History</h2>
+      <div className="flex items-baseline justify-between">
+        <h2 className="text-lg font-bold text-surface-900 dark:text-white">
+          {locale === 'nl' ? 'Prijshistorie' : 'Price History'}
+        </h2>
+        {totalDiff !== 0 && (
+          <span className={`text-sm font-semibold ${isDown ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>
+            {isDown ? '↓' : '↑'} €{formatNumber(Math.abs(Math.round(totalDiff)), locale)}
+          </span>
+        )}
+      </div>
+
+      {/* Sparkline chart */}
+      <div className="mt-4 rounded-xl bg-surface-50 p-4 dark:bg-surface-700/50">
+        <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-16" preserveAspectRatio="none">
+          {/* Area fill */}
+          <path
+            d={areaPath}
+            fill={isDown ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'}
+          />
+          {/* Line */}
+          <path
+            d={linePath}
+            fill="none"
+            stroke={isDown ? '#22c55e' : '#ef4444'}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {/* Dots */}
+          {points.map((point, i) => {
+            const [x, y] = point.split(',').map(Number);
+            return (
+              <circle
+                key={i}
+                cx={x}
+                cy={y}
+                r="3"
+                fill={isDown ? '#22c55e' : '#ef4444'}
+                opacity={i === prices.length - 1 ? 1 : 0.5}
+              />
+            );
+          })}
+        </svg>
+        <div className="mt-2 flex justify-between text-[10px] text-surface-400">
+          <span>{new Date(history[0].date).toLocaleDateString('nl-NL', { day: '2-digit', month: 'short' })}</span>
+          <span>{new Date(history[history.length - 1].date).toLocaleDateString('nl-NL', { day: '2-digit', month: 'short' })}</span>
+        </div>
+      </div>
+
+      {/* Price entries list */}
       <div className="mt-4 space-y-2">
         {history.map((entry, index) => {
           const prevPrice = index > 0 ? history[index - 1].price : null;

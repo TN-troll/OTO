@@ -369,6 +369,14 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
               EV
             </span>
           )}
+          {listing.hasSoundClip && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-purple-500/10 px-3 py-1.5 text-xs font-medium text-purple-600 dark:bg-purple-500/15 dark:text-purple-400">
+              <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+              </svg>
+              Sound
+            </span>
+          )}
           {pricePerHp != null && (
             <span className="inline-flex items-center rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
               €{formatNumber(pricePerHp, locale)}/HP

@@ -200,6 +200,8 @@ export interface ListingSummary {
   status?: 'active' | 'sold' | 'stale';
   /** Whether this listing is featured (pinned to top of browse results) */
   isFeatured?: boolean;
+  /** Whether this listing has an audio clip available */
+  hasSoundClip?: boolean;
 }
 
 /** Result of validating filter criteria or other input */
