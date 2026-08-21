@@ -8,6 +8,7 @@ import { NotificationsPage } from './pages/NotificationsPage';
 import { BrowseLayout } from './components/BrowseLayout';
 import { MarketplaceHealthBanner } from './components/MarketplaceHealthBanner';
 import { Header } from './components/Header';
+import { CompareTray } from './components/CompareTray';
 import { useLanguage } from './i18n';
 
 /** Error boundary to prevent full-page crashes */
@@ -180,6 +181,7 @@ export function App() {
           }
         />
       </Routes>
+      <CompareTray />
     </div>
     </ErrorBoundary>
   );

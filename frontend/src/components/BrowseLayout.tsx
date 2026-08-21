@@ -6,6 +6,7 @@ import { FilterPanel } from './FilterPanel';
 import { RecentlyViewedStrip } from './RecentlyViewedStrip';
 import { BrowsePage } from '../pages/BrowsePage';
 import { FilterProvider } from '../hooks/FilterContext';
+import { CompareTray } from './CompareTray';
 import { useLanguage } from '../i18n';
 
 const MapPage = lazy(() => import('../pages/MapPage'));
@@ -248,6 +249,7 @@ export function BrowseLayout() {
       </div>
 
       <Footer />
+      <CompareTray />
     </FilterProvider>
   );
 }
