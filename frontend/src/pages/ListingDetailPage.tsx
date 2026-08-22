@@ -63,6 +63,14 @@ export function ListingDetailPage() {
     }
   }, [id, addViewed]);
 
+  // Update page title for SEO
+  useEffect(() => {
+    if (listing) {
+      document.title = `${listing.make} ${listing.model} ${listing.year} — €${Math.round(listing.price).toLocaleString('nl-NL')} | OTO`;
+    }
+    return () => { document.title = 'OTO — Online Top Occasions'; };
+  }, [listing]);
+
   // Fetch similar cars
   const { data: similarListings } = useQuery({
     queryKey: ['similar', id],
@@ -137,6 +145,40 @@ export function ListingDetailPage() {
               </div>
               <MarketValueBadge price={listing.price} marketAvgPrice={listing.marketAvgPrice} />
             </div>
+          </div>
+
+          {/* Quick facts bar */}
+          <div className="mt-4 flex flex-wrap gap-3 rounded-xl bg-surface-50 px-4 py-3 dark:bg-surface-800">
+            {listing.mileage != null && (
+              <div className="flex items-center gap-1.5 text-sm">
+                <span className="text-surface-400">{locale === 'nl' ? 'Km-stand' : 'Mileage'}:</span>
+                <span className="font-semibold text-surface-900 dark:text-white">{formatNumber(listing.mileage, locale)} km</span>
+              </div>
+            )}
+            {listing.horsepower != null && (
+              <div className="flex items-center gap-1.5 text-sm">
+                <span className="text-surface-400">{locale === 'nl' ? 'Vermogen' : 'Power'}:</span>
+                <span className="font-semibold text-surface-900 dark:text-white">{listing.horsepower} pk</span>
+              </div>
+            )}
+            {listing.transmissionType && (
+              <div className="flex items-center gap-1.5 text-sm">
+                <span className="text-surface-400">{locale === 'nl' ? 'Transmissie' : 'Transmission'}:</span>
+                <span className="font-semibold text-surface-900 dark:text-white capitalize">{listing.transmissionType}</span>
+              </div>
+            )}
+            {listing.fuelType && (
+              <div className="flex items-center gap-1.5 text-sm">
+                <span className="text-surface-400">{locale === 'nl' ? 'Brandstof' : 'Fuel'}:</span>
+                <span className="font-semibold text-surface-900 dark:text-white capitalize">{listing.fuelType}</span>
+              </div>
+            )}
+            {listing.location && (
+              <div className="flex items-center gap-1.5 text-sm">
+                <span className="text-surface-400">{locale === 'nl' ? 'Locatie' : 'Location'}:</span>
+                <span className="font-semibold text-surface-900 dark:text-white">{listing.location}</span>
+              </div>
+            )}
           </div>
 
           {/* Share Buttons */}

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
@@ -11,6 +11,11 @@ export function SellerPage() {
   const location = params.get('location') || '';
   const sellerType = params.get('type') || 'dealer';
   const { locale } = useLanguage();
+
+  useEffect(() => {
+    document.title = `${sellerType === 'dealer' ? 'Dealer' : 'Particulier'} — ${location} | OTO`;
+    return () => { document.title = 'OTO — Online Top Occasions'; };
+  }, [location, sellerType]);
 
   const criteria: FilterCriteria = useMemo(() => ({
     location: location || undefined,
