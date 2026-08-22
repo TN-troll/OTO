@@ -843,6 +843,14 @@ export class FilterEngine {
       params.push(criteria.topSpeedMin);
       conditions.push(`l.top_speed_kmh >= $${params.length}`);
     }
+
+    // Equipment/options keywords — search in description (AND logic: all keywords must match)
+    if (criteria.equipmentKeywords?.length) {
+      for (const keyword of criteria.equipmentKeywords) {
+        params.push(`%${keyword}%`);
+        conditions.push(`(l.description ILIKE $${params.length} OR l.description_en ILIKE $${params.length})`);
+      }
+    }
   }
 
   private buildCacheKey(criteria: FilterCriteria): string {

@@ -290,6 +290,8 @@ const arbFilterState: fc.Arbitrary<FilterState> = fc.record({
   forcedInductionDetail: fc.subarray(FORCED_INDUCTION_VALUES, { minLength: 0, maxLength: 3 }),
   heritageEra: fc.subarray(HERITAGE_ERA_VALUES, { minLength: 0, maxLength: 3 }),
   isSpecialEdition: fc.boolean(),
+  equipmentKeywords: fc.array(fc.string({ minLength: 1, maxLength: 20 }), { minLength: 0, maxLength: 3 }),
+  location: fc.option(fc.string({ minLength: 2, maxLength: 20 }), { nil: undefined }),
 }).filter((state) => countExpectedChips(state as FilterState) > 0);
 
 // ─── Property Tests ─────────────────────────────────────────────────────────────

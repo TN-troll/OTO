@@ -13,6 +13,7 @@ import { DoorsSeatsFilter } from './filters/DoorsSeatsFilter';
 import { ConditionFilter } from './filters/ConditionFilter';
 import { EnginePerformanceSection } from './filters/EnginePerformanceSection';
 import { HeritageEditionSection } from './filters/HeritageEditionSection';
+import { EquipmentFilter } from './filters/EquipmentFilter';
 import { MobileFilterDrawer } from './filters/MobileFilterDrawer';
 import { useFilterContext } from '../hooks/FilterContext';
 import { useIsMobile } from '../hooks/useIsMobile';
@@ -44,6 +45,7 @@ export function FilterContent() {
     updateShowSold,
     resetFilters,
     clearFilterSection,
+    updateEquipmentKeywords,
     filterOptions,
   } = useFilterContext();
 
@@ -329,6 +331,11 @@ export function FilterContent() {
       <ConditionFilter />
       <EnginePerformanceSection />
       <HeritageEditionSection />
+      <EquipmentFilter
+        selected={filters.equipmentKeywords}
+        onChange={updateEquipmentKeywords}
+        onClear={() => clearFilterSection('equipment')}
+      />
 
       {/* Show sold listings toggle — 44px touch target */}
       <div className="border-b border-glass-border py-4 last:border-b-0 dark:border-white/[0.06]">

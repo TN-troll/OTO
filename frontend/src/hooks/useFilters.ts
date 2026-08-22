@@ -62,6 +62,7 @@ export interface FilterState {
   accelerationMax?: number;
   topSpeedMin?: number;
   location?: string;
+  equipmentKeywords: string[];
 }
 
 export const INITIAL_FILTER_STATE: FilterState = {
@@ -97,6 +98,7 @@ export const INITIAL_FILTER_STATE: FilterState = {
   accelerationMax: undefined,
   topSpeedMin: undefined,
   location: undefined,
+  equipmentKeywords: [],
 };
 
 /**
@@ -119,6 +121,7 @@ export const FILTER_SECTIONS: Record<string, (keyof FilterState)[]> = {
   condition: ['condition'],
   enginePerformance: ['engineDetailConfiguration', 'forcedInductionDetail', 'accelerationMax', 'topSpeedMin'],
   heritageEdition: ['heritageEra', 'isSpecialEdition'],
+  equipment: ['equipmentKeywords'],
   presets: ['performancePreset'],
 };
 
@@ -258,6 +261,7 @@ export function buildCriteria(
   if (state.accelerationMax !== undefined) criteria.accelerationMax = state.accelerationMax;
   if (state.topSpeedMin !== undefined) criteria.topSpeedMin = state.topSpeedMin;
   if (state.location) criteria.location = state.location;
+  if (state.equipmentKeywords.length > 0) criteria.equipmentKeywords = state.equipmentKeywords;
 
   // Sorting
   if (sorting) {
@@ -304,7 +308,8 @@ export function hasActiveFilters(state: FilterState): boolean {
     state.isSpecialEdition ||
     state.accelerationMax !== undefined ||
     state.topSpeedMin !== undefined ||
-    state.location !== undefined
+    state.location !== undefined ||
+    state.equipmentKeywords.length > 0
   );
 }
 
@@ -482,6 +487,9 @@ export function useFilters(options: UseFiltersOptions = {}) {
       if (deserialized.topSpeedMin !== undefined && deserialized.topSpeedMin > 0) {
         initial.topSpeedMin = deserialized.topSpeedMin;
       }
+      if (deserialized.equipmentKeywords && deserialized.equipmentKeywords.length > 0) {
+        initial.equipmentKeywords = deserialized.equipmentKeywords;
+      }
 
       // Also read legacy params not covered by the shared serializer
       const legacyMakes = params.get('makes')?.split(',').filter(Boolean);
@@ -566,6 +574,7 @@ export function useFilters(options: UseFiltersOptions = {}) {
     if (filters.bodyType.length > 0) params.set('bodyType', filters.bodyType.join(','));
     if (filters.showSold) params.set('showSold', 'true');
     if (filters.location) params.set('location', filters.location);
+    if (filters.equipmentKeywords.length > 0) params.set('equipmentKeywords', filters.equipmentKeywords.join(','));
 
     const search = params.toString();
     const newUrl = search ? `${window.location.pathname}?${search}` : window.location.pathname;
@@ -790,6 +799,10 @@ export function useFilters(options: UseFiltersOptions = {}) {
     updateState((prev) => ({ ...prev, location }));
   }, [updateState]);
 
+  const updateEquipmentKeywords = useCallback((keywords: string[]) => {
+    updateState((prev) => ({ ...prev, equipmentKeywords: keywords }));
+  }, [updateState]);
+
   // ─── Section Clear ────────────────────────────────────────────────────────────
   const clearFilterSection = useCallback((section: string) => {
     setFilters((prev) => clearSection(prev, section));
@@ -833,6 +846,7 @@ export function useFilters(options: UseFiltersOptions = {}) {
     updateAccelerationMax,
     updateTopSpeedMin,
     updateLocation,
+    updateEquipmentKeywords,
     // Presets
     applyPreset: applyPresetAction,
     deactivatePreset,

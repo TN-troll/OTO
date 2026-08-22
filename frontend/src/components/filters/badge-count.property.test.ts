@@ -124,6 +124,8 @@ const arbFilterState: fc.Arbitrary<FilterState> = fc.record({
   isSpecialEdition: fc.boolean(),
   accelerationMax: fc.option(fc.double({ min: 2.0, max: 15.0, noNaN: true }), { nil: undefined }),
   topSpeedMin: fc.option(fc.integer({ min: 100, max: 400 }), { nil: undefined }),
+  equipmentKeywords: fc.array(fc.string({ minLength: 1, maxLength: 20 }), { minLength: 0, maxLength: 3 }),
+  location: fc.option(fc.string({ minLength: 2, maxLength: 20 }), { nil: undefined }),
 });
 
 // The sections specified in the task description that we must validate

@@ -141,6 +141,8 @@ export interface FilterCriteria {
   isSpecialEdition?: boolean;
   accelerationMax?: number;
   topSpeedMin?: number;
+  /** Equipment/options keywords to search for in listing description (AND logic) */
+  equipmentKeywords?: string[];
 }
 
 /** Sound-specific filter criteria */
