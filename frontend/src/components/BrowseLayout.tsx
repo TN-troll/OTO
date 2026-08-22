@@ -139,6 +139,7 @@ function Footer() {
               <a href="/" className="text-xs text-surface-500 hover:text-brand-accent">{locale === 'nl' ? 'Zoeken' : 'Search'}</a>
               <a href="/?view=map" className="text-xs text-surface-500 hover:text-brand-accent">{locale === 'nl' ? 'Kaart' : 'Map'}</a>
               <a href="/compare" className="text-xs text-surface-500 hover:text-brand-accent">{locale === 'nl' ? 'Vergelijken' : 'Compare'}</a>
+              <a href="/collections" className="text-xs text-surface-500 hover:text-brand-accent">{locale === 'nl' ? 'Collecties' : 'Collections'}</a>
               <a href="/premium" className="text-xs text-surface-500 hover:text-brand-accent">Premium</a>
             </nav>
           </div>
