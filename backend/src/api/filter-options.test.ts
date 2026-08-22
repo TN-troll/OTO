@@ -491,7 +491,7 @@ describe('Filter Options Endpoint', () => {
   });
 
   describe('error handling', () => {
-    it('should return 500 when database query fails', async () => {
+    it('should return 200 with default values when database queries fail', async () => {
       // Redis not available
       mockGetRedisClient.mockReturnValue(null);
       // Database query fails
@@ -499,8 +499,13 @@ describe('Filter Options Endpoint', () => {
 
       const { status, body } = await callHandler();
 
-      expect(status).toBe(500);
-      expect(body).toEqual({ error: 'Internal server error' });
+      expect(status).toBe(200);
+      // Should fall back to DEFAULT_RANGES and empty arrays
+      expect(body.ranges).toBeDefined();
+      expect(body.makes).toEqual([]);
+      expect(body.drivetrains).toEqual([]);
+      expect(body.colors).toEqual([]);
+      expect(body.modelsByMake).toEqual({});
     });
   });
 });

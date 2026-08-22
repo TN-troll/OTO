@@ -61,22 +61,8 @@ filterOptionsRouter.get('/', async (_req: Request, res: Response): Promise<void>
       return;
     }
 
-    const [
-      rangesResult,
-      drivetrainsResult,
-      colorsResult,
-      sellerTypesResult,
-      doorCountsResult,
-      seatCountsResult,
-      conditionsResult,
-      engineConfigsResult,
-      inductionDetailsResult,
-      heritageEraResult,
-      specialEditionResult,
-      makesResult,
-      modelsByMakeResult,
-    ] = await Promise.all([
-      // Dynamic range min/max values
+    const settled = await Promise.allSettled([
+      // 0: Dynamic range min/max values
       query<{
         min_price: string | null;
         max_price: string | null;
@@ -98,39 +84,39 @@ filterOptionsRouter.get('/', async (_req: Request, res: Response): Promise<void>
          FROM listings
          WHERE status = 'active'`,
       ),
-      // Distinct drivetrains
+      // 1: Distinct drivetrains
       query<{ drivetrain: string }>(
         `SELECT DISTINCT drivetrain FROM listings WHERE status = 'active' AND drivetrain IS NOT NULL ORDER BY drivetrain`,
       ),
-      // Distinct exterior colors
+      // 2: Distinct exterior colors
       query<{ exterior_color: string }>(
         `SELECT DISTINCT exterior_color FROM listings WHERE status = 'active' AND exterior_color IS NOT NULL ORDER BY exterior_color`,
       ),
-      // Distinct seller types
+      // 3: Distinct seller types
       query<{ seller_type: string }>(
         `SELECT DISTINCT seller_type FROM listings WHERE status = 'active' AND seller_type IS NOT NULL ORDER BY seller_type`,
       ),
-      // Distinct door counts
+      // 4: Distinct door counts
       query<{ door_count: number }>(
         `SELECT DISTINCT door_count FROM listings WHERE status = 'active' AND door_count IS NOT NULL ORDER BY door_count`,
       ),
-      // Distinct seat counts
+      // 5: Distinct seat counts
       query<{ seat_count: number }>(
         `SELECT DISTINCT seat_count FROM listings WHERE status = 'active' AND seat_count IS NOT NULL ORDER BY seat_count`,
       ),
-      // Distinct conditions
+      // 6: Distinct conditions
       query<{ condition: string }>(
         `SELECT DISTINCT condition FROM listings WHERE status = 'active' AND condition IS NOT NULL ORDER BY condition`,
       ),
-      // Distinct engine detail configurations
+      // 7: Distinct engine detail configurations
       query<{ engine_detail_config: string }>(
         `SELECT DISTINCT engine_detail_config FROM listings WHERE status = 'active' AND engine_detail_config IS NOT NULL ORDER BY engine_detail_config`,
       ),
-      // Distinct forced induction details
+      // 8: Distinct forced induction details
       query<{ forced_induction_detail: string }>(
         `SELECT DISTINCT forced_induction_detail FROM listings WHERE status = 'active' AND forced_induction_detail IS NOT NULL ORDER BY forced_induction_detail`,
       ),
-      // Heritage era distribution counts
+      // 9: Heritage era distribution counts
       query<{ era: string; count: string }>(
         `SELECT
            CASE
@@ -143,19 +129,50 @@ filterOptionsRouter.get('/', async (_req: Request, res: Response): Promise<void>
          WHERE status = 'active'
          GROUP BY era`,
       ),
-      // Special edition count
+      // 10: Special edition count
       query<{ count: string }>(
         `SELECT COUNT(*)::text AS count FROM listings WHERE status = 'active' AND is_special_edition = TRUE`,
       ),
-      // Distinct makes
+      // 11: Distinct makes
       query<{ make: string }>(
         `SELECT DISTINCT make FROM listings WHERE status = 'active' ORDER BY make`,
       ),
-      // Models grouped by make
+      // 12: Models grouped by make
       query<{ make: string; model: string }>(
         `SELECT DISTINCT make, model FROM listings WHERE status = 'active' ORDER BY make, model`,
       ),
     ]);
+
+    // Safely extract results — default to empty rows on failure
+    function getResult<T>(index: number): { rows: T[] } {
+      const r = settled[index];
+      return r.status === 'fulfilled' ? r.value as unknown as { rows: T[] } : { rows: [] as T[] };
+    }
+
+    const rangesResult = getResult<{
+      min_price: string | null;
+      max_price: string | null;
+      min_horsepower: string | null;
+      max_horsepower: string | null;
+      min_displacement: string | null;
+      max_displacement: string | null;
+      min_year: string | null;
+      max_year: string | null;
+      min_mileage: string | null;
+      max_mileage: string | null;
+    }>(0);
+    const drivetrainsResult = getResult<{ drivetrain: string }>(1);
+    const colorsResult = getResult<{ exterior_color: string }>(2);
+    const sellerTypesResult = getResult<{ seller_type: string }>(3);
+    const doorCountsResult = getResult<{ door_count: number }>(4);
+    const seatCountsResult = getResult<{ seat_count: number }>(5);
+    const conditionsResult = getResult<{ condition: string }>(6);
+    const engineConfigsResult = getResult<{ engine_detail_config: string }>(7);
+    const inductionDetailsResult = getResult<{ forced_induction_detail: string }>(8);
+    const heritageEraResult = getResult<{ era: string; count: string }>(9);
+    const specialEditionResult = getResult<{ count: string }>(10);
+    const makesResult = getResult<{ make: string }>(11);
+    const modelsByMakeResult = getResult<{ make: string; model: string }>(12);
 
     const ranges = rangesResult.rows[0];
 
@@ -251,7 +268,7 @@ filterOptionsRouter.get('/models', async (req: Request, res: Response): Promise<
 
     res.json({ models: result.rows.map((r) => r.model) });
   } catch (err) {
-    console.error('Error fetching models for make:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('[OTO] Error fetching models:', err);
+    res.json({ models: [] });
   }
 });
