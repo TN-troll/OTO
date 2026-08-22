@@ -7,6 +7,8 @@ import { PremiumPage } from './pages/PremiumPage';
 import { NotificationsPage } from './pages/NotificationsPage';
 import { SellerPage } from './pages/SellerPage';
 import { DealerDashboard } from './pages/DealerDashboard';
+import { FavoritesPage } from './pages/FavoritesPage';
+import { BrandsPage } from './pages/BrandsPage';
 import { BrowseLayout } from './components/BrowseLayout';
 import { MarketplaceHealthBanner } from './components/MarketplaceHealthBanner';
 import { Header } from './components/Header';
@@ -132,6 +134,38 @@ export function App() {
                 <main className="flex-1 overflow-auto">
                   <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
                     <SellerPage />
+                  </div>
+                </main>
+              </div>
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/favorites"
+          element={
+            <>
+              <Header />
+              <div className="flex flex-1">
+                <main className="flex-1 overflow-auto">
+                  <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+                    <FavoritesPage />
+                  </div>
+                </main>
+              </div>
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/brands"
+          element={
+            <>
+              <Header />
+              <div className="flex flex-1">
+                <main className="flex-1 overflow-auto">
+                  <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+                    <BrandsPage />
                   </div>
                 </main>
               </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { SearchBar } from './SearchBar';
+import { ThemeToggle } from './ThemeToggle';
 import { PremiumBadge } from './PremiumBadge';
 import { useLanguage } from '../i18n';
 import { isPushSupported } from '../hooks/usePushNotifications';
@@ -109,82 +110,54 @@ export function Header({ activeTab, onTabChange }: { activeTab?: 'listings' | 'm
     <header className="sticky top-0 z-50">
       {/* Main header bar — frosted glass */}
       <div className="bg-white/70 shadow-glass backdrop-blur-xl dark:bg-black/70 dark:shadow-glass-dark">
-        <div className="mx-auto flex h-14 items-center justify-between px-4 sm:h-16 sm:px-6 lg:px-8 max-w-[1200px]">
-          {/* Logo */}
-          <a href="/" className="flex items-center gap-2.5">
-            <OtoLogo className="h-8 w-auto" />
-            <span className="hidden text-[11px] font-medium tracking-wide text-surface-500 dark:text-surface-400 lg:inline">
-              {t.tagline}
-            </span>
+        <div className="mx-auto flex h-14 items-center gap-2 px-4 sm:h-16 sm:px-6 lg:px-8 max-w-[1400px]">
+          {/* Logo — pushed left */}
+          <a href="/" className="flex shrink-0 items-center">
+            <OtoLogo className="h-7 w-auto" />
           </a>
 
-          {/* View toggle — Search/Map tabs (only on browse page) */}
+          {/* Desktop nav links */}
+          <nav className="ml-3 hidden items-center gap-1 md:flex">
+            <a href="/brands" className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-surface-400 transition-colors hover:bg-white/[0.06] hover:text-white">
+              {locale === 'nl' ? 'Merken' : 'Brands'}
+            </a>
+            <a href="/leaderboard" className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-surface-400 transition-colors hover:bg-white/[0.06] hover:text-white">
+              {locale === 'nl' ? '0-100 Sprint' : 'Leaderboard'}
+            </a>
+          </nav>
+
+          {/* View toggle — Search/Map (only on browse page) */}
           {activeTab && onTabChange && (
-            <div role="tablist" className="ml-4 hidden items-center gap-0.5 rounded-full border border-white/[0.12] bg-white/[0.06] p-0.5 backdrop-blur-md sm:inline-flex">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={activeTab === 'listings'}
-                onClick={() => onTabChange('listings')}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all duration-150 ${
-                  activeTab === 'listings'
-                    ? 'bg-white/[0.15] text-white shadow-sm'
-                    : 'text-surface-400 hover:text-surface-200'
-                }`}
-              >
-                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="M21 21l-4.35-4.35" />
-                </svg>
+            <div role="tablist" className="ml-2 hidden items-center gap-0.5 rounded-full border border-white/[0.12] bg-white/[0.06] p-0.5 backdrop-blur-md sm:inline-flex">
+              <button type="button" role="tab" aria-selected={activeTab === 'listings'} onClick={() => onTabChange('listings')}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all duration-150 ${activeTab === 'listings' ? 'bg-white/[0.15] text-white shadow-sm' : 'text-surface-400 hover:text-surface-200'}`}>
+                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></svg>
                 {t.tabListings}
               </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={activeTab === 'map'}
-                onClick={() => onTabChange('map')}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all duration-150 ${
-                  activeTab === 'map'
-                    ? 'bg-white/[0.15] text-white shadow-sm'
-                    : 'text-surface-400 hover:text-surface-200'
-                }`}
-              >
-                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-                  <circle cx="12" cy="9" r="2.5" />
-                </svg>
+              <button type="button" role="tab" aria-selected={activeTab === 'map'} onClick={() => onTabChange('map')}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all duration-150 ${activeTab === 'map' ? 'bg-white/[0.15] text-white shadow-sm' : 'text-surface-400 hover:text-surface-200'}`}>
+                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" /><circle cx="12" cy="9" r="2.5" /></svg>
                 {t.tabMap}
               </button>
             </div>
           )}
 
-          {/* Search — hidden on mobile, shown inline on md+ */}
-          <div className="hidden flex-1 max-w-md px-8 md:block">
+          {/* Search bar — centered, takes remaining space */}
+          <div className="hidden flex-1 max-w-lg px-4 md:block">
             <SearchBar />
           </div>
 
-          {/* Actions — right side */}
-          <div className="flex items-center gap-1.5">
-            {/* Favorites — always visible */}
-            <a
-              href="/favorites"
-              className="relative flex h-10 w-10 items-center justify-center rounded-xl text-surface-600 transition-colors hover:bg-surface-100/80 dark:text-surface-300 dark:hover:bg-white/[0.08]"
-              aria-label="Favorites"
-            >
+          {/* Right actions */}
+          <div className="ml-auto flex items-center gap-1">
+            <ThemeToggle />
+            <a href="/favorites" className="flex h-10 w-10 items-center justify-center rounded-xl text-surface-400 transition-colors hover:bg-white/[0.06] hover:text-red-400" aria-label="Favorites">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
               </svg>
             </a>
-
-            {/* Mobile menu toggle */}
-            <button
-              ref={toggleRef}
-              type="button"
-              onClick={toggleMenu}
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-surface-600 transition-colors hover:bg-surface-100/80 md:hidden dark:text-surface-300 dark:hover:bg-white/[0.08]"
-              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={mobileMenuOpen}
-            >
+            <button ref={toggleRef} type="button" onClick={toggleMenu}
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-surface-400 transition-colors hover:bg-white/[0.06] hover:text-white md:hidden"
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'} aria-expanded={mobileMenuOpen}>
               <MenuIcon open={mobileMenuOpen} />
             </button>
           </div>
