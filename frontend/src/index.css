@@ -6,6 +6,9 @@
   /* Safe area for notched devices */
   :root {
     --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    --color-brand: #0a1628;
+    --color-accent: #c97b4a;
+    --color-accent-light: #e8a67a;
   }
 
   html {
@@ -22,44 +25,69 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #f5f5f7;
-    color: #171717;
+    letter-spacing: -0.011em;
   }
 
+  /* ─── LIGHT MODE ─── */
+  body {
+    background-color: #f8f9fc;
+    color: #1e293b;
+  }
+
+  /* ─── DARK MODE ─── */
   html.dark body {
-    background-color: #000000;
-    color: #f5f5f5;
+    background-color: #0a1628;
+    color: #e2e6ef;
   }
 
-  /* Apple-style gradient mesh background — makes glass panels visible */
+  /* ─── Typography Hierarchy ─── */
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.025em;
+    font-weight: 700;
+  }
+
+  html.dark h1, html.dark h2, html.dark h3 {
+    color: #f8f9fc;
+  }
+
+  /* Muted text in dark mode should be legible */
+  html.dark .text-surface-500 {
+    color: #8e99ad;
+  }
+
+  /* ─── GRADIENT MESH BACKGROUND (Railway-style) ─── */
   .glass-mesh-bg {
     position: relative;
-    background-color: #f5f5f7;
+    background-color: #f8f9fc;
   }
+
   .glass-mesh-bg::before {
     content: '';
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
+    /* Light mode: subtle warm mesh with copper touches */
     background:
-      radial-gradient(ellipse 60% 50% at 20% 30%, rgba(0, 122, 255, 0.06), transparent 60%),
-      radial-gradient(ellipse 50% 60% at 80% 20%, rgba(175, 82, 222, 0.05), transparent 50%),
-      radial-gradient(ellipse 40% 40% at 60% 80%, rgba(212, 168, 83, 0.04), transparent 50%);
-  }
-  html.dark .glass-mesh-bg {
-    background-color: #000000;
-  }
-  html.dark .glass-mesh-bg::before {
-    background:
-      radial-gradient(ellipse 60% 50% at 20% 30%, rgba(0, 122, 255, 0.08), transparent 60%),
-      radial-gradient(ellipse 50% 60% at 80% 20%, rgba(175, 82, 222, 0.06), transparent 50%),
-      radial-gradient(ellipse 40% 40% at 60% 80%, rgba(212, 168, 83, 0.05), transparent 50%);
+      radial-gradient(ellipse 80% 60% at 0% 0%, rgba(201, 123, 74, 0.06), transparent 50%),
+      radial-gradient(ellipse 60% 80% at 100% 0%, rgba(30, 64, 175, 0.04), transparent 50%),
+      radial-gradient(ellipse 70% 50% at 50% 100%, rgba(201, 123, 74, 0.03), transparent 40%);
   }
 
-  /* Reduced motion — disable all animations and transitions globally.
-     This media query is live: changes apply immediately when the OS
-     preference toggles mid-session, no page reload required. */
+  html.dark .glass-mesh-bg {
+    background-color: #0a1628;
+  }
+
+  html.dark .glass-mesh-bg::before {
+    /* Dark mode: deep midnight blue with copper/navy gradient orbs */
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 10%, rgba(201, 123, 74, 0.08), transparent 50%),
+      radial-gradient(ellipse 60% 60% at 90% 10%, rgba(30, 64, 175, 0.10), transparent 50%),
+      radial-gradient(ellipse 80% 40% at 50% 90%, rgba(139, 92, 246, 0.04), transparent 40%),
+      radial-gradient(ellipse 50% 50% at 50% 50%, rgba(10, 22, 40, 0.3), transparent 70%);
+  }
+
+  /* ─── Reduced motion ─── */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -69,11 +97,64 @@
     }
   }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-track { background-color: #f5f5f5; }
-  ::-webkit-scrollbar-thumb { background-color: #d4d4d4; border-radius: 9999px; }
-  html.dark ::-webkit-scrollbar-track { background-color: #262626; }
-  html.dark ::-webkit-scrollbar-thumb { background-color: #525252; }
-  * { scrollbar-width: thin; }
+  /* ─── Selection color ─── */
+  ::selection {
+    background-color: rgba(201, 123, 74, 0.2);
+    color: inherit;
+  }
+
+  html.dark ::selection {
+    background-color: rgba(201, 123, 74, 0.3);
+  }
+
+  /* ─── Focus styles ─── */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /* ─── Links ─── */
+  a {
+    transition: color 0.15s ease;
+  }
+}
+
+@layer components {
+  /* ─── Premium card base ─── */
+  .card-premium {
+    @apply rounded-[20px] border transition-all duration-300 ease-smooth;
+    @apply bg-white/70 border-surface-200/60 shadow-glass;
+    @apply hover:shadow-glass-elevated hover:-translate-y-0.5;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  html.dark .card-premium {
+    @apply bg-white/[0.04] border-white/[0.08] shadow-glass-dark;
+    @apply hover:bg-white/[0.06] hover:border-white/[0.12];
+  }
+
+  /* ─── Glass panel ─── */
+  .glass-panel {
+    @apply rounded-2xl border backdrop-blur-xl;
+    @apply bg-white/60 border-white/20 shadow-glass;
+  }
+
+  html.dark .glass-panel {
+    @apply bg-white/[0.03] border-white/[0.06] shadow-glass-dark;
+  }
+
+  /* ─── Accent text ─── */
+  .text-accent-gradient {
+    background: linear-gradient(135deg, #c97b4a 0%, #e8a67a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ─── Copper divider ─── */
+  .divider-copper {
+    @apply h-px w-full;
+    background: linear-gradient(90deg, transparent 0%, rgba(201, 123, 74, 0.3) 50%, transparent 100%);
+  }
 }
