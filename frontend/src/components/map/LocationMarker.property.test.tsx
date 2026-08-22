@@ -147,7 +147,7 @@ describe('LocationMarker - Property Tests', () => {
   });
 
   // Property 8: Marker color reflects dealer presence
-  // Gold (#f59e0b) if dealerCount > 0, blue (#3b82f6) otherwise
+  // Gold (#d4a853) if dealerCount > 0, silver (#94a3b8) otherwise
   it('Property 8: Marker uses gold color when dealerCount > 0', () => {
     fc.assert(
       fc.property(
@@ -162,9 +162,9 @@ describe('LocationMarker - Property Tests', () => {
           const iconHtml = marker!.getAttribute('data-icon-html') ?? '';
 
           // Gold marker background color for dealer locations
-          expect(iconHtml).toContain('#f59e0b');
-          // Should NOT contain blue
-          expect(iconHtml).not.toContain('#3b82f6');
+          expect(iconHtml).toContain('#d4a853');
+          // Should NOT contain silver
+          expect(iconHtml).not.toContain('#94a3b8');
 
           cleanup();
         }
@@ -173,7 +173,7 @@ describe('LocationMarker - Property Tests', () => {
     );
   });
 
-  it('Property 8: Marker uses blue color when dealerCount === 0', () => {
+  it('Property 8: Marker uses silver color when dealerCount === 0', () => {
     fc.assert(
       fc.property(
         privateOnlyLocationArb,
@@ -186,10 +186,10 @@ describe('LocationMarker - Property Tests', () => {
           expect(marker).not.toBeNull();
           const iconHtml = marker!.getAttribute('data-icon-html') ?? '';
 
-          // Blue marker background color for private-only locations
-          expect(iconHtml).toContain('#3b82f6');
+          // Silver marker background color for private-only locations
+          expect(iconHtml).toContain('#94a3b8');
           // Should NOT contain gold
-          expect(iconHtml).not.toContain('#f59e0b');
+          expect(iconHtml).not.toContain('#d4a853');
 
           cleanup();
         }

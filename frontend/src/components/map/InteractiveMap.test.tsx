@@ -76,12 +76,13 @@ describe('InteractiveMap', () => {
     expect(mapContainer.dataset.zoom).toBe('7');
   });
 
-  it('renders OpenStreetMap TileLayer with proper attribution', () => {
+  it('renders CartoDB Dark TileLayer with proper attribution', () => {
     render(<InteractiveMap />);
     const tileLayer = screen.getByTestId('tile-layer');
     expect(tileLayer.dataset.attribution).toContain('OpenStreetMap');
+    expect(tileLayer.dataset.attribution).toContain('CARTO');
     expect(tileLayer.dataset.url).toBe(
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
     );
   });
 

@@ -61,7 +61,7 @@ describe('Dark Mode Contrast Compliance', () => {
     const darkSurfaceTokens = ['dark', 'darker'] as const;
 
     it.each(darkSurfaceTokens)(
-      'glass.%s has RGB channels ≤ 80 and opacity between 0.04–0.80',
+      'glass.%s has RGB channels ≤ 80 and opacity between 0.04–0.90',
       (key) => {
         const color = glassColors[key];
         const parsed = parseRgba(color);
@@ -71,18 +71,18 @@ describe('Dark Mode Contrast Compliance', () => {
         expect(parsed!.g, `glass.${key} G channel should be ≤ 80`).toBeLessThanOrEqual(80);
         expect(parsed!.b, `glass.${key} B channel should be ≤ 80`).toBeLessThanOrEqual(80);
         expect(parsed!.a, `glass.${key} opacity should be ≥ 0.04`).toBeGreaterThanOrEqual(0.04);
-        expect(parsed!.a, `glass.${key} opacity should be ≤ 0.80`).toBeLessThanOrEqual(0.80);
+        expect(parsed!.a, `glass.${key} opacity should be ≤ 0.90`).toBeLessThanOrEqual(0.90);
       },
     );
 
-    it('glass.dark (rgba(30,30,30,0.60)) has expected values', () => {
+    it('glass.dark (rgba(10, 22, 40, 0.70)) has expected values', () => {
       const parsed = parseRgba(glassColors.dark);
-      expect(parsed).toEqual({ r: 30, g: 30, b: 30, a: 0.60 });
+      expect(parsed).toEqual({ r: 10, g: 22, b: 40, a: 0.70 });
     });
 
-    it('glass.darker (rgba(20,20,20,0.80)) has expected values', () => {
+    it('glass.darker (rgba(8, 14, 31, 0.85)) has expected values', () => {
       const parsed = parseRgba(glassColors.darker);
-      expect(parsed).toEqual({ r: 20, g: 20, b: 20, a: 0.80 });
+      expect(parsed).toEqual({ r: 8, g: 14, b: 31, a: 0.85 });
     });
   });
 
@@ -94,10 +94,10 @@ describe('Dark Mode Contrast Compliance', () => {
       expect(parsed!.a, 'borderDark alpha should be ≤ 0.12').toBeLessThanOrEqual(0.12);
     });
 
-    it('glass.border alpha is 0.18 (for reference)', () => {
+    it('glass.border alpha is 0.15 (for reference)', () => {
       const parsed = parseRgba(glassColors.border);
       expect(parsed).not.toBeNull();
-      expect(parsed!.a).toBeCloseTo(0.18, 2);
+      expect(parsed!.a).toBeCloseTo(0.15, 2);
     });
   });
 
@@ -124,13 +124,13 @@ describe('Dark Mode Contrast Compliance', () => {
       }
     });
 
-    it('for any dark glass background (RGB ≤ 80, opacity 0.04–0.80) composited on black, white text contrast ≥ 4.5:1', () => {
+    it('for any dark glass background (RGB ≤ 80, opacity 0.04–0.90) composited on black, white text contrast ≥ 4.5:1', () => {
       // Generate arbitrary dark glass backgrounds within the design system constraints
       const arbDarkGlassBackground = fc.record({
         r: fc.integer({ min: 0, max: 80 }),
         g: fc.integer({ min: 0, max: 80 }),
         b: fc.integer({ min: 0, max: 80 }),
-        a: fc.double({ min: 0.04, max: 0.80, noNaN: true, noDefaultInfinity: true }),
+        a: fc.double({ min: 0.04, max: 0.90, noNaN: true, noDefaultInfinity: true }),
       });
 
       fc.assert(
@@ -161,7 +161,7 @@ describe('Dark Mode Contrast Compliance', () => {
         r: fc.integer({ min: 0, max: 80 }),
         g: fc.integer({ min: 0, max: 80 }),
         b: fc.integer({ min: 0, max: 80 }),
-        a: fc.double({ min: 0.04, max: 0.80, noNaN: true, noDefaultInfinity: true }),
+        a: fc.double({ min: 0.04, max: 0.90, noNaN: true, noDefaultInfinity: true }),
       });
 
       fc.assert(

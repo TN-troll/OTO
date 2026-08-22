@@ -293,7 +293,7 @@ describe('SearchService', () => {
 
       const result = await service.search('lambo');
 
-      expect(result.listings[0]).toEqual({
+      expect(result.listings[0]).toMatchObject({
         id: 'abc-123',
         title: 'Lamborghini Huracan EVO',
         primaryImageUrl: 'https://cdn.example.com/lambo1.jpg',

@@ -141,7 +141,8 @@ describe('RecentlyViewedStrip property tests', () => {
           // Wait for queries to settle
           await vi.waitFor(() => {
             // Either no cards (empty input or all failed), or cards rendered
-            const links = container.querySelectorAll('a[href^="/listing/"]');
+            const section = container.querySelector('section');
+            const links = section ? section.querySelectorAll('a[href^="/listing/"]') : [];
             if (ids.length === 0) {
               // Should render null
               expect(links.length).toBe(0);
@@ -151,7 +152,8 @@ describe('RecentlyViewedStrip property tests', () => {
             }
           }, { timeout: 2000 });
 
-          const cards = container.querySelectorAll('a[href^="/listing/"]');
+          const section = container.querySelector('section');
+          const cards = section ? section.querySelectorAll('a[href^="/listing/"]') : [];
           expect(cards.length).toBeLessThanOrEqual(5);
 
           unmount();
@@ -186,11 +188,13 @@ describe('RecentlyViewedStrip property tests', () => {
 
           // Wait for cards to render
           await vi.waitFor(() => {
-            const links = container.querySelectorAll('a[href^="/listing/"]');
+            const section = container.querySelector('section');
+            const links = section ? section.querySelectorAll('a[href^="/listing/"]') : [];
             expect(links.length).toBeGreaterThan(0);
           }, { timeout: 2000 });
 
-          const cards = container.querySelectorAll('a[href^="/listing/"]');
+          const section = container.querySelector('section')!;
+          const cards = section.querySelectorAll('a[href^="/listing/"]');
           const renderedIds = Array.from(cards).map(card =>
             card.getAttribute('href')!.replace('/listing/', ''),
           );
@@ -244,7 +248,8 @@ describe('RecentlyViewedStrip property tests', () => {
 
           // Wait for queries to settle
           await vi.waitFor(() => {
-            const links = container.querySelectorAll('a[href^="/listing/"]');
+            const section = container.querySelector('section');
+            const links = section ? section.querySelectorAll('a[href^="/listing/"]') : [];
             // Either all failed (renders null) or some succeeded
             if (successIds.length === 0) {
               // Component should render null — no section heading
@@ -258,8 +263,9 @@ describe('RecentlyViewedStrip property tests', () => {
           expect(container.textContent).not.toContain('error');
           expect(container.textContent).not.toContain('Error');
 
-          // Verify only successful listings are shown
-          const cards = container.querySelectorAll('a[href^="/listing/"]');
+          // Verify only successful listings are shown in the main section
+          const section = container.querySelector('section');
+          const cards = section ? section.querySelectorAll('a[href^="/listing/"]') : [];
           const renderedIds = Array.from(cards).map(card =>
             card.getAttribute('href')!.replace('/listing/', ''),
           );

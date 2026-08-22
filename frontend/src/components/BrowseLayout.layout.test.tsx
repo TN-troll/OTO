@@ -31,21 +31,36 @@ vi.mock('../i18n', () => ({
 
 // Mock heavy child components to isolate BrowseLayout testing
 vi.mock('./Header', () => ({
-  Header: () => <div data-testid="header">Header</div>,
+  Header: ({ activeTab, onTabChange }: { activeTab?: string; onTabChange?: (t: string) => void }) => (
+    <div data-testid="header">
+      {activeTab && onTabChange && (
+        <div role="tablist" data-testid="tabbar">
+          <button id="tab-listings" role="tab" aria-selected={activeTab === 'listings'} onClick={() => onTabChange('listings')}>Listings</button>
+          <button id="tab-map" role="tab" aria-selected={activeTab === 'map'} onClick={() => onTabChange('map')}>Map</button>
+        </div>
+      )}
+    </div>
+  ),
 }));
 
 vi.mock('./NotificationPreferences', () => ({
   NotificationPromptBanner: () => <div data-testid="notification-banner">NotificationBanner</div>,
 }));
 
-// TabBar mock includes id attributes so aria-labelledby can resolve accessible names
-vi.mock('./TabBar', () => ({
-  TabBar: ({ activeTab, onTabChange }: { activeTab: string; onTabChange: (t: string) => void }) => (
-    <div role="tablist" data-testid="tabbar">
-      <button id="tab-listings" role="tab" aria-selected={activeTab === 'listings'} onClick={() => onTabChange('listings')}>Listings</button>
-      <button id="tab-map" role="tab" aria-selected={activeTab === 'map'} onClick={() => onTabChange('map')}>Map</button>
-    </div>
-  ),
+vi.mock('./MobileBottomNav', () => ({
+  MobileBottomNav: () => <div data-testid="mobile-bottom-nav">MobileBottomNav</div>,
+}));
+
+vi.mock('./CompareTray', () => ({
+  CompareTray: () => null,
+}));
+
+vi.mock('./JustListedToast', () => ({
+  JustListedToast: () => null,
+}));
+
+vi.mock('./OtoLogo', () => ({
+  OtoLogo: () => <span data-testid="oto-logo">OTO</span>,
 }));
 
 vi.mock('./FilterPanel', () => ({

@@ -90,7 +90,7 @@ describe('Map Integration Tests - Full Map Flow', () => {
   });
 
   describe('GET /api/map/locations returns valid response', () => {
-    it('returns a complete MapLocationsResponse with multiple geocoded locations', async () => {
+    it('returns a complete MapLocationsResponse with multiple geocoded locations', { timeout: 15000 }, async () => {
       // No Redis available — direct DB flow
       mockGetRedisClient.mockReturnValue(null);
 

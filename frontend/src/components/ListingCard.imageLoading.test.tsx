@@ -119,7 +119,7 @@ describe('ListingCard image loading behavior', () => {
     });
 
     it('renders placeholder when no image URL is provided', () => {
-      const listing = createMockListing({ primaryImageUrl: null });
+      const listing = createMockListing({ primaryImageUrl: null, imageUrls: [] });
       render(<ListingCard listing={listing} />);
 
       const placeholder = screen.getByRole('img', { name: /image could not be loaded/i });

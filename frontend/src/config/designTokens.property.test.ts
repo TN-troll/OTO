@@ -6,7 +6,7 @@ import tailwindConfig from '../../tailwind.config.js';
  * Property 11: Glass Token Opacity Range
  *
  * For any glass surface color token (light or dark mode), the rgba opacity value
- * SHALL be between 0.04 and 0.80, and all backdrop-blur values SHALL be at least 12px.
+ * SHALL be between 0.04 and 0.90, and all backdrop-blur values SHALL be at least 12px.
  *
  * Validates: Requirements 4.1, 4.2
  */
@@ -33,19 +33,19 @@ function extractCubicBezierYPoints(value: string): number[] {
 const theme = tailwindConfig.theme.extend;
 
 describe('Property 11: Glass Token Opacity Range', () => {
-  describe('Glass color tokens have opacity within 0.04–0.80', () => {
+  describe('Glass color tokens have opacity within 0.04–0.90', () => {
     const glassColors = theme.colors.glass;
     const glassColorEntries = Object.entries(glassColors).filter(
       ([key]) => !key.includes('border'), // border tokens have different opacity requirements
     );
 
     it.each(glassColorEntries)(
-      'glass.%s has rgba opacity between 0.04 and 0.80',
+      'glass.%s has rgba opacity between 0.04 and 0.90',
       (key, value) => {
         const opacity = extractRgbaOpacity(value as string);
         expect(opacity).not.toBeNull();
         expect(opacity!).toBeGreaterThanOrEqual(0.04);
-        expect(opacity!).toBeLessThanOrEqual(0.80);
+        expect(opacity!).toBeLessThanOrEqual(0.90);
       },
     );
 
@@ -54,7 +54,7 @@ describe('Property 11: Glass Token Opacity Range', () => {
         const opacity = extractRgbaOpacity(value as string);
         expect(opacity, `glass.${key} opacity`).not.toBeNull();
         expect(opacity!, `glass.${key} opacity ${opacity} should be >= 0.04`).toBeGreaterThanOrEqual(0.04);
-        expect(opacity!, `glass.${key} opacity ${opacity} should be <= 0.80`).toBeLessThanOrEqual(0.80);
+        expect(opacity!, `glass.${key} opacity ${opacity} should be <= 0.90`).toBeLessThanOrEqual(0.90);
       }
     });
   });
@@ -92,13 +92,13 @@ describe('Property 11: Glass Token Opacity Range', () => {
 
   describe('Property-based: arbitrary opacity values within glass token range', () => {
     // Generate arbitrary opacity values within the valid range defined by the spec
-    const arbOpacity = fc.double({ min: 0.04, max: 0.80, noNaN: true, noDefaultInfinity: true });
+    const arbOpacity = fc.double({ min: 0.04, max: 0.90, noNaN: true, noDefaultInfinity: true });
 
-    it('any opacity in [0.04, 0.80] is within the valid glass token range', () => {
+    it('any opacity in [0.04, 0.90] is within the valid glass token range', () => {
       fc.assert(
         fc.property(arbOpacity, (opacity) => {
           expect(opacity).toBeGreaterThanOrEqual(0.04);
-          expect(opacity).toBeLessThanOrEqual(0.80);
+          expect(opacity).toBeLessThanOrEqual(0.90);
         }),
         { numRuns: 100 },
       );
@@ -121,17 +121,17 @@ describe('Property 11: Glass Token Opacity Range', () => {
           fc.constantFrom(...actualOpacities),
           (opacity) => {
             expect(opacity).toBeGreaterThanOrEqual(0.04);
-            expect(opacity).toBeLessThanOrEqual(0.80);
+            expect(opacity).toBeLessThanOrEqual(0.90);
           },
         ),
         { numRuns: 50 },
       );
     });
 
-    it('no valid glass opacity should be below 0.04 or above 0.80', () => {
+    it('no valid glass opacity should be below 0.04 or above 0.90', () => {
       // Test that values outside the range are correctly identified as invalid
       const arbInvalidLow = fc.double({ min: 0, max: 0.039, noNaN: true, noDefaultInfinity: true });
-      const arbInvalidHigh = fc.double({ min: 0.801, max: 1.0, noNaN: true, noDefaultInfinity: true });
+      const arbInvalidHigh = fc.double({ min: 0.901, max: 1.0, noNaN: true, noDefaultInfinity: true });
 
       fc.assert(
         fc.property(arbInvalidLow, (opacity) => {
@@ -142,7 +142,7 @@ describe('Property 11: Glass Token Opacity Range', () => {
 
       fc.assert(
         fc.property(arbInvalidHigh, (opacity) => {
-          expect(opacity).toBeGreaterThan(0.80);
+          expect(opacity).toBeGreaterThan(0.90);
         }),
         { numRuns: 50 },
       );

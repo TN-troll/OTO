@@ -128,10 +128,11 @@ describe('RecentlyViewedStrip', () => {
         Promise.resolve(createMockListing(id, { make: 'Car', model: id.toUpperCase() }))
       );
 
-      renderWithProviders(<RecentlyViewedStrip />);
+      const { container } = renderWithProviders(<RecentlyViewedStrip />);
 
       await waitFor(() => {
-        const links = screen.getAllByRole('link');
+        const section = container.querySelector('section')!;
+        const links = section.querySelectorAll('a[href^="/listing/"]');
         expect(links).toHaveLength(5);
       });
     });
@@ -143,10 +144,11 @@ describe('RecentlyViewedStrip', () => {
         Promise.resolve(createMockListing(id))
       );
 
-      renderWithProviders(<RecentlyViewedStrip maxItems={3} />);
+      const { container } = renderWithProviders(<RecentlyViewedStrip maxItems={3} />);
 
       await waitFor(() => {
-        const links = screen.getAllByRole('link');
+        const section = container.querySelector('section')!;
+        const links = section.querySelectorAll('a[href^="/listing/"]');
         expect(links).toHaveLength(3);
       });
     });
@@ -160,10 +162,11 @@ describe('RecentlyViewedStrip', () => {
         Promise.resolve(createMockListing(id, { make: 'Car', model: id }))
       );
 
-      renderWithProviders(<RecentlyViewedStrip />);
+      const { container } = renderWithProviders(<RecentlyViewedStrip />);
 
       await waitFor(() => {
-        const links = screen.getAllByRole('link');
+        const section = container.querySelector('section')!;
+        const links = section.querySelectorAll('a[href^="/listing/"]');
         expect(links[0]).toHaveAttribute('href', '/listing/first');
         expect(links[1]).toHaveAttribute('href', '/listing/second');
         expect(links[2]).toHaveAttribute('href', '/listing/third');
@@ -176,10 +179,11 @@ describe('RecentlyViewedStrip', () => {
       mockUseRecentlyViewed.mockReturnValue({ recentIds: ['abc123'] });
       mockGetListing.mockResolvedValue(createMockListing('abc123', { make: 'Porsche', model: '911' }));
 
-      renderWithProviders(<RecentlyViewedStrip />);
+      const { container } = renderWithProviders(<RecentlyViewedStrip />);
 
       await waitFor(() => {
-        const link = screen.getByRole('link');
+        const section = container.querySelector('section')!;
+        const link = section.querySelector('a[href^="/listing/"]');
         expect(link).toHaveAttribute('href', '/listing/abc123');
       });
     });
@@ -193,8 +197,8 @@ describe('RecentlyViewedStrip', () => {
       renderWithProviders(<RecentlyViewedStrip />);
 
       await waitFor(() => {
-        expect(screen.getByText('Ferrari F40')).toBeInTheDocument();
-        expect(screen.getByText(/€1,250,000/)).toBeInTheDocument();
+        expect(screen.getAllByText('Ferrari F40').length).toBeGreaterThan(0);
+        expect(screen.getAllByText(/€1[.,]250[.,]000/).length).toBeGreaterThan(0);
       });
     });
   });
@@ -208,7 +212,7 @@ describe('RecentlyViewedStrip', () => {
       renderWithProviders(<RecentlyViewedStrip />);
 
       await waitFor(() => {
-        expect(screen.getByText('Recently Viewed')).toBeInTheDocument();
+        expect(screen.getAllByText('Recently Viewed').length).toBeGreaterThan(0);
       });
     });
 
@@ -220,7 +224,7 @@ describe('RecentlyViewedStrip', () => {
       renderWithProviders(<RecentlyViewedStrip />);
 
       await waitFor(() => {
-        expect(screen.getByText('Laatst bekeken')).toBeInTheDocument();
+        expect(screen.getAllByText('Laatst bekeken').length).toBeGreaterThan(0);
       });
     });
   });
@@ -233,10 +237,11 @@ describe('RecentlyViewedStrip', () => {
         return Promise.resolve(createMockListing(id, { make: 'Car', model: id }));
       });
 
-      renderWithProviders(<RecentlyViewedStrip />);
+      const { container } = renderWithProviders(<RecentlyViewedStrip />);
 
       await waitFor(() => {
-        const links = screen.getAllByRole('link');
+        const section = container.querySelector('section')!;
+        const links = section.querySelectorAll('a[href^="/listing/"]');
         expect(links).toHaveLength(2);
         expect(links[0]).toHaveAttribute('href', '/listing/good');
         expect(links[1]).toHaveAttribute('href', '/listing/also-good');

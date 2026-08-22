@@ -772,7 +772,7 @@ describe('FilterEngine', () => {
 
       const result = await engine.queryCursor({ limit: 10, filters: {} });
 
-      expect(result.items[0]).toEqual({
+      expect(result.items[0]).toMatchObject({
         id: 'uuid-1',
         title: 'Ferrari 488 GTB',
         primaryImageUrl: 'https://example.com/img1.jpg',

@@ -69,14 +69,14 @@ describe('Header responsive behavior', () => {
   it('renders a mobile menu toggle button with md:hidden class (navigation collapse below 768px)', () => {
     render(<Header />);
 
-    // The toggle button should have an aria-label for navigation menu
-    const toggleButton = screen.getByLabelText('Open navigation menu');
+    // The toggle button should have an aria-label for menu
+    const toggleButton = screen.getByLabelText('Open menu');
     expect(toggleButton).toBeDefined();
     expect(toggleButton.className).toContain('md:hidden');
 
-    // Verify 44x44 touch target sizing classes (h-11 w-11 = 44px)
-    expect(toggleButton.className).toContain('h-11');
-    expect(toggleButton.className).toContain('w-11');
+    // Verify 40x40 touch target sizing classes (h-10 w-10 = 40px)
+    expect(toggleButton.className).toContain('h-10');
+    expect(toggleButton.className).toContain('w-10');
   });
 
   /**

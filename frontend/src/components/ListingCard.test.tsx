@@ -64,12 +64,12 @@ describe('ListingCard interaction states', () => {
       expect(card.className).toContain('hover:shadow-glass-elevated');
     });
 
-    it('has transition-all and duration-300 for smooth hover animation', () => {
+    it('has transition-[transform,opacity,box-shadow] and duration-300 for smooth hover animation', () => {
       const listing = createMockListing();
       render(<ListingCard listing={listing} />);
 
       const card = screen.getByRole('link', { name: /Porsche 911 2023/i });
-      expect(card.className).toContain('transition-all');
+      expect(card.className).toContain('transition-[transform,opacity,box-shadow]');
       expect(card.className).toContain('duration-300');
     });
   });
@@ -118,7 +118,7 @@ describe('ListingCard interaction states', () => {
     });
 
     it('renders the placeholder when no image URL is provided', () => {
-      const listing = createMockListing({ primaryImageUrl: null });
+      const listing = createMockListing({ primaryImageUrl: null, imageUrls: [] });
       const { container } = render(<ListingCard listing={listing} />);
 
       // Should show accessible placeholder with role="img" and aria-label
@@ -129,7 +129,7 @@ describe('ListingCard interaction states', () => {
     });
 
     it('placeholder preserves the aspect ratio container', () => {
-      const listing = createMockListing({ primaryImageUrl: null });
+      const listing = createMockListing({ primaryImageUrl: null, imageUrls: [] });
       const { container } = render(<ListingCard listing={listing} />);
 
       // The aspect ratio container should still exist
@@ -138,7 +138,7 @@ describe('ListingCard interaction states', () => {
     });
 
     it('featured card placeholder uses 16:9 aspect ratio', () => {
-      const listing = createMockListing({ primaryImageUrl: null });
+      const listing = createMockListing({ primaryImageUrl: null, imageUrls: [] });
       const { container } = render(<ListingCard listing={listing} featured={true} />);
 
       const aspectContainer = container.querySelector('.aspect-\\[16\\/9\\]');

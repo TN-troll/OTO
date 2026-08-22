@@ -36,7 +36,16 @@ vi.mock('./pages/NotificationsPage', () => ({
 }));
 
 vi.mock('./components/Header', () => ({
-  Header: () => <div data-testid="header">Header</div>,
+  Header: ({ activeTab, onTabChange }: { activeTab?: string; onTabChange?: (t: string) => void }) => (
+    <div data-testid="header">
+      {activeTab && onTabChange && (
+        <div role="tablist">
+          <button role="tab" aria-selected={activeTab === 'listings'} onClick={() => onTabChange('listings')}>Listings</button>
+          <button role="tab" aria-selected={activeTab === 'map'} onClick={() => onTabChange('map')}>Map</button>
+        </div>
+      )}
+    </div>
+  ),
 }));
 
 vi.mock('./components/FilterPanel', () => ({
@@ -53,6 +62,43 @@ vi.mock('./components/MarketplaceHealthBanner', () => ({
 
 vi.mock('./components/RecentlyViewedStrip', () => ({
   RecentlyViewedStrip: () => <div data-testid="recently-viewed-strip">RecentlyViewedStrip</div>,
+}));
+
+vi.mock('./components/MobileBottomNav', () => ({
+  MobileBottomNav: () => <div data-testid="mobile-bottom-nav">MobileBottomNav</div>,
+}));
+
+vi.mock('./components/CompareTray', () => ({
+  CompareTray: () => null,
+}));
+
+vi.mock('./components/JustListedToast', () => ({
+  JustListedToast: () => null,
+}));
+
+vi.mock('./components/CookieConsent', () => ({
+  CookieConsent: () => null,
+}));
+
+vi.mock('./components/ScrollToTop', () => ({
+  ScrollToTop: () => null,
+}));
+
+vi.mock('./components/LoadingBar', () => ({
+  LoadingBar: () => null,
+}));
+
+vi.mock('./components/OtoLogo', () => ({
+  OtoLogo: () => <span data-testid="oto-logo">OTO</span>,
+}));
+
+vi.mock('./hooks/FilterContext', () => ({
+  FilterProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  useFilterContext: () => ({
+    mobileFilterOpen: false,
+    setMobileFilterOpen: vi.fn(),
+    filters: {},
+  }),
 }));
 
 const mockUseLanguage = vi.fn();
