@@ -188,4 +188,20 @@ export const api = {
       body: JSON.stringify(criteria),
     });
   },
+
+  /**
+   * Get active ads for a placement
+   */
+  async getAds(placement: string, make?: string): Promise<{ ads: Array<{ id: string; title: string; description: string | null; imageUrl: string | null; linkUrl: string; placement: string }> }> {
+    const params = new URLSearchParams({ placement });
+    if (make) params.set('make', make);
+    return fetchJson(`${API_BASE}/ads?${params.toString()}`);
+  },
+
+  /**
+   * Track an ad click
+   */
+  async trackAdClick(adId: string): Promise<void> {
+    fetchJson(`${API_BASE}/ads/click/${adId}`, { method: 'POST' }).catch(() => {});
+  },
 };
