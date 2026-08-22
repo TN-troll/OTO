@@ -26,7 +26,7 @@ interface RdwData {
  * RDW license plate lookup component.
  * Shows on listing detail pages — allows buyers to check vehicle registration status.
  */
-export function RdwCheck() {
+export function RdwCheck({ make, model, year }: { make?: string; model?: string; year?: number }) {
   const { locale } = useLanguage();
   const [plate, setPlate] = useState('');
   const [loading, setLoading] = useState(false);
@@ -67,7 +67,12 @@ export function RdwCheck() {
         {locale === 'nl' ? '\uD83D\uDD0D RDW Kentekencheck' : '\uD83D\uDD0D RDW Plate Check'}
       </h3>
       <p className="mt-1 text-xs text-surface-400">
-        {locale === 'nl' ? 'Controleer APK, eigenaar en voertuiggegevens' : 'Check MOT, ownership and vehicle details'}
+        {make && model
+          ? (locale === 'nl'
+            ? `Voer het kenteken van deze ${make} ${model}${year ? ` (${year})` : ''} in om APK-status en voertuighistorie te controleren`
+            : `Enter the plate of this ${make} ${model}${year ? ` (${year})` : ''} to check MOT status and vehicle history`)
+          : (locale === 'nl' ? 'Controleer APK, eigenaar en voertuiggegevens' : 'Check MOT, ownership and vehicle details')
+        }
       </p>
 
       <div className="mt-3 flex gap-2">

@@ -4,7 +4,7 @@ import { useLanguage } from '../i18n';
  * Affiliate partner links — shown on listing detail pages.
  * These are first-party links, no cookie consent needed.
  */
-export function AffiliateLinks({ price, make }: { price: number; make: string }) {
+export function AffiliateLinks({ price, make, model, year, mileage }: { price: number; make: string; model?: string; year?: number; mileage?: number | null }) {
   const { locale } = useLanguage();
   const monthlyEstimate = Math.round(price / 60);
 
@@ -16,7 +16,7 @@ export function AffiliateLinks({ price, make }: { price: number; make: string })
       <div className="mt-3 grid gap-3 sm:grid-cols-3">
         {/* Financing */}
         <a
-          href={`https://www.independer.nl/autolening/vergelijken?bedrag=${price}`}
+          href={`https://www.independer.nl/autolening/vergelijken?bedrag=${price}&looptijd=60`}
           target="_blank"
           rel="noopener noreferrer sponsored"
           className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 transition-all hover:border-brand-accent/30 hover:bg-brand-accent/5"
@@ -28,13 +28,15 @@ export function AffiliateLinks({ price, make }: { price: number; make: string })
           </div>
           <div>
             <p className="text-xs font-semibold text-white">{locale === 'nl' ? 'Financiering' : 'Financing'}</p>
-            <p className="text-[10px] text-surface-400">~&euro;{monthlyEstimate}/mnd</p>
+            <p className="text-[10px] text-surface-400">
+              {make} {model || ''} • ~&euro;{monthlyEstimate}/mnd
+            </p>
           </div>
         </a>
 
         {/* Insurance */}
         <a
-          href={`https://www.independer.nl/autoverzekering/vergelijken`}
+          href={`https://www.independer.nl/autoverzekering/vergelijken?merk=${encodeURIComponent(make)}`}
           target="_blank"
           rel="noopener noreferrer sponsored"
           className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 transition-all hover:border-brand-accent/30 hover:bg-brand-accent/5"

@@ -338,10 +338,10 @@ export function ListingDetailPage() {
           </div>
 
           {/* RDW License Plate Check */}
-          <RdwCheck />
+          <RdwCheck make={listing.make} model={listing.model} year={listing.year} />
 
           {/* Affiliate Partner Links */}
-          <AffiliateLinks price={listing.price} make={listing.make} />
+          <AffiliateLinks price={listing.price} make={listing.make} model={listing.model} year={listing.year} mileage={listing.mileage} />
         </div>
       </div>
 
