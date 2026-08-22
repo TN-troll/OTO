@@ -15,7 +15,7 @@ export function SellerPage() {
 
   useEffect(() => {
     document.title = `${sellerType === 'dealer' ? 'Dealer' : 'Particulier'} — ${location} | OTO`;
-    return () => { document.title = 'OTO — Online Top Occasions'; };
+    return () => { document.title = 'OTO — The Online Trade Occasions Platform'; };
   }, [location, sellerType]);
 
   const criteria: FilterCriteria = useMemo(() => ({

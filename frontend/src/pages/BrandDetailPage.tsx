@@ -13,7 +13,7 @@ export function BrandDetailPage() {
 
   useEffect(() => {
     document.title = `${decodedMake} | OTO`;
-    return () => { document.title = 'OTO — Online Top Occasions'; };
+    return () => { document.title = 'OTO — The Online Trade Occasions Platform'; };
   }, [decodedMake]);
 
   // Fetch models for this make

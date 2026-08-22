@@ -26,7 +26,7 @@ export function DealerDashboard() {
       .then(r => r.ok ? r.json() : { ads: [] })
       .then(data => setAds(data.ads || []))
       .finally(() => setLoading(false));
-    return () => { document.title = 'OTO — Online Top Occasions'; };
+    return () => { document.title = 'OTO — The Online Trade Occasions Platform'; };
   }, []);
 
   const handleCreate = async () => {

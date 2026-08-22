@@ -8,7 +8,7 @@ export function DealersPage() {
 
   useEffect(() => {
     document.title = locale === 'nl' ? 'Dealers | OTO' : 'Dealers | OTO';
-    return () => { document.title = 'OTO — Online Top Occasions'; };
+    return () => { document.title = 'OTO — The Online Trade Occasions Platform'; };
   }, [locale]);
 
   // Get unique dealer locations

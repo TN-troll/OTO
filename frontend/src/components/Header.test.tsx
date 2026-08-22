@@ -22,7 +22,7 @@ vi.mock('./PremiumBadge', () => ({
 vi.mock('../i18n', () => ({
   useLanguage: () => ({
     locale: 'nl',
-    t: { tagline: 'Online Top Occasions', searchPlaceholder: 'Zoek...' },
+    t: { tagline: 'The Online Trade Occasions Platform', searchPlaceholder: 'Zoek...' },
     setLocale: vi.fn(),
   }),
 }));

@@ -100,7 +100,7 @@ export function CollectionsPage() {
 
   useEffect(() => {
     document.title = locale === 'nl' ? 'Collecties | OTO' : 'Collections | OTO';
-    return () => { document.title = 'OTO \u2014 Online Top Occasions'; };
+    return () => { document.title = 'OTO \u2014 The Online Trade Occasions Platform'; };
   }, [locale]);
 
   return (

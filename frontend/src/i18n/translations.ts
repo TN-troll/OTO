@@ -206,7 +206,7 @@ export interface Translations {
 export const translations: Record<Locale, Translations> = {
   en: {
     brandName: 'OTO',
-    tagline: 'Online Top Occasions — Luxury & Performance Cars from NL',
+    tagline: 'The Online Trade Occasions Platform',
     searchPlaceholder: 'Search by make or model...',
     searchMinChars: 'Type at least 2 characters to search',
     searchNoResults: 'No listings found for',
@@ -389,7 +389,7 @@ export const translations: Record<Locale, Translations> = {
   },
   nl: {
     brandName: 'OTO',
-    tagline: 'Online Top Occasions — Luxe & Sportauto\'s uit Nederland',
+    tagline: 'The Online Trade Occasions Platform',
     searchPlaceholder: 'Zoek op merk of model...',
     searchMinChars: 'Typ minimaal 2 tekens om te zoeken',
     searchNoResults: 'Geen advertenties gevonden voor',

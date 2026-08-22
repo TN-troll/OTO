@@ -16,7 +16,7 @@ export function ModelPage() {
 
   useEffect(() => {
     document.title = `${decodedMake} ${decodedModel} | OTO`;
-    return () => { document.title = 'OTO — Online Top Occasions'; };
+    return () => { document.title = 'OTO — The Online Trade Occasions Platform'; };
   }, [decodedMake, decodedModel]);
 
   const { data, isLoading } = useQuery({

@@ -1,6 +1,6 @@
 {
   "name": "exclusive-car-ads-aggregator",
-  "version": "3.7.17",
+  "version": "3.7.18",
   "private": true,
   "description": "Aggregates exclusive, luxury, and high-performance car ads from Dutch marketplaces",
   "workspaces": [

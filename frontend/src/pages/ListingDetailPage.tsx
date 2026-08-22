@@ -72,7 +72,7 @@ export function ListingDetailPage() {
     if (listing) {
       document.title = `${listing.make} ${listing.model} ${listing.year} — €${Math.round(listing.price).toLocaleString('nl-NL')} | OTO`;
     }
-    return () => { document.title = 'OTO — Online Top Occasions'; };
+    return () => { document.title = 'OTO — The Online Trade Occasions Platform'; };
   }, [listing]);
 
   // Fetch similar cars

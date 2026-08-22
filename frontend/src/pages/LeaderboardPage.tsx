@@ -68,7 +68,7 @@ export function LeaderboardPage() {
 
   useEffect(() => {
     document.title = `${category} km/h Leaderboard | OTO`;
-    return () => { document.title = 'OTO — Online Top Occasions'; };
+    return () => { document.title = 'OTO — The Online Trade Occasions Platform'; };
   }, [category]);
 
   const entries = useMemo(() => getEntriesForCategory(category), [category]);

@@ -11,7 +11,7 @@ export function BrandsPage() {
 
   useEffect(() => {
     document.title = locale === 'nl' ? 'Merken | OTO' : 'Brands | OTO';
-    return () => { document.title = 'OTO — Online Top Occasions'; };
+    return () => { document.title = 'OTO — The Online Trade Occasions Platform'; };
   }, [locale]);
 
   const { data: filterOptions, isLoading } = useQuery({

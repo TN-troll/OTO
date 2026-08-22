@@ -86,13 +86,13 @@ vi.mock('../components/ListingListItem', () => ({
 
 const enTranslations = {
   adDescription: 'Advertisement',
-  tagline: 'Online Top Occasions',
+  tagline: 'The Online Trade Occasions Platform',
   searchPlaceholder: 'Search...',
 };
 
 const nlTranslations = {
   adDescription: 'Advertentietekst',
-  tagline: 'Online Top Occasions',
+  tagline: 'The Online Trade Occasions Platform',
   searchPlaceholder: 'Zoek...',
 };
 

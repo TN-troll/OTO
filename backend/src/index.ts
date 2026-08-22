@@ -1,4 +1,4 @@
-// Backend entry point for OTO - Online Top Occasions
+// Backend entry point for OTO - The Online Trade Occasions Platform
 // Serves both the API and the frontend static files from a single service.
 // Deploy: restored notification banner with hooks fix
 

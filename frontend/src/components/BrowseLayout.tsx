@@ -144,7 +144,7 @@ function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t border-surface-800 pt-6 text-center">
-          <p className="text-[10px] text-surface-600">&copy; {new Date().getFullYear()} OTO &mdash; Online Top Occasions. All rights reserved.</p>
+          <p className="text-[10px] text-surface-600">&copy; {new Date().getFullYear()} OTO &mdash; The Online Trade Occasions Platform. All rights reserved.</p>
         </div>
       </div>
     </footer>

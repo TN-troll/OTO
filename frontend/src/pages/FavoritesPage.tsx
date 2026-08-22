@@ -13,7 +13,7 @@ export function FavoritesPage() {
 
   useEffect(() => {
     document.title = locale === 'nl' ? 'Favorieten | OTO' : 'Favorites | OTO';
-    return () => { document.title = 'OTO — Online Top Occasions'; };
+    return () => { document.title = 'OTO — The Online Trade Occasions Platform'; };
   }, [locale]);
 
   // Fetch full listing data for favorited IDs
