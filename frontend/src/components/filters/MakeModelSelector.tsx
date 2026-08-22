@@ -98,6 +98,19 @@ export function MakeModelSelector({
     return availableModels.filter((model) => model.toLowerCase().includes(q));
   }, [availableModels, modelSearch]);
 
+  // Clear search inputs when selections are externally cleared
+  useEffect(() => {
+    if (selectedMakes.length === 0) {
+      setMakeSearch('');
+    }
+  }, [selectedMakes.length]);
+
+  useEffect(() => {
+    if (selectedModels.length === 0) {
+      setModelSearch('');
+    }
+  }, [selectedModels.length]);
+
   // Reset active index when filtered list changes
   useEffect(() => {
     setMakeActiveIndex(-1);
