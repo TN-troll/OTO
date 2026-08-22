@@ -127,6 +127,99 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
       { path: 'mercedes-benz/eqs', kw: 200, pages: 2 },
       { path: 'bmw/i4', kw: 200, pages: 2 },
       { path: 'bmw/ix', kw: 200, pages: 2 },
+      // === MISSING MODELS (NEW) ===
+      // Alpine
+      { path: 'alpine/a110', kw: 0, pages: 3 },
+      // Morgan / Donkervoort / Wiesmann — Dutch favorites
+      { path: 'morgan', kw: 0, pages: 2 },
+      { path: 'donkervoort', kw: 0, pages: 2 },
+      { path: 'wiesmann', kw: 0, pages: 2 },
+      // TVR / De Tomaso / Noble — classics
+      { path: 'tvr', kw: 0, pages: 2 },
+      { path: 'de-tomaso', kw: 0, pages: 1 },
+      { path: 'noble', kw: 0, pages: 1 },
+      // BMW missing models
+      { path: 'bmw/m850', kw: 0, pages: 2 },
+      { path: 'bmw/i7', kw: 200, pages: 2 },
+      { path: 'bmw/xm', kw: 200, pages: 2 },
+      { path: 'bmw/8-serie', kw: 200, pages: 3 },
+      { path: 'bmw/7-serie', kw: 200, pages: 2 },
+      { path: 'bmw/5-serie', kw: 200, pages: 3 },
+      { path: 'bmw/3-serie', kw: 200, pages: 3 },
+      // Mercedes missing
+      { path: 'mercedes-benz/sl-klasse', kw: 200, pages: 3 },
+      { path: 'mercedes-benz/gt', kw: 200, pages: 3 },
+      { path: 'mercedes-benz/eqe', kw: 200, pages: 2 },
+      { path: 'mercedes-benz/glb', kw: 200, pages: 2 },
+      { path: 'mercedes-benz/gls', kw: 200, pages: 2 },
+      // Audi missing
+      { path: 'audi/rs-q3', kw: 0, pages: 2 },
+      { path: 'audi/sq5', kw: 200, pages: 2 },
+      { path: 'audi/s4', kw: 200, pages: 2 },
+      { path: 'audi/s5', kw: 200, pages: 2 },
+      { path: 'audi/s6', kw: 200, pages: 2 },
+      { path: 'audi/s7', kw: 200, pages: 2 },
+      { path: 'audi/tt-rs', kw: 0, pages: 2 },
+      // Porsche missing
+      { path: 'porsche/cayman', kw: 0, pages: 3 },
+      { path: 'porsche/boxster', kw: 0, pages: 3 },
+      // Maserati missing
+      { path: 'maserati/mc20', kw: 0, pages: 2 },
+      { path: 'maserati/granturismo', kw: 0, pages: 3 },
+      { path: 'maserati/quattroporte', kw: 0, pages: 2 },
+      { path: 'maserati/grecale', kw: 150, pages: 2 },
+      // Lexus missing
+      { path: 'lexus/rc', kw: 150, pages: 2 },
+      { path: 'lexus/is', kw: 150, pages: 2 },
+      { path: 'lexus/ls', kw: 150, pages: 2 },
+      // Land Rover / Range Rover — V8 models
+      { path: 'land-rover/range-rover-velar', kw: 150, pages: 2 },
+      { path: 'land-rover/discovery', kw: 200, pages: 2 },
+      // Jaguar missing
+      { path: 'jaguar/f-pace', kw: 200, pages: 2 },
+      { path: 'jaguar/xe', kw: 200, pages: 2 },
+      { path: 'jaguar/xf', kw: 200, pages: 2 },
+      { path: 'jaguar/xj', kw: 150, pages: 2 },
+      { path: 'jaguar/i-pace', kw: 200, pages: 2 },
+      // Volvo performance
+      { path: 'volvo/xc90', kw: 200, pages: 2 },
+      { path: 'volvo/s60', kw: 200, pages: 2 },
+      { path: 'volvo/v60', kw: 200, pages: 2 },
+      // Polestar
+      { path: 'polestar', kw: 0, pages: 3 },
+      // Lotus missing
+      { path: 'lotus/eletre', kw: 0, pages: 2 },
+      { path: 'lotus/emeya', kw: 0, pages: 2 },
+      { path: 'lotus/emira', kw: 0, pages: 2 },
+      // Electric hypercars
+      { path: 'rimac', kw: 0, pages: 1 },
+      { path: 'pininfarina', kw: 0, pages: 1 },
+      // Classic supercars
+      { path: 'ferrari/f40', kw: 0, pages: 1 },
+      { path: 'ferrari/f50', kw: 0, pages: 1 },
+      { path: 'ferrari/enzo', kw: 0, pages: 1 },
+      { path: 'ferrari/testarossa', kw: 0, pages: 1 },
+      { path: 'ferrari/360', kw: 0, pages: 2 },
+      { path: 'ferrari/430', kw: 0, pages: 2 },
+      { path: 'ferrari/550', kw: 0, pages: 1 },
+      { path: 'ferrari/575', kw: 0, pages: 1 },
+      { path: 'ferrari/599', kw: 0, pages: 2 },
+      { path: 'ferrari/california', kw: 0, pages: 2 },
+      { path: 'ferrari/gtc4lusso', kw: 0, pages: 2 },
+      { path: 'lamborghini/gallardo', kw: 0, pages: 3 },
+      { path: 'lamborghini/murcielago', kw: 0, pages: 1 },
+      // AMG / M-Power specific
+      { path: 'mercedes-benz/c-klasse', kw: 300, pages: 3 }, // C63
+      { path: 'mercedes-benz/e-klasse', kw: 300, pages: 3 }, // E63
+      // Dodge
+      { path: 'dodge/viper', kw: 0, pages: 2 },
+      { path: 'dodge/charger', kw: 200, pages: 2 },
+      // Genesis
+      { path: 'genesis', kw: 200, pages: 2 },
+      // Caterham / Ariel — track cars
+      { path: 'caterham', kw: 0, pages: 2 },
+      // Dallara
+      { path: 'dallara', kw: 0, pages: 1 },
     ];
 
     for (const { path, kw, pages } of premiumSearches) {
@@ -136,9 +229,22 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
       }
     }
 
-    // General high-power searches (catches everything we might have missed)
-    for (let p = 1; p <= 10; p++) {
+    // General high-power searches — broader catchall
+    // €50k+ / 300kW+ (biggest money)
+    for (let p = 1; p <= 15; p++) {
       searchPages.push(`${BASE_URL}/lst?sort=price&desc=1&powertype=kw&powerfrom=300&pricefrom=50000${p > 1 ? `&page=${p}` : ''}`);
+    }
+    // €30k-50k / 200kW+ (performance sweet spot)
+    for (let p = 1; p <= 10; p++) {
+      searchPages.push(`${BASE_URL}/lst?sort=price&desc=1&powertype=kw&powerfrom=200&pricefrom=30000&priceto=50000${p > 1 ? `&page=${p}` : ''}`);
+    }
+    // €100k+ (any power, luxury cars)
+    for (let p = 1; p <= 10; p++) {
+      searchPages.push(`${BASE_URL}/lst?sort=price&desc=1&pricefrom=100000${p > 1 ? `&page=${p}` : ''}`);
+    }
+    // 400kW+ any price (hypercars/supercars)
+    for (let p = 1; p <= 5; p++) {
+      searchPages.push(`${BASE_URL}/lst?sort=price&desc=1&powertype=kw&powerfrom=400${p > 1 ? `&page=${p}` : ''}`);
     }
 
     console.log(`[OTO] Total search pages to scrape: ${searchPages.length}`);
