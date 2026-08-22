@@ -257,20 +257,20 @@ export function ListingDetailPage() {
             <a href="#specifications" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
               {t.specifications}
             </a>
-            <a href="#finance" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
-              {locale === 'nl' ? 'Financiering' : 'Finance'}
-            </a>
-            <a href="#depreciation" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
-              {locale === 'nl' ? 'Afschrijving' : 'Depreciation'}
-            </a>
-            <a href="#price-history" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
-              {locale === 'nl' ? 'Prijshistorie' : 'Price History'}
-            </a>
             {listing.description && (
               <a href="#description" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
                 {locale === 'nl' ? 'Beschrijving' : 'Description'}
               </a>
             )}
+            <a href="#price-history" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+              {locale === 'nl' ? 'Prijshistorie' : 'Price History'}
+            </a>
+            <a href="#depreciation" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+              {locale === 'nl' ? 'Afschrijving' : 'Depreciation'}
+            </a>
+            <a href="#finance" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
+              {locale === 'nl' ? 'Financiering' : 'Finance'}
+            </a>
             {listing.soundProfile && (
               <a href="#sound" className="inline-flex items-center gap-1 rounded-full border border-surface-200 bg-surface-50 px-3 py-1.5 text-xs font-medium text-surface-600 transition-colors duration-150 hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-surface-600 dark:bg-surface-800 dark:text-surface-400 dark:hover:border-brand-accent/30 dark:hover:text-brand-accent">
                 {locale === 'nl' ? 'Geluid' : 'Sound'}
@@ -292,24 +292,9 @@ export function ListingDetailPage() {
             />
           )}
 
-          {/* Finance Calculator */}
-          <div id="finance" className="scroll-mt-4">
-            <FinanceCalculator listingPrice={listing.price} />
-          </div>
-
           {/* Specifications Grid */}
           <div id="specifications" className="scroll-mt-4">
             <SpecificationsSection listing={listing} />
-          </div>
-
-          {/* Price History */}
-          <div id="price-history" className="scroll-mt-4">
-            <PriceHistorySection history={priceHistoryData?.history} />
-          </div>
-
-          {/* Depreciation Calculator */}
-          <div id="depreciation" className="scroll-mt-4">
-            <DepreciationSection price={listing.price} year={listing.year} mileage={listing.mileage} make={listing.make} />
           </div>
 
           {/* Description */}
@@ -322,10 +307,27 @@ export function ListingDetailPage() {
             </div>
           )}
 
-          {/* Sound Profile Section */}
-          <div id="sound" className="scroll-mt-4">
-            <SoundProfileSection soundProfile={listing.soundProfile} />
+          {/* Price History */}
+          <div id="price-history" className="scroll-mt-4">
+            <PriceHistorySection history={priceHistoryData?.history} />
           </div>
+
+          {/* Depreciation Calculator */}
+          <div id="depreciation" className="scroll-mt-4">
+            <DepreciationSection price={listing.price} year={listing.year} mileage={listing.mileage} make={listing.make} />
+          </div>
+
+          {/* Finance Calculator */}
+          <div id="finance" className="scroll-mt-4">
+            <FinanceCalculator listingPrice={listing.price} />
+          </div>
+
+          {/* Sound Profile Section — only when sound data available */}
+          {listing.soundProfile && (
+            <div id="sound" className="scroll-mt-4">
+              <SoundProfileSection soundProfile={listing.soundProfile} />
+            </div>
+          )}
 
           {/* YouTube Engine Sound */}
           <YouTubeSoundSection make={listing.make} model={listing.model} />
@@ -662,45 +664,36 @@ function SpecificationsSection({ listing }: { listing: ListingDetail }) {
 function SoundProfileSection({ soundProfile }: { soundProfile: SoundProfile | null }) {
   const { t } = useLanguage();
 
+  if (!soundProfile) return null;
+
   return (
     <div className="mt-8 border-t border-surface-100 pt-6 dark:border-surface-700">
       <h2 className="text-lg font-bold text-surface-900 dark:text-white">{t.soundProfile}</h2>
 
-      {soundProfile ? (
-        <div className="mt-4 space-y-5">
-          {/* Characteristics */}
-          <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <div className="rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
-              <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.engineConfiguration}</dt>
-              <dd className="mt-1 text-sm font-bold text-surface-900 dark:text-white">{formatEnumLabel(soundProfile.engineConfiguration)}</dd>
-            </div>
-            <div className="rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
-              <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.cylinders}</dt>
-              <dd className="mt-1 text-sm font-bold text-surface-900 dark:text-white">{soundProfile.cylinderCount}</dd>
-            </div>
-            <div className="rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
-              <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.induction}</dt>
-              <dd className="mt-1 text-sm font-bold text-surface-900 dark:text-white">{formatEnumLabel(soundProfile.forcedInduction)}</dd>
-            </div>
-            <div className="rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
-              <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.exhaustNote}</dt>
-              <dd className="mt-1 text-sm font-bold text-surface-900 dark:text-white">{formatEnumLabel(soundProfile.exhaustNote)}</dd>
-            </div>
-          </dl>
+      <div className="mt-4 space-y-5">
+        {/* Characteristics */}
+        <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
+            <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.engineConfiguration}</dt>
+            <dd className="mt-1 text-sm font-bold text-surface-900 dark:text-white">{formatEnumLabel(soundProfile.engineConfiguration)}</dd>
+          </div>
+          <div className="rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
+            <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.cylinders}</dt>
+            <dd className="mt-1 text-sm font-bold text-surface-900 dark:text-white">{soundProfile.cylinderCount}</dd>
+          </div>
+          <div className="rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
+            <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.induction}</dt>
+            <dd className="mt-1 text-sm font-bold text-surface-900 dark:text-white">{formatEnumLabel(soundProfile.forcedInduction)}</dd>
+          </div>
+          <div className="rounded-lg bg-surface-50 p-3 dark:bg-surface-700">
+            <dt className="text-xs font-medium text-surface-500 dark:text-surface-400">{t.exhaustNote}</dt>
+            <dd className="mt-1 text-sm font-bold text-surface-900 dark:text-white">{formatEnumLabel(soundProfile.exhaustNote)}</dd>
+          </div>
+        </dl>
 
-          {/* Audio Player */}
-          <AudioPlayer soundProfileId={soundProfile.id} />
-        </div>
-      ) : (
-        <div className="mt-4 rounded-lg bg-surface-50 p-4 dark:bg-surface-700">
-          <span className="inline-flex items-center rounded-full bg-surface-200 px-3 py-1 text-xs font-semibold text-surface-600 dark:bg-surface-600 dark:text-surface-300">
-            {t.unclassified}
-          </span>
-          <p className="mt-2 text-sm text-surface-500 dark:text-surface-400">
-            {t.unclassifiedHint}
-          </p>
-        </div>
-      )}
+        {/* Audio Player */}
+        <AudioPlayer soundProfileId={soundProfile.id} />
+      </div>
     </div>
   );
 }

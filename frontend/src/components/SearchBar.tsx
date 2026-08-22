@@ -146,7 +146,7 @@ export function SearchBar({ onSearchResults }: SearchBarProps) {
           onChange={handleInputChange}
           placeholder={t.searchPlaceholder}
           maxLength={MAX_QUERY_LENGTH}
-          className="block w-full rounded-xl border border-surface-200/60 bg-white/10 py-3 pl-12 pr-12 text-base lg:text-sm text-white placeholder-surface-400 shadow-sm backdrop-blur-sm transition-all duration-200 focus:border-brand-accent focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 md:bg-white/10 md:text-white md:placeholder-surface-400"
+          className="block w-full rounded-xl border border-surface-200 bg-surface-50 py-3 pl-12 pr-12 text-base lg:text-sm text-surface-900 placeholder-surface-400 shadow-sm transition-all duration-200 focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/30 dark:border-white/[0.1] dark:bg-white/[0.06] dark:text-white dark:placeholder-surface-500"
           aria-label="Search cars by make or model"
           role="searchbox"
         />
