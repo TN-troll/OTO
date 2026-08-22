@@ -434,7 +434,7 @@ export class FilterEngine {
       status: row.status,
       isFeatured: row.is_featured,
       hasSoundClip: !!row.sound_profile_id,
-      snippet: row.snippet ? row.snippet.replace(/\n/g, ' ').trim() : null,
+      snippet: row.snippet ? row.snippet.replace(/<[^>]*>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim() : null,
     }));
 
     const totalPages = Math.ceil(totalCount / pageSize);
@@ -531,7 +531,7 @@ export class FilterEngine {
       status: row.status,
       isFeatured: row.is_featured,
       hasSoundClip: !!row.sound_profile_id,
-      snippet: row.snippet ? row.snippet.replace(/\n/g, ' ').trim() : null,
+      snippet: row.snippet ? row.snippet.replace(/<[^>]*>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim() : null,
     }));
 
     const nextCursor = hasMore ? this.encodeCursor(offset + limit) : null;
