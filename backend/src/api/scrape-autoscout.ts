@@ -7,6 +7,7 @@ import { Router, Request, Response } from 'express';
 import { query } from '../db/connection.js';
 import { MAX_IMAGES_PER_LISTING, CURATION_HP_THRESHOLD } from '@car-ads/shared';
 import { isDutchLocation } from '../map/location-validator.js';
+import { DeduplicationService } from '../deduplication/dedup-service.js';
 
 export const scrapeAutoscoutRouter = Router();
 
@@ -271,11 +272,13 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
     console.log(`[OTO] Total unique: ${unique.length}`);
 
     // Incremental upsert — don't delete existing listings, only add new ones
+    const dedupService = new DeduplicationService();
     let inserted = 0;
     let skipped = 0;
+    let merged = 0;
     for (const listing of unique) {
       try {
-        // Check if this listing already exists (by external ID or title+price combo)
+        // 1. Check if this listing already exists in same marketplace
         const existing = await query(
           `SELECT l.id FROM listings l
            JOIN source_references sr ON sr.listing_id = l.id
@@ -285,21 +288,16 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
         );
 
         if (existing.rows.length > 0) {
-          // Record price if changed
+          // Price change tracking (existing logic)
           const existingId = existing.rows[0].id;
-          const currentPrice = listing.price;
           const lastPrice = await query<{ price: string }>(
             `SELECT price FROM listings WHERE id = $1`, [existingId]
           );
-          if (lastPrice.rows[0] && Math.abs(parseFloat(lastPrice.rows[0].price) - currentPrice) > 1) {
-            await query(
-              `INSERT INTO price_history (listing_id, price) VALUES ($1, $2)`,
-              [existingId, currentPrice]
-            );
-            await query(
-              `UPDATE listings SET price = $1, last_verified = NOW() WHERE id = $2`,
-              [currentPrice, existingId]
-            );
+          if (lastPrice.rows[0] && Math.abs(parseFloat(lastPrice.rows[0].price) - listing.price) > 1) {
+            await query(`INSERT INTO price_history (listing_id, price) VALUES ($1, $2)`, [existingId, listing.price]);
+            await query(`UPDATE listings SET price = $1, last_verified = NOW() WHERE id = $2`, [listing.price, existingId]);
+          } else {
+            await query(`UPDATE listings SET last_verified = NOW() WHERE id = $1`, [existingId]);
           }
           skipped++;
           continue;
@@ -311,6 +309,34 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
           continue;
         }
 
+        // 2. Cross-platform dedup: check if same car exists from another marketplace
+        const duplicate = await dedupService.findDuplicate({
+          title: listing.title,
+          price: listing.price,
+          mileage: listing.mileage,
+          year: listing.year,
+          make: listing.make,
+          model: listing.model,
+          engineDisplacementCc: listing.engineDisplacementCc,
+          horsepower: listing.horsepower,
+          location: listing.location,
+          sellerType: listing.sellerType as 'dealer' | 'private' | null,
+          sourceUrl: listing.sourceUrl,
+          imageUrls: listing.imageUrls,
+          transmissionType: listing.transmissionType as 'manual' | 'automatic' | null,
+          fuelType: listing.fuelType as 'petrol' | 'diesel' | 'hybrid' | 'electric' | null,
+          marketplace: 'autoscout24',
+          externalId: listing.externalId,
+        });
+
+        if (duplicate) {
+          // Same car already exists from another marketplace → merge sources
+          await dedupService.mergeSources(duplicate.existingListingId, listing.sourceUrl, 'autoscout24', listing.externalId);
+          merged++;
+          continue;
+        }
+
+        // 3. Insert new listing
         const result = await query(
           `INSERT INTO listings (title, description, price, mileage, year, make, model, engine_displacement_cc, horsepower, location, seller_type, transmission_type, fuel_type, body_type, image_urls, status, curation_criteria, date_added, last_verified)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, 'active', $16, NOW(), NOW())
@@ -346,6 +372,7 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
       unique: unique.length,
       inserted,
       skipped,
+      merged,
     });
   } catch (err) {
     console.error('[OTO] AutoScout24 scrape failed:', err);

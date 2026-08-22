@@ -8,6 +8,7 @@ import * as cheerio from 'cheerio';
 import { query } from '../db/connection.js';
 import { MAX_IMAGES_PER_LISTING, CURATION_HP_THRESHOLD } from '@car-ads/shared';
 import { isDutchLocation } from '../map/location-validator.js';
+import { DeduplicationService } from '../deduplication/dedup-service.js';
 
 export const scrapeRealRouter = Router();
 
@@ -197,13 +198,15 @@ scrapeRealRouter.get('/autotrack', async (_req: Request, res: Response): Promise
     console.log(`[OTO] [AutoTrack] Total unique: ${unique.length}`);
 
     // Upsert
+    const dedupService = new DeduplicationService();
     let inserted = 0;
     let skipped = 0;
     let priceUpdated = 0;
+    let merged = 0;
 
     for (const listing of unique) {
       try {
-        // Check if exists by external_id
+        // 1. Check if exists by external_id in same marketplace
         const existing = await query(
           `SELECT l.id, l.price FROM listings l
            JOIN source_references sr ON sr.listing_id = l.id
@@ -233,6 +236,34 @@ scrapeRealRouter.get('/autotrack', async (_req: Request, res: Response): Promise
           continue;
         }
 
+        // 2. Cross-platform dedup: check if same car exists from another marketplace
+        const duplicate = await dedupService.findDuplicate({
+          title: listing.title,
+          price: listing.price,
+          mileage: listing.mileage,
+          year: listing.year,
+          make: listing.make,
+          model: listing.model,
+          engineDisplacementCc: listing.engineDisplacementCc,
+          horsepower: listing.horsepower,
+          location: listing.location,
+          sellerType: listing.sellerType as 'dealer' | 'private' | null,
+          sourceUrl: listing.sourceUrl,
+          imageUrls: listing.imageUrls,
+          transmissionType: listing.transmissionType as 'manual' | 'automatic' | null,
+          fuelType: listing.fuelType as 'petrol' | 'diesel' | 'hybrid' | 'electric' | null,
+          marketplace: 'autotrack',
+          externalId: listing.externalId,
+        });
+
+        if (duplicate) {
+          // Same car already exists from another marketplace → merge sources
+          await dedupService.mergeSources(duplicate.existingListingId, listing.sourceUrl, 'autotrack', listing.externalId);
+          merged++;
+          continue;
+        }
+
+        // 3. Insert new listing
         const result = await query(
           `INSERT INTO listings (title, description, price, mileage, year, make, model, engine_displacement_cc, horsepower, location, seller_type, transmission_type, fuel_type, body_type, image_urls, status, curation_criteria, date_added, last_verified)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, 'active', $16, NOW(), NOW())
@@ -270,6 +301,7 @@ scrapeRealRouter.get('/autotrack', async (_req: Request, res: Response): Promise
       inserted,
       skipped,
       priceUpdated,
+      merged,
     });
   } catch (err) {
     console.error('[OTO] AutoTrack scrape failed:', err);
