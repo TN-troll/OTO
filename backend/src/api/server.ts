@@ -18,6 +18,7 @@ import { premiumSignupRouter } from './premium-signup.js';
 import { mapRouter } from './map.js';
 import { favoritesRouter } from './favorites.js';
 import { adsRouter } from './ads.js';
+import { rdwRouter } from './rdw.js';
 import { cacheMiddleware } from './middleware/cache.js';
 import { env } from '../config/env.js';
 
@@ -61,6 +62,7 @@ export function createApp(): express.Application {
   app.use('/api/map', mapRouter);
   app.use('/api/favorites', favoritesRouter);
   app.use('/api/ads', adsRouter);
+  app.use('/api/rdw', rdwRouter);
 
   return app;
 }
