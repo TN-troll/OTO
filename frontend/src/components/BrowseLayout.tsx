@@ -1,6 +1,7 @@
 import { lazy, Suspense, Component, type ReactNode } from 'react';
 import { useTabState } from '../hooks/useTabState';
 import { Header } from './Header';
+import { MobileBottomNav } from './MobileBottomNav';
 import { NotificationPromptBanner } from './NotificationPreferences';
 import { FilterPanel } from './FilterPanel';
 import { RecentlyViewedStrip } from './RecentlyViewedStrip';
@@ -119,16 +120,47 @@ function OtoLogo({ className = '' }: { className?: string }) {
 }
 
 function Footer() {
-  const { t } = useLanguage();
+  const { t, locale, setLocale } = useLanguage();
   return (
-    <footer className="border-t border-surface-200 bg-brand dark:border-surface-700">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-          <div className="flex items-center gap-3">
+    <footer className="border-t border-surface-200 bg-surface-950 dark:border-surface-800">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+          {/* Brand */}
+          <div className="col-span-2 sm:col-span-1">
             <OtoLogo className="h-6 w-auto" />
-            <span className="text-xs text-surface-400">{t.tagline}</span>
+            <p className="mt-2 text-xs text-surface-500">{t.tagline}</p>
+            <p className="mt-1 text-[10px] text-surface-600">Netherlands only</p>
           </div>
-          <p className="text-xs text-surface-500">© {new Date().getFullYear()} OTO. All rights reserved.</p>
+          {/* Navigation */}
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-surface-400">{locale === 'nl' ? 'Navigatie' : 'Navigate'}</p>
+            <nav className="mt-3 flex flex-col gap-2">
+              <a href="/" className="text-xs text-surface-500 hover:text-brand-accent">{locale === 'nl' ? 'Zoeken' : 'Search'}</a>
+              <a href="/?view=map" className="text-xs text-surface-500 hover:text-brand-accent">{locale === 'nl' ? 'Kaart' : 'Map'}</a>
+              <a href="/compare" className="text-xs text-surface-500 hover:text-brand-accent">{locale === 'nl' ? 'Vergelijken' : 'Compare'}</a>
+              <a href="/premium" className="text-xs text-surface-500 hover:text-brand-accent">Premium</a>
+            </nav>
+          </div>
+          {/* Legal */}
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-surface-400">{locale === 'nl' ? 'Juridisch' : 'Legal'}</p>
+            <nav className="mt-3 flex flex-col gap-2">
+              <a href="/privacy" className="text-xs text-surface-500 hover:text-brand-accent">Privacy Policy</a>
+              <a href="/terms" className="text-xs text-surface-500 hover:text-brand-accent">{locale === 'nl' ? 'Voorwaarden' : 'Terms'}</a>
+              <a href="/cookies" className="text-xs text-surface-500 hover:text-brand-accent">Cookies</a>
+            </nav>
+          </div>
+          {/* Language */}
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-surface-400">{locale === 'nl' ? 'Taal' : 'Language'}</p>
+            <div className="mt-3 flex gap-2">
+              <button type="button" onClick={() => setLocale('nl')} className={`rounded-md px-2.5 py-1 text-xs font-medium ${locale === 'nl' ? 'bg-brand-accent/15 text-brand-accent' : 'text-surface-500 hover:text-white'}`}>NL</button>
+              <button type="button" onClick={() => setLocale('en')} className={`rounded-md px-2.5 py-1 text-xs font-medium ${locale === 'en' ? 'bg-brand-accent/15 text-brand-accent' : 'text-surface-500 hover:text-white'}`}>EN</button>
+            </div>
+          </div>
+        </div>
+        <div className="mt-8 border-t border-surface-800 pt-6 text-center">
+          <p className="text-[10px] text-surface-600">&copy; {new Date().getFullYear()} OTO &mdash; Online Top Occasions. All rights reserved.</p>
         </div>
       </div>
     </footer>
@@ -154,7 +186,7 @@ export function BrowseLayout() {
         <MobileFilterOverlay />
 
         {/* Content area — switches between listings and map */}
-        <main id="main-content" className="flex-1 overflow-auto">
+        <main id="main-content" className="flex-1 overflow-auto pb-16 md:pb-0">
           {/* Listings view */}
           <div
             id="tabpanel-listings"
@@ -187,6 +219,7 @@ export function BrowseLayout() {
       </div>
 
       <Footer />
+      <MobileBottomNav activeTab={activeTab} onTabChange={setActiveTab} />
       <CompareTray />
     </FilterProvider>
   );
