@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback, memo } from 'react';
 import type { ListingSummary } from '@car-ads/shared';
 import { useFavorites } from '../hooks/useFavorites';
 import { useCompare } from '../hooks/useCompare';
-import { usePriceDrops } from '../hooks/usePriceDrops';
 import { getProxyImageUrl } from '../utils/imageProxy';
 import { formatPrice, formatNumber } from '../utils/formatNumber';
 import { getMakeLogo } from '../utils/makeLogos';
@@ -66,14 +65,9 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
   const touchStartX = useRef(0);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { addToCompare, removeFromCompare, isInCompare } = useCompare();
-  const { trackPrice, getDropAmount } = usePriceDrops();
   const { locale } = useLanguage();
 
-  // Track price for price-drop detection
-  useEffect(() => { trackPrice(listing.id, listing.price); }, [listing.id, listing.price]);
   const isNew = listing.dateAdded && (Date.now() - new Date(listing.dateAdded).getTime()) < 48 * 60 * 60 * 1000;
-  const pricePerHp = listing.horsepower ? Math.round(listing.price / listing.horsepower) : null;
-  const pricePerKm = listing.mileage && listing.mileage > 0 ? (listing.price / listing.mileage).toFixed(1) : null;
   const isFeaturedCard = featured || listing.isFeatured;
 
   const images = listing.imageUrls?.length > 0 ? listing.imageUrls.slice(0, 4) : (listing.primaryImageUrl ? [listing.primaryImageUrl] : []);
@@ -281,21 +275,11 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
 
       {/* Content — generous padding, clean hierarchy */}
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        {/* Price + financing */}
+        {/* Price */}
         <div className="flex items-baseline justify-between">
           <span className="text-xl font-bold text-brand dark:text-brand-accent">
             {formatPrice(listing.price, locale)}
           </span>
-          {getDropAmount(listing.id) && (
-            <span className="ml-2 inline-flex items-center gap-0.5 rounded-full bg-green-500/10 px-2 py-0.5 text-[10px] font-bold text-green-500">
-              ↓ €{formatNumber(getDropAmount(listing.id)!, locale)}
-            </span>
-          )}
-          {listing.price > 5000 && (
-            <span className="text-[11px] text-surface-400">
-              ~€{formatNumber(Math.round(listing.price / 60), locale)}/mnd
-            </span>
-          )}
         </div>
 
         {/* Make & Model — tracking-tight, 17px semibold */}
@@ -309,69 +293,30 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
           </span>
         </h3>
 
-        {/* Spec pills — glass capsules with backdrop-blur-sm */}
-        <div className="mt-3 flex flex-wrap gap-2">
-          {listing.horsepower != null && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
-              <svg className="h-3 w-3 text-accent-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              {listing.horsepower} HP
-            </span>
-          )}
-          {listing.engineDisplacementCc != null && (
-            <span className="inline-flex items-center rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
-              {(listing.engineDisplacementCc / 1000).toFixed(1)}L
-            </span>
-          )}
+        {/* Spec pills — max 3 key specs */}
+        <div className="mt-2 flex flex-wrap gap-1.5">
           {listing.mileage != null && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
-              <svg className="h-3 w-3 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
+            <span className="inline-flex items-center gap-1 rounded-md bg-surface-100/80 px-2 py-1 text-[11px] font-medium text-surface-600 dark:bg-white/[0.06] dark:text-surface-300">
               {formatNumber(listing.mileage, locale)} km
             </span>
           )}
-          {listing.fuelType === 'electric' && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-3 py-1.5 text-xs font-medium text-blue-600 dark:bg-blue-500/15 dark:text-blue-400">
-              <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              EV
+          {listing.horsepower != null && (
+            <span className="inline-flex items-center gap-1 rounded-md bg-surface-100/80 px-2 py-1 text-[11px] font-medium text-surface-600 dark:bg-white/[0.06] dark:text-surface-300">
+              {listing.horsepower} pk
             </span>
           )}
-          {listing.hasSoundClip && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-purple-500/10 px-3 py-1.5 text-xs font-medium text-purple-600 dark:bg-purple-500/15 dark:text-purple-400">
-              <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-              </svg>
-              Sound
-            </span>
-          )}
-          {pricePerHp != null && (
-            <span className="inline-flex items-center rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
-              €{formatNumber(pricePerHp, locale)}/HP
-            </span>
-          )}
-          {pricePerKm != null && (
-            <span className="inline-flex items-center rounded-full bg-surface-100/80 px-3 py-1.5 text-xs font-medium text-surface-600 backdrop-blur-sm dark:bg-white/[0.06] dark:text-surface-300">
-              €{pricePerKm}/km
+          {listing.engineDisplacementCc != null && (
+            <span className="inline-flex items-center rounded-md bg-surface-100/80 px-2 py-1 text-[11px] font-medium text-surface-600 dark:bg-white/[0.06] dark:text-surface-300">
+              {(listing.engineDisplacementCc / 1000).toFixed(1)}L
             </span>
           )}
         </div>
 
-        {/* Ad snippet */}
-        {listing.snippet && (
-          <p className="mt-2 line-clamp-1 text-[11px] text-surface-400 dark:text-surface-500">
-            {listing.snippet}{listing.snippet.length >= 145 ? '…' : ''}
-          </p>
-        )}
-
         {/* Deal badge */}
         {listing.marketAvgPrice != null && listing.price < listing.marketAvgPrice && (
-          <div className="mt-2 flex items-center gap-1.5">
-            <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2.5 py-1 text-[11px] font-semibold text-green-600 dark:bg-green-500/15 dark:text-green-400">
-              <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <div className="mt-2 flex items-center gap-1">
+            <span className="inline-flex items-center gap-0.5 rounded-full bg-green-500/10 px-2 py-0.5 text-[10px] font-semibold text-green-600 dark:bg-green-500/15 dark:text-green-400">
+              <svg className="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
               </svg>
               €{formatNumber(Math.round(listing.marketAvgPrice - listing.price), locale)} {locale === 'nl' ? 'onder markt' : 'below market'}
