@@ -206,14 +206,14 @@ scrapeAutoscoutRouter.get('/run', async (_req: Request, res: Response): Promise<
         }
 
         const result = await query(
-          `INSERT INTO listings (title, description, price, mileage, year, make, model, engine_displacement_cc, horsepower, location, seller_type, transmission_type, fuel_type, image_urls, status, curation_criteria, date_added, last_verified)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'active', $15, NOW(), NOW())
+          `INSERT INTO listings (title, description, price, mileage, year, make, model, engine_displacement_cc, horsepower, location, seller_type, transmission_type, fuel_type, body_type, image_urls, status, curation_criteria, date_added, last_verified)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, 'active', $16, NOW(), NOW())
            RETURNING id`,
           [
             listing.title, listing.description, listing.price, listing.mileage, listing.year,
             listing.make, listing.model, listing.engineDisplacementCc,
             listing.horsepower, listing.location, listing.sellerType,
-            listing.transmissionType, listing.fuelType,
+            listing.transmissionType, listing.fuelType, listing.bodyType,
             listing.imageUrls.slice(0, MAX_IMAGES_PER_LISTING),
             listing.curationCriteria,
           ]
@@ -364,6 +364,7 @@ interface ParsedListing {
   sellerType: string | null;
   transmissionType: string | null;
   fuelType: string | null;
+  bodyType: string | null;
   imageUrls: string[];
   curationCriteria: string[];
   sourceUrl: string;
@@ -460,6 +461,31 @@ function parseListing(raw: any): ParsedListing | null {
     else if (fuelStr.toLowerCase().includes('elektro') || fuelStr.toLowerCase().includes('hybride')) fuelType = 'hybrid';
     else if (fuelStr.toLowerCase().includes('electric')) fuelType = 'electric';
 
+    // Body type
+    let bodyType: string | null = null;
+    const bodyStr = (raw.vehicle?.body || raw.vehicle?.bodyType || raw.vehicle?.bodyColorText || '').toLowerCase();
+    if (bodyStr.includes('coupé') || bodyStr.includes('coupe')) bodyType = 'coupe';
+    else if (bodyStr.includes('cabrio') || bodyStr.includes('roadster') || bodyStr.includes('spider')) bodyType = 'cabriolet';
+    else if (bodyStr.includes('sedan') || bodyStr.includes('limousine') || bodyStr.includes('berline')) bodyType = 'sedan';
+    else if (bodyStr.includes('suv') || bodyStr.includes('offroad') || bodyStr.includes('terrein')) bodyType = 'suv';
+    else if (bodyStr.includes('station') || bodyStr.includes('estate') || bodyStr.includes('touring')) bodyType = 'stationwagon';
+    else if (bodyStr.includes('hatchback') || bodyStr.includes('compact')) bodyType = 'hatchback';
+    // Also check vehicleDetails for body type info
+    if (!bodyType) {
+      const bodyDetail = (raw.vehicleDetails || []).find((d: any) =>
+        d.data && (d.data.toLowerCase().includes('coupé') || d.data.toLowerCase().includes('sedan') ||
+        d.data.toLowerCase().includes('suv') || d.data.toLowerCase().includes('cabrio'))
+      );
+      if (bodyDetail?.data) {
+        const bd = bodyDetail.data.toLowerCase();
+        if (bd.includes('coupé') || bd.includes('coupe')) bodyType = 'coupe';
+        else if (bd.includes('cabrio') || bd.includes('spider')) bodyType = 'cabriolet';
+        else if (bd.includes('sedan') || bd.includes('limousine')) bodyType = 'sedan';
+        else if (bd.includes('suv')) bodyType = 'suv';
+        else if (bd.includes('station')) bodyType = 'stationwagon';
+      }
+    }
+
     // Location
     const location = raw.location?.city || null;
 
@@ -499,6 +525,7 @@ function parseListing(raw: any): ParsedListing | null {
       sellerType,
       transmissionType: transmission,
       fuelType,
+      bodyType,
       imageUrls: images,
       curationCriteria: criteria,
       sourceUrl,

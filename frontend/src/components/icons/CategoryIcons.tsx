@@ -98,49 +98,52 @@ export function ClassicIcon({ className }: IconProps) {
   );
 }
 
-/** Grand Tourer — long elegant fastback, flowing roofline into tail (Aston Martin DB11) */
+/** Grand Tourer — winding road through mountains */
 export function GrandTourerIcon({ className }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
-      <path d="M3 29 L3 24 C3 22 4 20 6 18 L9 15.5 L13 13 C16 11.5 20 10.5 24 10 L30 9.5 L36 9.5 L42 10 C46 10.5 49 11 52 12 C55 13 57 14.5 59 16.5 C61 18.5 63 20.5 65 22.5 C67 24.5 70 26.5 73 28 L76 29 L66 29 C66 25.7 63.3 23 60 23 C56.7 23 54 25.7 54 29 L25 29 C25 25.7 22.3 23 19 23 C15.7 23 13 25.7 13 29 Z" />
-      <circle cx="19" cy="29" r="3.5" />
-      <circle cx="60" cy="29" r="3.5" />
+      <path d="M5 28 C15 28 15 18 25 18 C35 18 35 28 45 28 C55 28 55 18 65 18 C70 18 73 20 75 22" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M20 8 L25 14 L15 14 Z" opacity="0.3" />
+      <path d="M55 5 L62 14 L48 14 Z" opacity="0.3" />
+      <path d="M38 10 L43 14 L33 14 Z" opacity="0.2" />
     </svg>
   );
 }
 
-/** Track Weapon — sports car with prominent rear wing on pylons (Porsche 911 GT3 RS) */
+/** Track Weapon — racing circuit outline */
 export function TrackWeaponIcon({ className }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
-      <path d="M4 29 L4 25 C4 23 5 21 7 19 L10 17 L14 15 C17 13.5 20 12.5 24 12 L30 11.5 L36 11 C39 11 42 11 45 11.5 C48 12 51 13 54 14.5 C57 16 59 17.5 61 19.5 C63 21.5 65 23 67 24.5 C69 26 72 27.5 75 28.5 L75 29 L67 29 C67 25.7 64.3 23 61 23 C57.7 23 55 25.7 55 29 L25 29 C25 25.7 22.3 23 19 23 C15.7 23 13 25.7 13 29 Z" />
-      <circle cx="19" cy="29" r="3.5" />
-      <circle cx="61" cy="29" r="3.5" />
-      <rect x="57" y="5" width="14" height="2.5" rx="1.2" />
-      <rect x="59.5" y="7.5" width="1.5" height="6" />
-      <rect x="69" y="7.5" width="1.5" height="6" />
+      <path d="M15 28 C8 28 5 24 5 20 C5 14 10 10 18 10 L55 10 C65 10 72 14 72 20 C72 22 70 24 68 25 L60 28 C55 30 50 28 48 25 L45 20 C43 17 40 16 37 17 L30 20 C27 22 25 25 20 28 Z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="15" cy="28" r="2" opacity="0.5" />
+      <path d="M14 27 L16 29" stroke="currentColor" strokeWidth="1.5" opacity="0.4" />
     </svg>
   );
 }
 
-/** Daily Luxury — long flowing modern sedan, lower than formal Luxury (Mercedes S-Class) */
+/** Daily Luxury — diamond gem */
 export function DailyLuxuryIcon({ className }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
-      <path d="M4 29 L4 24 C4 22 5 20 7 17.5 L10 14.5 L14 12 C17 10.5 20 9.5 24 9 L30 8.5 L36 8 L42 8 L48 8.5 C52 9 55 10 58 11.5 L62 14 L65 17 C66.5 19 67.5 21 68 23 L70 25 L73 27 L75 29 L65 29 C65 25.7 62.3 23 59 23 C55.7 23 53 25.7 53 29 L27 29 C27 25.7 24.3 23 21 23 C17.7 23 15 25.7 15 29 Z" />
-      <circle cx="21" cy="29" r="3.5" />
-      <circle cx="59" cy="29" r="3.5" />
+      <path d="M40 4 L55 14 L40 32 L25 14 Z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M25 14 L55 14" stroke="currentColor" strokeWidth="1.5" opacity="0.4" />
+      <path d="M40 4 L35 14 L40 32" stroke="currentColor" strokeWidth="1" opacity="0.3" />
+      <path d="M40 4 L45 14 L40 32" stroke="currentColor" strokeWidth="1" opacity="0.3" />
+      <path d="M30 9 L35 14" stroke="currentColor" strokeWidth="1" opacity="0.2" />
+      <path d="M50 9 L45 14" stroke="currentColor" strokeWidth="1" opacity="0.2" />
     </svg>
   );
 }
 
-/** Classic Collectible — vintage long-hood sports car, same as ClassicIcon (Ferrari 250 GTO) */
+/** Classic Collectible — vintage steering wheel */
 export function ClassicCollectibleIcon({ className }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 80 36" fill="currentColor" aria-hidden="true">
-      <path d="M3 29 L3 24 C3 22 4 20 5 18.5 L8 16 L12 14 L18 12 L26 10.5 L34 10 L42 10 C46 10 50 10.5 53 11.5 C56 12.5 59 14 61 16 C63 18 65 20 67 22 C69 24 71 26 73 27.5 L74 29 L67 29 C67 24.6 64 21 60.5 21 C57 21 54 24.6 54 29 L22 29 C22 24.6 19 21 15.5 21 C12 21 9 24.6 9 29 Z" />
-      <circle cx="15.5" cy="29" r="4.2" />
-      <circle cx="60.5" cy="29" r="4.2" />
+      <circle cx="40" cy="18" r="14" fill="none" stroke="currentColor" strokeWidth="2.5" />
+      <circle cx="40" cy="18" r="4" fill="none" stroke="currentColor" strokeWidth="2" />
+      <path d="M40 14 L40 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M36.5 19.5 L30 25" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M43.5 19.5 L50 25" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
