@@ -162,6 +162,27 @@ export function DealerDashboard() {
           </table>
         </div>
       )}
+      {/* Listing Performance Section */}
+      <div className="mt-8">
+        <h2 className="text-lg font-bold text-white">{locale === 'nl' ? 'Tip: Verhoog uw zichtbaarheid' : 'Tip: Boost your visibility'}</h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
+            <p className="text-2xl font-bold text-brand-accent">Featured</p>
+            <p className="mt-1 text-xs text-surface-400">{locale === 'nl' ? 'Bovenaan in resultaten' : 'Top of search results'}</p>
+            <p className="mt-2 text-sm font-medium text-white">€49/maand</p>
+          </div>
+          <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
+            <p className="text-2xl font-bold text-brand-accent">Verified</p>
+            <p className="mt-1 text-xs text-surface-400">{locale === 'nl' ? 'Vertrouwensbadge op al uw auto\'s' : 'Trust badge on all your cars'}</p>
+            <p className="mt-2 text-sm font-medium text-white">€29/maand</p>
+          </div>
+          <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
+            <p className="text-2xl font-bold text-brand-accent">Boost</p>
+            <p className="mt-1 text-xs text-surface-400">{locale === 'nl' ? 'Individuele auto boosten' : 'Boost individual listings'}</p>
+            <p className="mt-2 text-sm font-medium text-white">€9/auto</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
