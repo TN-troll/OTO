@@ -36,7 +36,7 @@ export function CollapsibleSection({
   const headerId = useId();
 
   return (
-    <div className="border-b border-glass-border py-1 last:border-b-0 dark:border-white/[0.06]">
+    <div className="border-b border-glass-border py-1 last:border-b-0 overflow-visible dark:border-white/[0.06]">
       {/* Section header */}
       <div className="flex items-center gap-2">
         <button

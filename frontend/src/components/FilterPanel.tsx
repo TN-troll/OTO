@@ -158,19 +158,21 @@ export function FilterContent() {
           2. Existing filters (Make/Model, Price, Year, HP, Displacement, Mileage,
              Transmission, Fuel Type, Body Type, Sound Profile)
          ══════════════════════════════════════════════════════════════════════════ */}
-      <CollapsibleSection
-        title={t.make}
-        defaultExpanded={true}
-        activeCount={makesCount}
-        onClear={() => clearFilterSection('make')}
-      >
-        <MakeModelSelector
-          selectedMakes={filters.makes}
-          selectedModels={filters.models}
-          onMakesChange={updateMakes}
-          onModelsChange={updateModels}
-        />
-      </CollapsibleSection>
+      <div className="relative z-20">
+        <CollapsibleSection
+          title={t.make}
+          defaultExpanded={true}
+          activeCount={makesCount}
+          onClear={() => clearFilterSection('make')}
+        >
+          <MakeModelSelector
+            selectedMakes={filters.makes}
+            selectedModels={filters.models}
+            onMakesChange={updateMakes}
+            onModelsChange={updateModels}
+          />
+        </CollapsibleSection>
+      </div>
 
       <CollapsibleSection
         title={t.price}
