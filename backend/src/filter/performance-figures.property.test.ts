@@ -4,16 +4,13 @@ import { FilterEngine } from './filter-engine.js';
 import type { FilterCriteria } from '@car-ads/shared';
 
 /**
- * Property 12: Performance Figure Filters Are No-Op (columns not yet in production)
+ * Property 12: Performance Figure Filters Generate Correct SQL
  *
- * The columns zero_to_hundred_seconds and top_speed_kmh do not exist in the
- * production database (migrations not yet run). The filter engine must NOT
- * generate SQL referencing these columns, regardless of filter input values.
+ * The columns zero_to_hundred_seconds and top_speed_kmh now exist in the
+ * production database (migrations run 2025-01-XX). The filter engine must
+ * generate SQL referencing these columns when filter values are provided.
  *
- * Once migrations are run in production, this test should be reverted to
- * assert the clauses ARE generated.
- *
- * Validates: No 500 errors from non-existent columns
+ * Validates: Requirements 14.2, 19.4
  */
 
 // Mock the database module
@@ -56,7 +53,7 @@ function setupMockForQuery(): void {
 // Tests
 // ============================================================
 
-describe('Property 12: Performance Figure Filters Are No-Op (columns not in production)', () => {
+describe('Property 12: Performance Figure Filters Generate Correct SQL', () => {
   let engine: FilterEngine;
 
   beforeEach(() => {
@@ -64,7 +61,7 @@ describe('Property 12: Performance Figure Filters Are No-Op (columns not in prod
     setupMockForQuery();
   });
 
-  it('should NOT include zero_to_hundred_seconds in SQL when accelerationMax is set', async () => {
+  it('should include zero_to_hundred_seconds in SQL when accelerationMax is set', async () => {
     await fc.assert(
       fc.asyncProperty(arbAccelerationMax, async (accelerationMax) => {
         setupMockForQuery();
@@ -74,14 +71,13 @@ describe('Property 12: Performance Figure Filters Are No-Op (columns not in prod
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
 
-        // Column does not exist in production — must NOT be referenced
-        expect(countSql).not.toContain('l.zero_to_hundred_seconds');
+        expect(countSql).toContain('l.zero_to_hundred_seconds');
       }),
       { numRuns: 100 },
     );
   });
 
-  it('should NOT include top_speed_kmh in SQL when topSpeedMin is set', async () => {
+  it('should include top_speed_kmh in SQL when topSpeedMin is set', async () => {
     await fc.assert(
       fc.asyncProperty(arbTopSpeedMin, async (topSpeedMin) => {
         setupMockForQuery();
@@ -91,14 +87,13 @@ describe('Property 12: Performance Figure Filters Are No-Op (columns not in prod
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
 
-        // Column does not exist in production — must NOT be referenced
-        expect(countSql).not.toContain('l.top_speed_kmh');
+        expect(countSql).toContain('l.top_speed_kmh');
       }),
       { numRuns: 100 },
     );
   });
 
-  it('should NOT include either performance column when both filters are active', async () => {
+  it('should include both performance columns when both filters are active', async () => {
     await fc.assert(
       fc.asyncProperty(arbAccelerationMax, arbTopSpeedMin, async (accelerationMax, topSpeedMin) => {
         setupMockForQuery();
@@ -108,15 +103,14 @@ describe('Property 12: Performance Figure Filters Are No-Op (columns not in prod
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
 
-        // Neither column should be referenced
-        expect(countSql).not.toContain('l.zero_to_hundred_seconds');
-        expect(countSql).not.toContain('l.top_speed_kmh');
+        expect(countSql).toContain('l.zero_to_hundred_seconds');
+        expect(countSql).toContain('l.top_speed_kmh');
       }),
       { numRuns: 100 },
     );
   });
 
-  it('should NOT include performance figure columns regardless of other filters', async () => {
+  it('should include performance figure columns alongside other filters', async () => {
     await fc.assert(
       fc.asyncProperty(arbAccelerationMax, arbTopSpeedMin, async (accelerationMax, topSpeedMin) => {
         setupMockForQuery();
@@ -126,11 +120,11 @@ describe('Property 12: Performance Figure Filters Are No-Op (columns not in prod
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
 
-        // Performance columns must not appear even with other valid filters
-        expect(countSql).not.toContain('l.zero_to_hundred_seconds');
-        expect(countSql).not.toContain('l.top_speed_kmh');
+        // Performance columns should appear
+        expect(countSql).toContain('l.zero_to_hundred_seconds');
+        expect(countSql).toContain('l.top_speed_kmh');
 
-        // But other valid filters should still work
+        // Other valid filters should still work
         expect(countSql).toContain('l.horsepower >= ');
       }),
       { numRuns: 100 },
@@ -154,7 +148,7 @@ describe('Property 12: Performance Figure Filters Are No-Op (columns not in prod
           expect(mockQuery).toHaveBeenCalled();
           const countSql = mockQuery.mock.calls[0][0] as string;
 
-          // No performance figure conditions should be present
+          // No performance figure conditions should be present when not requested
           expect(countSql).not.toContain('l.zero_to_hundred_seconds');
           expect(countSql).not.toContain('l.top_speed_kmh');
         },

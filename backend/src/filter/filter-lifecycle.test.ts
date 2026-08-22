@@ -336,19 +336,30 @@ describe('Filter Lifecycle Integration Tests', () => {
       const sql = countCall?.[0] as string;
       const params = countCall?.[1] as unknown[];
 
-      // seller_type EXISTS in production — should be in the WHERE clause
+      // All columns now exist in production — should be in the WHERE clause
       expect(sql).toContain('l.seller_type = ANY($');
       expect(params).toContainEqual(['dealer']);
 
-      // The following columns do NOT exist in production (migrations not run).
-      // They are intentionally skipped to prevent 500 errors.
-      expect(sql).not.toContain('l.drivetrain');
-      expect(sql).not.toContain('l.exterior_color');
-      expect(sql).not.toContain('l.door_count');
-      expect(sql).not.toContain('l.seat_count');
-      expect(sql).not.toContain('l.condition = ANY(');
-      expect(sql).not.toContain('l.engine_detail_config');
-      expect(sql).not.toContain('l.forced_induction_detail');
+      expect(sql).toContain('l.drivetrain = ANY($');
+      expect(params).toContainEqual(['rwd']);
+
+      expect(sql).toContain('l.exterior_color = ANY($');
+      expect(params).toContainEqual(['black', 'red']);
+
+      expect(sql).toContain('l.door_count = ANY($');
+      expect(params).toContainEqual([2, 4]);
+
+      expect(sql).toContain('l.seat_count = ANY($');
+      expect(params).toContainEqual([4]);
+
+      expect(sql).toContain('l.condition = ANY($');
+      expect(params).toContainEqual(['used', 'classic']);
+
+      expect(sql).toContain('l.engine_detail_config = ANY($');
+      expect(params).toContainEqual(['v8']);
+
+      expect(sql).toContain('l.forced_induction_detail = ANY($');
+      expect(params).toContainEqual(['turbocharged']);
     });
 
     it('should build heritage era year-based WHERE clause', async () => {
@@ -366,7 +377,7 @@ describe('Filter Lifecycle Integration Tests', () => {
       expect(sql).toContain(' OR ');
     });
 
-    it('should NOT build performance figure filters (columns not in production)', async () => {
+    it('should build performance figure filters (columns now in production)', async () => {
       mockDbResults(0, []);
 
       await engine.query({ accelerationMax: 3.5, topSpeedMin: 300 });
@@ -375,13 +386,16 @@ describe('Filter Lifecycle Integration Tests', () => {
         (call) => typeof call[0] === 'string' && (call[0] as string).includes('COUNT(*)'),
       );
       const sql = countCall?.[0] as string;
+      const params = countCall?.[1] as unknown[];
 
-      // Columns do not exist in production — must NOT be referenced
-      expect(sql).not.toContain('l.zero_to_hundred_seconds');
-      expect(sql).not.toContain('l.top_speed_kmh');
+      // Columns now exist in production — should be referenced
+      expect(sql).toContain('l.zero_to_hundred_seconds');
+      expect(sql).toContain('l.top_speed_kmh');
+      expect(params).toContainEqual(3.5);
+      expect(params).toContainEqual(300);
     });
 
-    it('should NOT build isSpecialEdition boolean filter (column not in production)', async () => {
+    it('should build isSpecialEdition boolean filter (column now in production)', async () => {
       mockDbResults(0, []);
 
       await engine.query({ isSpecialEdition: true });
@@ -391,8 +405,8 @@ describe('Filter Lifecycle Integration Tests', () => {
       );
       const sql = countCall?.[0] as string;
 
-      // Column does not exist in production — must NOT be referenced
-      expect(sql).not.toContain('l.is_special_edition');
+      // Column now exists in production — should be referenced
+      expect(sql).toContain('l.is_special_edition = TRUE');
     });
 
     it('should expand performance preset before query building', async () => {
@@ -410,14 +424,16 @@ describe('Filter Lifecycle Integration Tests', () => {
       const preset = PERFORMANCE_PRESETS.find((p) => p.id === 'daily_luxury')!;
 
       // Verify preset's filters were expanded into WHERE clause
-      // transmission_type and make columns exist in production
+      // transmission_type, make, and doors columns all exist in production
       expect(sql).toContain('l.transmission_type = ANY($');
       expect(sql).toContain('l.make = ANY($');
       expect(params).toContainEqual(preset.filters.transmissionType);
       expect(params).toContainEqual(preset.filters.makes);
 
-      // doors column does NOT exist in production — should be skipped
-      expect(sql).not.toContain('l.door_count');
+      // doors column now exists in production — should be included
+      if (preset.filters.doors) {
+        expect(sql).toContain('l.door_count = ANY($');
+      }
     });
 
     it('should handle preset expansion with user overrides', async () => {

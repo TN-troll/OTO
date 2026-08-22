@@ -15,15 +15,9 @@ import type {
  *
  * Tests that multi-select filters generate correct SQL.
  *
- * NOTE: Many columns (drivetrain, exterior_color, door_count, seat_count,
- * condition, engine_detail_config, forced_induction_detail) do NOT exist
- * in production yet (migrations not run). These filters are intentionally
- * skipped in the engine to prevent 500 errors.
+ * All columns now exist in production (migrations run 2025-01-XX).
  *
- * Only `seller_type` and `body_type` are active multi-select columns.
- * TODO: Re-enable full tests after running migrations in production.
- *
- * Validates: Requirements 1.7, 14.2, 19.4 (for seller_type only, others deferred)
+ * Validates: Requirements 1.7, 14.2, 19.4
  */
 
 // Mock the database module
@@ -133,11 +127,9 @@ describe('Property 1: Multi-select filter correctness', () => {
     );
   });
 
-  // ─── Skipped filters (columns DO NOT exist in production) ───────────────
-  // These filters are intentionally no-ops to prevent 500 errors.
-  // TODO: Re-enable after running migrations in production.
+  // ─── All filters now active (columns exist in production) ───────────────
 
-  it('should NOT generate SQL for drivetrain filter (column not in production)', async () => {
+  it('should generate correct ANY clause for drivetrain filter', async () => {
     await fc.assert(
       fc.asyncProperty(arbDrivetrains, async (drivetrains) => {
         setupMockForQuery();
@@ -147,13 +139,13 @@ describe('Property 1: Multi-select filter correctness', () => {
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
 
-        expect(countSql).not.toContain('l.drivetrain');
+        expect(countSql).toContain('l.drivetrain = ANY(');
       }),
       { numRuns: 100 },
     );
   });
 
-  it('should NOT generate SQL for color filter (column not in production)', async () => {
+  it('should generate correct ANY clause for color filter', async () => {
     await fc.assert(
       fc.asyncProperty(arbColors, async (colors) => {
         setupMockForQuery();
@@ -163,13 +155,13 @@ describe('Property 1: Multi-select filter correctness', () => {
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
 
-        expect(countSql).not.toContain('l.exterior_color');
+        expect(countSql).toContain('l.exterior_color = ANY(');
       }),
       { numRuns: 100 },
     );
   });
 
-  it('should NOT generate SQL for doors filter (column not in production)', async () => {
+  it('should generate correct ANY clause for doors filter', async () => {
     await fc.assert(
       fc.asyncProperty(arbDoors, async (doors) => {
         setupMockForQuery();
@@ -179,13 +171,13 @@ describe('Property 1: Multi-select filter correctness', () => {
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
 
-        expect(countSql).not.toContain('l.door_count');
+        expect(countSql).toContain('l.door_count = ANY(');
       }),
       { numRuns: 100 },
     );
   });
 
-  it('should NOT generate SQL for seats filter (column not in production)', async () => {
+  it('should generate correct ANY clause for seats filter', async () => {
     await fc.assert(
       fc.asyncProperty(arbSeats, async (seats) => {
         setupMockForQuery();
@@ -195,13 +187,13 @@ describe('Property 1: Multi-select filter correctness', () => {
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
 
-        expect(countSql).not.toContain('l.seat_count');
+        expect(countSql).toContain('l.seat_count = ANY(');
       }),
       { numRuns: 100 },
     );
   });
 
-  it('should NOT generate SQL for condition filter (column not in production)', async () => {
+  it('should generate correct ANY clause for condition filter', async () => {
     await fc.assert(
       fc.asyncProperty(arbConditions, async (conditions) => {
         setupMockForQuery();
@@ -211,13 +203,13 @@ describe('Property 1: Multi-select filter correctness', () => {
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
 
-        expect(countSql).not.toContain('l.condition = ANY(');
+        expect(countSql).toContain('l.condition = ANY(');
       }),
       { numRuns: 100 },
     );
   });
 
-  it('should NOT generate SQL for engineDetailConfiguration filter (column not in production)', async () => {
+  it('should generate correct ANY clause for engineDetailConfiguration filter', async () => {
     await fc.assert(
       fc.asyncProperty(arbEngineDetailConfigs, async (engineConfigs) => {
         setupMockForQuery();
@@ -227,13 +219,13 @@ describe('Property 1: Multi-select filter correctness', () => {
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
 
-        expect(countSql).not.toContain('l.engine_detail_config');
+        expect(countSql).toContain('l.engine_detail_config = ANY(');
       }),
       { numRuns: 100 },
     );
   });
 
-  it('should NOT generate SQL for forcedInductionDetail filter (column not in production)', async () => {
+  it('should generate correct ANY clause for forcedInductionDetail filter', async () => {
     await fc.assert(
       fc.asyncProperty(arbForcedInductionDetails, async (inductionDetails) => {
         setupMockForQuery();
@@ -243,13 +235,13 @@ describe('Property 1: Multi-select filter correctness', () => {
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
 
-        expect(countSql).not.toContain('l.forced_induction_detail');
+        expect(countSql).toContain('l.forced_induction_detail = ANY(');
       }),
       { numRuns: 100 },
     );
   });
 
-  it('should NOT generate SQL for skipped columns even when all multi-select filters are combined', async () => {
+  it('should generate SQL for all multi-select columns when all filters are combined', async () => {
     await fc.assert(
       fc.asyncProperty(
         arbDrivetrains,
@@ -275,13 +267,13 @@ describe('Property 1: Multi-select filter correctness', () => {
           expect(mockQuery).toHaveBeenCalled();
           const countSql = mockQuery.mock.calls[0][0] as string;
 
-          // None of the skipped columns should appear
-          expect(countSql).not.toContain('l.drivetrain');
-          expect(countSql).not.toContain('l.door_count');
-          expect(countSql).not.toContain('l.seat_count');
-          expect(countSql).not.toContain('l.condition = ANY(');
-          expect(countSql).not.toContain('l.engine_detail_config');
-          expect(countSql).not.toContain('l.forced_induction_detail');
+          // All columns should appear in the SQL
+          expect(countSql).toContain('l.drivetrain = ANY(');
+          expect(countSql).toContain('l.door_count = ANY(');
+          expect(countSql).toContain('l.seat_count = ANY(');
+          expect(countSql).toContain('l.condition = ANY(');
+          expect(countSql).toContain('l.engine_detail_config = ANY(');
+          expect(countSql).toContain('l.forced_induction_detail = ANY(');
         },
       ),
       { numRuns: 100 },
