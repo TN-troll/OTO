@@ -281,6 +281,20 @@ async function start() {
         }
       }, SIX_HOURS);
 
+      // AutoTrack scrape every 6 hours (offset by 3 hours from AutoScout24)
+      setTimeout(() => {
+        setInterval(async () => {
+          try {
+            console.log('[OTO] [CRON] Running scheduled AutoTrack scrape...');
+            const response = await fetch(`http://localhost:${port}/api/scrape-real/autotrack`);
+            const result = await response.json();
+            console.log('[OTO] [CRON] AutoTrack scrape result:', JSON.stringify(result));
+          } catch (err) {
+            console.error('[OTO] [CRON] AutoTrack scrape failed:', err);
+          }
+        }, SIX_HOURS);
+      }, 3 * 60 * 60 * 1000); // Start 3 hours after boot (offset from AutoScout24)
+
       // Enrichment every hour (50 listings per run)
       setInterval(async () => {
         try {
