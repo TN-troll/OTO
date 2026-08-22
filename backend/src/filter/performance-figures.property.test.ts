@@ -4,15 +4,16 @@ import { FilterEngine } from './filter-engine.js';
 import type { FilterCriteria } from '@car-ads/shared';
 
 /**
- * Property 12: Performance Figure Filters Exclude NULL Data
+ * Property 12: Performance Figure Filters Are No-Op (columns not yet in production)
  *
- * For any accelerationMax value, all returned listings SHALL have
- * zero_to_hundred_seconds <= accelerationMax AND zero_to_hundred_seconds IS NOT NULL.
+ * The columns zero_to_hundred_seconds and top_speed_kmh do not exist in the
+ * production database (migrations not yet run). The filter engine must NOT
+ * generate SQL referencing these columns, regardless of filter input values.
  *
- * For any topSpeedMin value, all returned listings SHALL have
- * top_speed_kmh >= topSpeedMin AND top_speed_kmh IS NOT NULL.
+ * Once migrations are run in production, this test should be reverted to
+ * assert the clauses ARE generated.
  *
- * Validates: Requirements 14.13, 14.14, 18.8, 18.9, 18.10
+ * Validates: No 500 errors from non-existent columns
  */
 
 // Mock the database module
@@ -55,7 +56,7 @@ function setupMockForQuery(): void {
 // Tests
 // ============================================================
 
-describe('Property 12: Performance Figure Filters Exclude NULL Data', () => {
+describe('Property 12: Performance Figure Filters Are No-Op (columns not in production)', () => {
   let engine: FilterEngine;
 
   beforeEach(() => {
@@ -63,7 +64,7 @@ describe('Property 12: Performance Figure Filters Exclude NULL Data', () => {
     setupMockForQuery();
   });
 
-  it('should include IS NOT NULL and <= bound for accelerationMax', async () => {
+  it('should NOT include zero_to_hundred_seconds in SQL when accelerationMax is set', async () => {
     await fc.assert(
       fc.asyncProperty(arbAccelerationMax, async (accelerationMax) => {
         setupMockForQuery();
@@ -72,20 +73,15 @@ describe('Property 12: Performance Figure Filters Exclude NULL Data', () => {
 
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
-        const params = mockQuery.mock.calls[0][1] as unknown[];
 
-        // SQL must include NULL exclusion for zero_to_hundred_seconds
-        expect(countSql).toContain('l.zero_to_hundred_seconds IS NOT NULL');
-        // SQL must include the upper bound condition
-        expect(countSql).toMatch(/l\.zero_to_hundred_seconds <= \$\d+/);
-        // Params must contain the accelerationMax value
-        expect(params).toContain(accelerationMax);
+        // Column does not exist in production — must NOT be referenced
+        expect(countSql).not.toContain('l.zero_to_hundred_seconds');
       }),
       { numRuns: 100 },
     );
   });
 
-  it('should include IS NOT NULL and >= bound for topSpeedMin', async () => {
+  it('should NOT include top_speed_kmh in SQL when topSpeedMin is set', async () => {
     await fc.assert(
       fc.asyncProperty(arbTopSpeedMin, async (topSpeedMin) => {
         setupMockForQuery();
@@ -94,47 +90,15 @@ describe('Property 12: Performance Figure Filters Exclude NULL Data', () => {
 
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
-        const params = mockQuery.mock.calls[0][1] as unknown[];
 
-        // SQL must include NULL exclusion for top_speed_kmh
-        expect(countSql).toContain('l.top_speed_kmh IS NOT NULL');
-        // SQL must include the lower bound condition
-        expect(countSql).toMatch(/l\.top_speed_kmh >= \$\d+/);
-        // Params must contain the topSpeedMin value
-        expect(params).toContain(topSpeedMin);
+        // Column does not exist in production — must NOT be referenced
+        expect(countSql).not.toContain('l.top_speed_kmh');
       }),
       { numRuns: 100 },
     );
   });
 
-  it('should include both NULL exclusions when both filters are active', async () => {
-    await fc.assert(
-      fc.asyncProperty(arbAccelerationMax, arbTopSpeedMin, async (accelerationMax, topSpeedMin) => {
-        setupMockForQuery();
-
-        await engine.query({ accelerationMax, topSpeedMin } as FilterCriteria);
-
-        expect(mockQuery).toHaveBeenCalled();
-        const countSql = mockQuery.mock.calls[0][0] as string;
-        const params = mockQuery.mock.calls[0][1] as unknown[];
-
-        // Both NULL exclusions must be present
-        expect(countSql).toContain('l.zero_to_hundred_seconds IS NOT NULL');
-        expect(countSql).toContain('l.top_speed_kmh IS NOT NULL');
-
-        // Both bound conditions must be present
-        expect(countSql).toMatch(/l\.zero_to_hundred_seconds <= \$\d+/);
-        expect(countSql).toMatch(/l\.top_speed_kmh >= \$\d+/);
-
-        // Params must contain both values
-        expect(params).toContain(accelerationMax);
-        expect(params).toContain(topSpeedMin);
-      }),
-      { numRuns: 100 },
-    );
-  });
-
-  it('should pass performance figure values as parameterized query values (not inlined)', async () => {
+  it('should NOT include either performance column when both filters are active', async () => {
     await fc.assert(
       fc.asyncProperty(arbAccelerationMax, arbTopSpeedMin, async (accelerationMax, topSpeedMin) => {
         setupMockForQuery();
@@ -144,13 +108,30 @@ describe('Property 12: Performance Figure Filters Exclude NULL Data', () => {
         expect(mockQuery).toHaveBeenCalled();
         const countSql = mockQuery.mock.calls[0][0] as string;
 
-        // The raw numeric values should NOT appear inline in the SQL
-        expect(countSql).not.toContain(`<= ${accelerationMax}`);
-        expect(countSql).not.toContain(`>= ${topSpeedMin}`);
+        // Neither column should be referenced
+        expect(countSql).not.toContain('l.zero_to_hundred_seconds');
+        expect(countSql).not.toContain('l.top_speed_kmh');
+      }),
+      { numRuns: 100 },
+    );
+  });
 
-        // Instead they should use parameterized $N placeholders
-        expect(countSql).toMatch(/l\.zero_to_hundred_seconds <= \$\d+/);
-        expect(countSql).toMatch(/l\.top_speed_kmh >= \$\d+/);
+  it('should NOT include performance figure columns regardless of other filters', async () => {
+    await fc.assert(
+      fc.asyncProperty(arbAccelerationMax, arbTopSpeedMin, async (accelerationMax, topSpeedMin) => {
+        setupMockForQuery();
+
+        await engine.query({ accelerationMax, topSpeedMin, horsepowerMin: 300 } as FilterCriteria);
+
+        expect(mockQuery).toHaveBeenCalled();
+        const countSql = mockQuery.mock.calls[0][0] as string;
+
+        // Performance columns must not appear even with other valid filters
+        expect(countSql).not.toContain('l.zero_to_hundred_seconds');
+        expect(countSql).not.toContain('l.top_speed_kmh');
+
+        // But other valid filters should still work
+        expect(countSql).toContain('l.horsepower >= ');
       }),
       { numRuns: 100 },
     );

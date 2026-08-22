@@ -763,53 +763,44 @@ export class FilterEngine {
   }
 
   /**
-   * Build WHERE clause conditions for the new premium filter fields:
-   * drivetrain, color, sellerType, doors, seats, condition,
-   * engineDetailConfiguration, forcedInductionDetail, heritageEra,
-   * isSpecialEdition, accelerationMax, topSpeedMin.
+   * Build WHERE clause conditions for the new premium filter fields.
+   *
+   * NOTE: Many columns (l.drivetrain, l.exterior_color, l.door_count, l.seat_count,
+   * l.condition, l.engine_detail_config, l.forced_induction_detail,
+   * l.zero_to_hundred_seconds, l.top_speed_kmh, l.is_special_edition) do NOT exist
+   * in production because the corresponding migrations have not been run yet.
+   * Including them causes 500 errors. They are intentionally skipped here.
+   * TODO: Run migrations on production, then re-enable these filters.
    */
   private buildNewFieldClauses(criteria: FilterCriteria, conditions: string[], params: unknown[]): void {
-    // Drivetrain
-    if (criteria.drivetrain?.length) {
-      params.push(criteria.drivetrain);
-      conditions.push(`l.drivetrain = ANY($${params.length})`);
-    }
-    // Color
-    if (criteria.color?.length) {
-      params.push(criteria.color);
-      conditions.push(`l.exterior_color = ANY($${params.length})`);
-    }
-    // Seller type
+    // Seller type — uses l.seller_type which EXISTS in production (core column)
     if (criteria.sellerType?.length) {
       params.push(criteria.sellerType);
       conditions.push(`l.seller_type = ANY($${params.length})`);
     }
-    // Doors
-    if (criteria.doors?.length) {
-      params.push(criteria.doors);
-      conditions.push(`l.door_count = ANY($${params.length})`);
-    }
-    // Seats
-    if (criteria.seats?.length) {
-      params.push(criteria.seats);
-      conditions.push(`l.seat_count = ANY($${params.length})`);
-    }
-    // Condition
-    if (criteria.condition?.length) {
-      params.push(criteria.condition);
-      conditions.push(`l.condition = ANY($${params.length})`);
-    }
-    // Engine detail configuration
-    if (criteria.engineDetailConfiguration?.length) {
-      params.push(criteria.engineDetailConfiguration);
-      conditions.push(`l.engine_detail_config = ANY($${params.length})`);
-    }
-    // Forced induction detail
-    if (criteria.forcedInductionDetail?.length) {
-      params.push(criteria.forcedInductionDetail);
-      conditions.push(`l.forced_induction_detail = ANY($${params.length})`);
-    }
-    // Heritage era → year-based filtering
+
+    // Drivetrain — SKIPPED (column l.drivetrain may not exist)
+    // if (criteria.drivetrain?.length) { ... }
+
+    // Color — SKIPPED (column l.exterior_color may not exist)
+    // if (criteria.color?.length) { ... }
+
+    // Doors — SKIPPED (column l.door_count may not exist)
+    // if (criteria.doors?.length) { ... }
+
+    // Seats — SKIPPED (column l.seat_count may not exist)
+    // if (criteria.seats?.length) { ... }
+
+    // Condition — SKIPPED (column l.condition may not exist)
+    // if (criteria.condition?.length) { ... }
+
+    // Engine detail configuration — SKIPPED (column l.engine_detail_config may not exist)
+    // if (criteria.engineDetailConfiguration?.length) { ... }
+
+    // Forced induction detail — SKIPPED (column l.forced_induction_detail may not exist)
+    // if (criteria.forcedInductionDetail?.length) { ... }
+
+    // Heritage era → year-based filtering (uses l.year which EXISTS in production)
     if (criteria.heritageEra?.length) {
       const eraConditions = criteria.heritageEra.map((era) => {
         switch (era) {
@@ -820,19 +811,13 @@ export class FilterEngine {
       });
       conditions.push(`(${eraConditions.join(' OR ')})`);
     }
-    // Special edition
-    if (criteria.isSpecialEdition === true) {
-      conditions.push(`l.is_special_edition = TRUE`);
-    }
-    // Performance figures with NULL exclusion
-    if (criteria.accelerationMax !== undefined) {
-      params.push(criteria.accelerationMax);
-      conditions.push(`l.zero_to_hundred_seconds IS NOT NULL AND l.zero_to_hundred_seconds <= $${params.length}`);
-    }
-    if (criteria.topSpeedMin !== undefined) {
-      params.push(criteria.topSpeedMin);
-      conditions.push(`l.top_speed_kmh IS NOT NULL AND l.top_speed_kmh >= $${params.length}`);
-    }
+
+    // Special edition — SKIPPED (column l.is_special_edition may not exist)
+    // if (criteria.isSpecialEdition === true) { ... }
+
+    // Performance figures — SKIPPED (columns l.zero_to_hundred_seconds, l.top_speed_kmh may not exist)
+    // if (criteria.accelerationMax !== undefined) { ... }
+    // if (criteria.topSpeedMin !== undefined) { ... }
   }
 
   private buildCacheKey(criteria: FilterCriteria): string {
