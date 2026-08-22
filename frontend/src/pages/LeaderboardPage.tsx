@@ -113,7 +113,7 @@ export function LeaderboardPage() {
           return (
             <a
               key={`${entry.make}-${entry.model}`}
-              href={`/?makes=${encodeURIComponent(entry.make)}&models=${encodeURIComponent(entry.searchTerm)}`}
+              href={`/?q=${encodeURIComponent(entry.make + ' ' + entry.model)}`}
               className="group flex items-center gap-4 rounded-xl border border-surface-100 bg-white p-4 transition-all hover:border-brand-accent/30 hover:shadow-md dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-brand-accent/30"
             >
               {/* Rank */}
