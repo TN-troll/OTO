@@ -257,7 +257,7 @@ async function start() {
       const SIX_HOURS = 6 * 60 * 60 * 1000;
       const ONE_HOUR = 60 * 60 * 1000;
 
-      // Clean up any non-Dutch listings on startup (one-time)
+      // Clean up any non-Dutch listings on startup (idempotent, runs every boot)
       import('./map/cleanup-foreign-listings.js')
         .then(({ cleanupForeignListings }) => cleanupForeignListings())
         .catch(err => console.error('[OTO] Foreign listing cleanup failed:', err));

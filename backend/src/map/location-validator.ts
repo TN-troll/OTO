@@ -1,59 +1,70 @@
 import { DUTCH_CITY_COORDS } from './geocoding.js';
 
 /**
- * Known non-Dutch location patterns — cities/regions that indicate a foreign listing.
- * Case-insensitive matching.
+ * Dutch postal code pattern: 4 digits followed by optional space and 2 letters.
+ * Examples: "1012 AB", "3011AB", "1234 XY"
  */
-const FOREIGN_PATTERNS = [
-  // Spain
-  'marbella', 'barcelona', 'madrid', 'malaga', 'valencia', 'ibiza', 'sevilla',
-  // Germany
-  'münchen', 'munich', 'berlin', 'hamburg', 'frankfurt', 'düsseldorf', 'köln', 'stuttgart',
-  // Belgium (only if explicitly Belgian cities, not border towns)
-  'brussel', 'brussels', 'antwerpen', 'gent', 'luik', 'liège',
-  // France
-  'paris', 'monaco', 'nice', 'lyon', 'cannes',
-  // Italy
-  'milano', 'milan', 'roma', 'rome', 'torino',
-  // UK
-  'london', 'manchester', 'birmingham',
-  // Other
-  'dubai', 'abu dhabi', 'zürich', 'genève', 'geneva', 'wien', 'vienna',
+const DUTCH_POSTAL_CODE_REGEX = /\b[1-9]\d{3}\s?[A-Z]{2}\b/i;
+
+/**
+ * Dutch province names (both official and common variants).
+ */
+const DUTCH_PROVINCES = [
+  'noord-holland', 'zuid-holland', 'noord-brabant', 'zuid-holland',
+  'gelderland', 'utrecht', 'overijssel', 'limburg', 'friesland',
+  'groningen', 'drenthe', 'flevoland', 'zeeland',
+  // Common abbreviations/variants
+  'n-holland', 'z-holland', 'n-brabant', 'n.h.', 'z.h.', 'n.b.',
+  'fryslân', 'fryslan',
 ];
 
 /**
- * Check if a location is within the Netherlands.
- * Returns true if:
- * - Location matches a known Dutch city in our geocoding table
- * - Location is null/empty (we allow these — they might be NL without specific city)
- * - Location doesn't match any known foreign pattern
- *
- * Returns false if location matches a known foreign city.
+ * Extract all city names from the geocoding table for partial matching.
+ */
+const DUTCH_CITY_NAMES: string[] = Array.from(DUTCH_CITY_COORDS.keys());
+
+/**
+ * Check if a location is within the Netherlands using a STRICT whitelist approach.
+ * 
+ * Returns true ONLY if:
+ * - Location is null/empty (allowed — might be NL without tagged city)
+ * - Contains a Dutch postal code (1234 AB pattern)
+ * - Exact match in Dutch city geocoding table
+ * - Contains a known Dutch province name
+ * - Contains a Dutch city name as a substring (e.g., "Amsterdam, Noord-Holland" matches "amsterdam")
+ * 
+ * Returns false for EVERYTHING else (strict by default).
  */
 export function isDutchLocation(location: string | null | undefined): boolean {
-  if (!location || location.trim() === '') return true; // Allow null/empty
+  if (!location || location.trim() === '') return true;
 
   const normalized = location.trim().toLowerCase();
 
-  // If it's in our Dutch city table, it's definitely Dutch
+  // 1. Exact match in Dutch city table
   if (DUTCH_CITY_COORDS.has(normalized)) return true;
 
-  // Check against known foreign patterns
-  for (const pattern of FOREIGN_PATTERNS) {
-    if (normalized.includes(pattern)) return false;
+  // 2. Contains a Dutch postal code
+  if (DUTCH_POSTAL_CODE_REGEX.test(location)) return true;
+
+  // 3. Contains a Dutch province name
+  for (const province of DUTCH_PROVINCES) {
+    if (normalized.includes(province)) return true;
   }
 
-  // If location contains country indicators, reject
-  if (normalized.includes('spain') || normalized.includes('españa') ||
-      normalized.includes('germany') || normalized.includes('deutschland') ||
-      normalized.includes('france') || normalized.includes('italy') ||
-      normalized.includes('italia') || normalized.includes('belgium') ||
-      normalized.includes('belgique') || normalized.includes('uk') ||
-      normalized.includes('united kingdom') || normalized.includes('schweiz') ||
-      normalized.includes('österreich') || normalized.includes('portugal')) {
-    return false;
+  // 4. Contains a known Dutch city name as substring
+  // e.g., "Amsterdam, Noord-Holland" → contains "amsterdam"
+  for (const city of DUTCH_CITY_NAMES) {
+    if (city.length >= 4 && normalized.includes(city)) return true;
   }
 
-  // Default: allow (might be a small NL town not in our table)
-  return true;
+  // 5. Check if a Dutch city name contains the location (reverse match)
+  // e.g., location "amstelveen" might be a truncated version
+  if (normalized.length >= 4) {
+    for (const city of DUTCH_CITY_NAMES) {
+      if (city.includes(normalized)) return true;
+    }
+  }
+
+  // STRICT: reject anything that doesn't match Dutch patterns
+  return false;
 }

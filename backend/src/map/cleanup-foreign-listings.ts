@@ -3,7 +3,8 @@ import { isDutchLocation } from './location-validator.js';
 
 /**
  * Marks active listings with non-Dutch locations as 'inactive'.
- * Run once to clean existing data, then the scraper will prevent new imports.
+ * Idempotent — runs on every startup to catch any foreign listings
+ * that slipped through between validator updates.
  */
 export async function cleanupForeignListings(): Promise<number> {
   // Get all active listings with a location
