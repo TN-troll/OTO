@@ -455,11 +455,11 @@ function parseListing(raw: any): ParsedListing | null {
 
     // Fuel type
     let fuelType: string | null = null;
-    const fuelStr = raw.vehicle?.fuel || '';
-    if (fuelStr.toLowerCase().includes('benzine') || fuelStr.toLowerCase().includes('petrol')) fuelType = 'petrol';
-    else if (fuelStr.toLowerCase().includes('diesel')) fuelType = 'diesel';
-    else if (fuelStr.toLowerCase().includes('elektro') || fuelStr.toLowerCase().includes('hybride')) fuelType = 'hybrid';
-    else if (fuelStr.toLowerCase().includes('electric')) fuelType = 'electric';
+    const fuelStr = (raw.vehicle?.fuel || '').toLowerCase();
+    if (fuelStr.includes('benzine') || fuelStr.includes('petrol') || fuelStr.includes('gasoline')) fuelType = 'petrol';
+    else if (fuelStr.includes('diesel')) fuelType = 'diesel';
+    else if (fuelStr.includes('elektrisch') || fuelStr.includes('electric') || fuelStr.includes('elektro') || fuelStr.includes('ev')) fuelType = 'electric';
+    else if (fuelStr.includes('hybride') || fuelStr.includes('hybrid') || fuelStr.includes('plug-in')) fuelType = 'hybrid';
 
     // Body type
     let bodyType: string | null = null;
