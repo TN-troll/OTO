@@ -99,7 +99,7 @@ export function CollapsibleSection({
           isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
         }`}
       >
-        <div className="overflow-hidden">
+        <div className={isExpanded ? 'overflow-visible' : 'overflow-hidden'}>
           <div className="px-2 pb-3 pt-3">
             {children}
           </div>

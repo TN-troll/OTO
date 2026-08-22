@@ -158,7 +158,7 @@ export function FilterContent() {
           2. Existing filters (Make/Model, Price, Year, HP, Displacement, Mileage,
              Transmission, Fuel Type, Body Type, Sound Profile)
          ══════════════════════════════════════════════════════════════════════════ */}
-      <div className="relative z-20">
+      <div className="relative z-[50]">
         <CollapsibleSection
           title={t.make}
           defaultExpanded={true}
@@ -174,6 +174,7 @@ export function FilterContent() {
         </CollapsibleSection>
       </div>
 
+      <div className="relative z-[1]">
       <CollapsibleSection
         title={t.price}
         defaultExpanded={true}
@@ -346,6 +347,7 @@ export function FilterContent() {
             <div className="absolute left-1 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
           </div>
         </label>
+      </div>
       </div>
     </>
   );
