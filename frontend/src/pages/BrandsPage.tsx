@@ -46,7 +46,7 @@ export function BrandsPage() {
             return (
               <a
                 key={make}
-                href={`/?makes=${encodeURIComponent(make)}`}
+                href={`/brands/${encodeURIComponent(make)}`}
                 className="flex flex-col items-center gap-2 rounded-2xl border border-surface-200 bg-surface-50 p-4 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:shadow-sm dark:border-white/[0.08] dark:bg-white/[0.02] dark:hover:border-brand-accent/30"
               >
                 {logo ? (
