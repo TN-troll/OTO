@@ -86,6 +86,17 @@ export function ListingDetailPage() {
     enabled: !!id,
   });
 
+  // Fetch AI price estimate
+  const { data: priceEstimate } = useQuery({
+    queryKey: ['priceEstimate', id],
+    queryFn: async () => {
+      const res = await fetch(`${(import.meta.env.VITE_API_URL || '')}/api/price-estimate/${id}`);
+      return res.ok ? res.json() : null;
+    },
+    enabled: !!id,
+    staleTime: 300_000,
+  });
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-16">
@@ -145,6 +156,24 @@ export function ListingDetailPage() {
                 </p>
               </div>
               <MarketValueBadge price={listing.price} marketAvgPrice={listing.marketAvgPrice} />
+              {/* AI Price Estimate */}
+              {priceEstimate?.estimate && (
+                <div className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm ${
+                  priceEstimate.verdict === 'below_market' ? 'bg-green-900/20 text-green-400' :
+                  priceEstimate.verdict === 'above_market' ? 'bg-amber-900/20 text-amber-400' :
+                  'bg-surface-50 text-surface-600 dark:bg-surface-800 dark:text-surface-300'
+                }`}>
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                  </svg>
+                  <span className="font-medium">
+                    {locale === 'nl' ? 'Geschatte waarde' : 'Estimated value'}: €{priceEstimate.estimate.toLocaleString('nl-NL')}
+                  </span>
+                  <span className="text-xs opacity-70">
+                    ({locale === 'nl' ? `${priceEstimate.similarCount} vergelijkbaar` : `${priceEstimate.similarCount} similar`})
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 

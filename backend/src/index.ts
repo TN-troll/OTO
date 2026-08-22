@@ -195,6 +195,16 @@ async function start() {
           created_at TIMESTAMPTZ DEFAULT NOW()
         );
 
+        -- User accounts for cross-device sync
+        CREATE TABLE IF NOT EXISTS user_accounts (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          email_hash VARCHAR(64) NOT NULL UNIQUE,
+          email VARCHAR(300) NOT NULL,
+          device_token VARCHAR(64) NOT NULL,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_at TIMESTAMPTZ DEFAULT NOW()
+        );
+
         -- Performance indexes
         CREATE INDEX IF NOT EXISTS idx_listings_make_status ON listings(make, status);
         CREATE INDEX IF NOT EXISTS idx_listings_price_status ON listings(price, status);
@@ -301,6 +311,15 @@ async function start() {
           console.error('[OTO] [CRON] Sound profile assignment failed:', err);
         }
       }, SIX_HOURS);
+
+      // Price drop checks every 6 hours
+      import('./notifications/price-drop-checker.js')
+        .then(({ checkPriceDrops }) => {
+          setInterval(() => {
+            checkPriceDrops().catch(err => console.error('[OTO] [CRON] Price drop check failed:', err));
+          }, SIX_HOURS);
+        })
+        .catch(err => console.error('[OTO] Failed to load price-drop-checker:', err));
 
       // Run initial scrape 5 minutes after startup (allow server to pass health check first)
       setTimeout(async () => {
