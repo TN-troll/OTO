@@ -125,6 +125,7 @@ export class SearchService {
       image_urls: string[];
       date_added: Date;
       snippet: string | null;
+      snippet_en: string | null;
     }>(sql, params);
 
     const listings: ListingSummary[] = result.rows.map((row) => ({
@@ -140,6 +141,7 @@ export class SearchService {
       engineDisplacementCc: row.engine_displacement_cc,
       dateAdded: row.date_added,
       snippet: row.snippet ? row.snippet.replace(/\n/g, ' ').trim() : null,
+      snippetEn: row.snippet_en ? row.snippet_en.replace(/\n/g, ' ').trim() : null,
     }));
 
     // Generate suggestions when no results found
@@ -277,7 +279,7 @@ export class SearchService {
     }
 
     const whereClause = conditions.join(' AND ');
-    const sql = `SELECT id, title, make, model, year, price, horsepower, engine_displacement_cc, image_urls, date_added, LEFT(description, 150) AS snippet
+    const sql = `SELECT id, title, make, model, year, price, horsepower, engine_displacement_cc, image_urls, date_added, LEFT(description, 150) AS snippet, LEFT(description_en, 150) AS snippet_en
                  FROM listings
                  WHERE ${whereClause}
                  ORDER BY date_added DESC`;

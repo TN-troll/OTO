@@ -391,7 +391,7 @@ export class FilterEngine {
     const sortColumn = SORT_COLUMN_MAP[sortBy];
     const orderDirection = sortOrder.toUpperCase();
 
-    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.mileage, l.fuel_type, l.location, l.seller_type, l.date_added, l.status, l.is_featured, l.sound_profile_id, LEFT(l.description, 150) AS snippet FROM listings l${this.needsSoundJoin(expandedCriteria) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.mileage, l.fuel_type, l.location, l.seller_type, l.date_added, l.status, l.is_featured, l.sound_profile_id, LEFT(l.description, 150) AS snippet, LEFT(l.description_en, 150) AS snippet_en FROM listings l${this.needsSoundJoin(expandedCriteria) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
 
     const dataResult = await query<{
       id: string;
@@ -412,6 +412,7 @@ export class FilterEngine {
       is_featured: boolean;
       sound_profile_id: string | null;
       snippet: string | null;
+      snippet_en: string | null;
     }>(dataSql, [...params, pageSize, offset]);
 
     const listings: ListingSummary[] = dataResult.rows.map((row) => ({
@@ -435,6 +436,7 @@ export class FilterEngine {
       isFeatured: row.is_featured,
       hasSoundClip: !!row.sound_profile_id,
       snippet: row.snippet ? row.snippet.replace(/<[^>]*>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim() : null,
+      snippetEn: row.snippet_en ? row.snippet_en.replace(/<[^>]*>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim() : null,
     }));
 
     const totalPages = Math.ceil(totalCount / pageSize);
@@ -485,7 +487,7 @@ export class FilterEngine {
     const orderDirection = sortOrder.toUpperCase();
     const fetchCount = limit + 1;
 
-    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.mileage, l.fuel_type, l.location, l.seller_type, l.date_added, l.status, l.is_featured, l.sound_profile_id, LEFT(l.description, 150) AS snippet FROM listings l${this.needsSoundJoin(expandedFilters) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
+    const dataSql = `SELECT l.id, l.title, l.image_urls, l.make, l.model, l.year, l.price, l.horsepower, l.engine_displacement_cc, l.mileage, l.fuel_type, l.location, l.seller_type, l.date_added, l.status, l.is_featured, l.sound_profile_id, LEFT(l.description, 150) AS snippet, LEFT(l.description_en, 150) AS snippet_en FROM listings l${this.needsSoundJoin(expandedFilters) ? ' INNER JOIN sound_profiles sp ON l.sound_profile_id = sp.id' : ''} WHERE ${whereClause} ORDER BY (l.is_featured = TRUE AND l.status = 'active') DESC, l.featured_sort_order ASC, l.${sortColumn} ${orderDirection} LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
 
     const dataResult = await query<{
       id: string;
@@ -506,6 +508,7 @@ export class FilterEngine {
       is_featured: boolean;
       sound_profile_id: string | null;
       snippet: string | null;
+      snippet_en: string | null;
     }>(dataSql, [...queryParams, fetchCount, offset]);
 
     const hasMore = dataResult.rows.length > limit;
@@ -532,6 +535,7 @@ export class FilterEngine {
       isFeatured: row.is_featured,
       hasSoundClip: !!row.sound_profile_id,
       snippet: row.snippet ? row.snippet.replace(/<[^>]*>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim() : null,
+      snippetEn: row.snippet_en ? row.snippet_en.replace(/<[^>]*>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim() : null,
     }));
 
     const nextCursor = hasMore ? this.encodeCursor(offset + limit) : null;

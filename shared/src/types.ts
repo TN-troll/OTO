@@ -204,6 +204,8 @@ export interface ListingSummary {
   hasSoundClip?: boolean;
   /** Short snippet from the ad description (first ~150 chars) */
   snippet: string | null;
+  /** English translation of the snippet (null if not available) */
+  snippetEn: string | null;
 }
 
 /** Result of validating filter criteria or other input */

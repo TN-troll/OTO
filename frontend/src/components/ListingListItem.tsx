@@ -22,6 +22,7 @@ function ListingListItemInner({ listing }: ListingListItemProps) {
   const { locale } = useLanguage();
   const isNew = listing.dateAdded && (Date.now() - new Date(listing.dateAdded).getTime()) < 48 * 60 * 60 * 1000;
   const marketTrend = getMarketTrend(listing.make, listing.model);
+  const snippetText = locale === 'en' && listing.snippetEn ? listing.snippetEn : listing.snippet;
 
   // Price fairness indicator — based on market average if available,
   // or heuristic based on €/HP ratio for the segment
@@ -161,9 +162,9 @@ function ListingListItemInner({ listing }: ListingListItemProps) {
           </div>
 
           {/* Ad description snippet */}
-          {listing.snippet && (
+          {snippetText && (
             <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-surface-400">
-              {listing.snippet}{listing.snippet.length >= 145 ? '…' : ''}
+              {snippetText}{snippetText.length >= 145 ? '…' : ''}
             </p>
           )}
 
