@@ -262,6 +262,11 @@ async function start() {
         .then(({ cleanupForeignListings }) => cleanupForeignListings())
         .catch(err => console.error('[OTO] Foreign listing cleanup failed:', err));
 
+      // Backfill premium filter columns on startup (idempotent)
+      import('./map/backfill-premium-columns.js')
+        .then(({ backfillPremiumColumns }) => backfillPremiumColumns())
+        .catch(err => console.error('[OTO] Premium column backfill failed:', err));
+
       console.log('[OTO] Cron schedule: scrape every 6h, enrich every 1h');
 
       // Full scrape every 6 hours
