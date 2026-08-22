@@ -9,7 +9,45 @@ type SpeedCategory = '0-100' | '0-200' | '100-200';
 interface ModelEntry {
   make: string;
   model: string;
+  searchTerm: string;
   time: number;
+}
+
+/** Extract base model name for better DB matching */
+function getBaseModel(model: string): string {
+  const baseModelMap: Record<string, string> = {
+    '911 Turbo S': '911',
+    '911 GT3': '911',
+    '911 GT3 RS': '911',
+    '911 GT2 RS': '911',
+    '911 Turbo': '911',
+    '911 Sport Classic': '911',
+    'SF90 Spider': 'SF90',
+    'SF90XX': 'SF90',
+    'F8 Tributo': 'F8',
+    'F8 Spider': 'F8',
+    '812 Competizione': '812',
+    '296 GTS': '296',
+    '296 GTB': '296',
+    'Huracán STO': 'Huracán',
+    'Huracán Tecnica': 'Huracán',
+    'Continental GT': 'Continental',
+    'Continental GTC': 'Continental',
+    'Golf R': 'Golf',
+    'Golf GTI': 'Golf',
+    'Civic Type R': 'Civic',
+    'i30 N': 'i30',
+    'Ioniq 5 N': 'Ioniq',
+    'Cayman GT4': 'Cayman',
+    'Aventador SVJ': 'Aventador',
+    'AMG GT R': 'AMG GT',
+    'AMG GT Black Series': 'AMG GT',
+    'M3 CS': 'M3',
+    'Model S Plaid': 'Model S',
+    'Model 3 Performance': 'Model 3',
+    'Model X Plaid': 'Model X',
+  };
+  return baseModelMap[model] || model;
 }
 
 function getEntriesForCategory(category: SpeedCategory): ModelEntry[] {
@@ -17,7 +55,7 @@ function getEntriesForCategory(category: SpeedCategory): ModelEntry[] {
   const entries: ModelEntry[] = [];
   for (const [make, models] of Object.entries(dataMap)) {
     for (const [model, time] of Object.entries(models)) {
-      entries.push({ make, model, time });
+      entries.push({ make, model, searchTerm: getBaseModel(model), time });
     }
   }
   return entries.sort((a, b) => a.time - b.time);
@@ -75,7 +113,7 @@ export function LeaderboardPage() {
           return (
             <a
               key={`${entry.make}-${entry.model}`}
-              href={`/?makes=${encodeURIComponent(entry.make)}&models=${encodeURIComponent(entry.model)}`}
+              href={`/?makes=${encodeURIComponent(entry.make)}&models=${encodeURIComponent(entry.searchTerm)}`}
               className="group flex items-center gap-4 rounded-xl border border-surface-100 bg-white p-4 transition-all hover:border-brand-accent/30 hover:shadow-md dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-brand-accent/30"
             >
               {/* Rank */}

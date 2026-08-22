@@ -5,26 +5,38 @@
 export const ACCELERATION_DATA: Record<string, Record<string, number>> = {
   'Ferrari': {
     'SF90 Spider': 2.5,
+    'SF90XX': 2.3,
     'F8 Tributo': 2.9,
     'F8 Spider': 2.9,
     '812': 2.9,
+    '812 Competizione': 2.8,
     'Purosangue': 3.3,
     '296 GTS': 2.9,
+    '296 GTB': 2.9,
     '488 GTB': 3.0,
     'LaFerrari': 2.6,
     '12 Cilindri': 2.9,
+    'F40': 4.7,
+    'F50': 3.7,
+    'Enzo': 3.4,
   },
   'Lamborghini': {
     'Revuelto': 2.5,
     'Huracán': 2.9,
+    'Huracán STO': 2.9,
+    'Huracán Tecnica': 3.0,
     'Aventador': 2.8,
+    'Aventador SVJ': 2.8,
     'Urus': 3.6,
     'Countach': 2.8,
   },
   'Porsche': {
     '911 GT3': 3.4,
     '911 GT3 RS': 3.2,
+    '911 GT2 RS': 2.7,
     '911 Turbo S': 2.7,
+    '911 Turbo': 3.0,
+    '911 Sport Classic': 4.1,
     '911': 3.6,
     'Taycan': 2.8,
     'Cayenne': 3.8,
@@ -32,10 +44,14 @@ export const ACCELERATION_DATA: Record<string, Record<string, number>> = {
     'Carrera GT': 3.5,
     '918 Spyder': 2.5,
     '718': 4.0,
+    'Cayman GT4': 4.2,
   },
   'McLaren': {
     '720S': 2.8,
     '750S': 2.8,
+    '765LT': 2.7,
+    'P1': 2.8,
+    'Senna': 2.8,
     '600LT': 2.9,
     '620R': 2.9,
     'Artura': 3.0,
@@ -46,13 +62,19 @@ export const ACCELERATION_DATA: Record<string, Record<string, number>> = {
   },
   'Mercedes-Benz': {
     'AMG GT': 3.2,
+    'AMG GT R': 3.5,
+    'AMG GT Black Series': 3.1,
     'AMG ONE': 2.9,
     'G 63 AMG': 4.5,
     'S 63 AMG': 3.5,
     'A 45 AMG': 3.9,
+    'C 63 AMG': 3.9,
+    'E 63 AMG': 3.4,
   },
   'BMW': {
+    'M2': 4.1,
     'M3': 3.9,
+    'M3 CS': 3.4,
     'M4': 3.9,
     'M5': 3.4,
     'M8': 3.2,
@@ -61,10 +83,13 @@ export const ACCELERATION_DATA: Record<string, Record<string, number>> = {
   },
   'Audi': {
     'R8': 3.1,
+    'RS5': 3.9,
     'RS6': 3.6,
     'RS7': 3.6,
     'RSQ8': 3.8,
     'RS3': 3.8,
+    'RS4': 4.1,
+    'RS e-tron GT': 3.3,
     'e-tron GT': 3.3,
   },
   'Rolls-Royce': {
@@ -97,6 +122,15 @@ export const ACCELERATION_DATA: Record<string, Record<string, number>> = {
   'Honda': {
     'Civic Type R': 5.4,
   },
+  'Tesla': {
+    'Model S Plaid': 2.1,
+    'Model S': 3.2,
+    'Model 3 Performance': 3.3,
+    'Model X Plaid': 2.5,
+  },
+  'Rimac': {
+    'Nevera': 1.97,
+  },
 };
 
 export function getAcceleration(make: string, model: string): number | null {
@@ -126,7 +160,8 @@ export const ACCELERATION_0_200: Record<string, Record<string, number>> = {
   'Mercedes-Benz': { 'AMG ONE': 7.0, 'AMG GT': 10.8 },
   'BMW': { 'M5': 11.1, 'M8': 10.5 },
   'Audi': { 'R8': 9.9, 'e-tron GT': 10.5 },
-  'Tesla': { 'Model S': 9.4 },
+  'Tesla': { 'Model S': 9.4, 'Model S Plaid': 6.8 },
+  'Rimac': { 'Nevera': 4.3 },
 };
 
 /**
