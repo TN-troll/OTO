@@ -8,6 +8,7 @@ import { useFilterContext } from '../hooks/FilterContext';
 import { useInfiniteListings } from '../hooks/useInfiniteListings';
 import { useLanguage } from '../i18n';
 import { CATEGORIES } from '../data/categories';
+import { getMakeLogo } from '../utils/makeLogos';
 
 import { CATEGORY_CONTENT } from '../data/category-content';
 import { useCompare } from '../hooks/useCompare';
@@ -269,6 +270,21 @@ export function BrowsePage() {
           <div className="flex items-center gap-3 rounded-xl bg-white px-5 py-3 shadow-premium dark:bg-surface-800">
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-surface-200 border-t-brand-accent dark:border-surface-700" />
             <span className="text-sm font-medium text-surface-700 dark:text-surface-200">{t.updating}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Active brand header — shown when make filter is active */}
+      {filters.makes.length === 1 && (
+        <div className="mb-4 flex items-center gap-3 rounded-xl border border-surface-200 bg-surface-50 p-3 dark:border-white/[0.08] dark:bg-white/[0.02]">
+          {getMakeLogo(filters.makes[0]) && (
+            <img src={getMakeLogo(filters.makes[0])!} alt={filters.makes[0]} className="h-8 w-8 object-contain" />
+          )}
+          <div>
+            <p className="text-sm font-bold text-surface-900 dark:text-white">{filters.makes[0]}</p>
+            <p className="text-[11px] text-surface-400">
+              {infiniteTotalCount} {locale === 'nl' ? 'advertenties' : 'listings'}
+            </p>
           </div>
         </div>
       )}

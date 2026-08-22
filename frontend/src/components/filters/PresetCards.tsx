@@ -5,10 +5,14 @@ import { useLanguage } from '../../i18n/LanguageContext';
 
 /** Background images for each preset — use high-quality Unsplash photos */
 const PRESET_IMAGES: Record<PerformancePresetId, string> = {
-  v8_grand_tourers: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&h=200&fit=crop&q=80', // Winding coastal road at sunset (GT vibe)
-  track_weapons: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=400&h=200&fit=crop&q=80', // Race car on track / racing stripes
-  daily_luxury: 'https://images.unsplash.com/photo-1563720223185-11003d516935?w=400&h=200&fit=crop&q=80', // Luxury car interior / leather
-  classic_collectibles: 'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?w=400&h=200&fit=crop&q=80', // Classic vintage car (E-Type / old Porsche)
+  // GT: Aston Martin DB11 on a scenic road — the quintessential grand tourer
+  v8_grand_tourers: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&h=200&fit=crop&q=80',
+  // Track: Porsche GT3 on a race track with curbing visible
+  track_weapons: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=400&h=200&fit=crop&q=80',
+  // Luxury: Rolls-Royce / luxury car interior with leather and wood
+  daily_luxury: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&h=200&fit=crop&q=80',
+  // Classic: vintage Porsche 911 / E-Type — genuine classic car
+  classic_collectibles: 'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=400&h=200&fit=crop&q=80',
 };
 
 /** Maps preset IDs to their i18n translation keys */
