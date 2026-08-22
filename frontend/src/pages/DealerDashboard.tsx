@@ -183,6 +183,106 @@ export function DealerDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Performance Metrics (requires location) */}
+      <div className="mt-8 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-6">
+        <h2 className="text-lg font-bold text-white">{locale === 'nl' ? '📊 Performance' : '📊 Performance'}</h2>
+        <p className="mt-1 text-xs text-surface-400">{locale === 'nl' ? 'Voer uw locatie in om prestaties te bekijken' : 'Enter your location to view performance'}</p>
+        <div className="mt-3 flex gap-2">
+          <input
+            type="text"
+            placeholder={locale === 'nl' ? 'Uw stad (bijv. Amsterdam)' : 'Your city (e.g., Amsterdam)'}
+            className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-surface-500 outline-none focus:border-brand-accent/50"
+            id="dealer-location"
+          />
+          <button
+            onClick={async () => {
+              const loc = (document.getElementById('dealer-location') as HTMLInputElement)?.value;
+              if (!loc) return;
+              try {
+                const res = await fetch(`${API_BASE}/dealer/performance?location=${encodeURIComponent(loc)}`);
+                if (res.ok) {
+                  const data = await res.json();
+                  alert(`📊 ${loc}:\n• ${data.dealer.listingCount} listings\n• ${data.dealer.totalViews} views total\n• ${data.dealer.avgViewsPerListing} views/listing\n• Platform avg: ${data.platform.avgViewsPerListing} views/listing\n• Performance: ${data.performance.viewsVsPlatform > 0 ? '+' : ''}${data.performance.viewsVsPlatform}% vs platform\n• Rating: ${data.dealer.rating}/5 (${data.dealer.ratingCount} reviews)`);
+                }
+              } catch { /* ignore */ }
+            }}
+            className="rounded-lg bg-brand-accent px-4 py-2 text-sm font-bold text-white"
+          >
+            {locale === 'nl' ? 'Bekijk' : 'View'}
+          </button>
+        </div>
+      </div>
+
+      {/* Inventory Sync */}
+      <div className="mt-8 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-6">
+        <h2 className="text-lg font-bold text-white">{locale === 'nl' ? '🚗 Inventaris' : '🚗 Inventory'}</h2>
+        <p className="mt-1 text-xs text-surface-400">{locale === 'nl' ? 'Bekijk uw actieve auto\'s en hun weergaven' : 'View your active listings and their views'}</p>
+        <div className="mt-3 flex gap-2">
+          <input
+            type="text"
+            placeholder={locale === 'nl' ? 'Uw stad (bijv. Amsterdam)' : 'Your city (e.g., Amsterdam)'}
+            className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-surface-500 outline-none focus:border-brand-accent/50"
+            id="dealer-inventory-location"
+          />
+          <button
+            onClick={async () => {
+              const loc = (document.getElementById('dealer-inventory-location') as HTMLInputElement)?.value;
+              if (!loc) return;
+              try {
+                const res = await fetch(`${API_BASE}/dealer/inventory?location=${encodeURIComponent(loc)}`);
+                if (res.ok) {
+                  const data = await res.json();
+                  const lines = data.listings.slice(0, 10).map((l: { title: string; price: number; views: number }) =>
+                    `• ${l.title} — €${l.price.toLocaleString()} (${l.views} views)`
+                  );
+                  alert(`🚗 ${loc} — ${data.totalListings} listings:\n${lines.join('\n')}${data.totalListings > 10 ? `\n...+${data.totalListings - 10} more` : ''}`);
+                }
+              } catch { /* ignore */ }
+            }}
+            className="rounded-lg bg-brand-accent px-4 py-2 text-sm font-bold text-white"
+          >
+            {locale === 'nl' ? 'Laden' : 'Load'}
+          </button>
+        </div>
+      </div>
+
+      {/* Review Management */}
+      <div className="mt-8 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-6">
+        <h2 className="text-lg font-bold text-white">{locale === 'nl' ? '⭐ Reviews' : '⭐ Reviews'}</h2>
+        <p className="mt-1 text-xs text-surface-400">{locale === 'nl' ? 'Bekijk klantbeoordelingen voor uw locatie' : 'View customer reviews for your location'}</p>
+        <div className="mt-3 flex gap-2">
+          <input
+            type="text"
+            placeholder={locale === 'nl' ? 'Uw stad (bijv. Amsterdam)' : 'Your city (e.g., Amsterdam)'}
+            className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-surface-500 outline-none focus:border-brand-accent/50"
+            id="dealer-reviews-location"
+          />
+          <button
+            onClick={async () => {
+              const loc = (document.getElementById('dealer-reviews-location') as HTMLInputElement)?.value;
+              if (!loc) return;
+              try {
+                const res = await fetch(`${API_BASE}/dealer/reviews?location=${encodeURIComponent(loc)}`);
+                if (res.ok) {
+                  const data = await res.json();
+                  if (data.reviews.length === 0) {
+                    alert(locale === 'nl' ? 'Nog geen reviews voor deze locatie.' : 'No reviews for this location yet.');
+                    return;
+                  }
+                  const lines = data.reviews.slice(0, 10).map((r: { rating: number; comment: string | null; date: string }) =>
+                    `${'⭐'.repeat(r.rating)} ${r.comment || (locale === 'nl' ? '(geen opmerking)' : '(no comment)')}`
+                  );
+                  alert(`⭐ Reviews (${data.reviews.length}):\n${lines.join('\n')}`);
+                }
+              } catch { /* ignore */ }
+            }}
+            className="rounded-lg bg-brand-accent px-4 py-2 text-sm font-bold text-white"
+          >
+            {locale === 'nl' ? 'Laden' : 'Load'}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

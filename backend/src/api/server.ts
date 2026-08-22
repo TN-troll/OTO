@@ -23,6 +23,7 @@ import { authRouter } from './auth.js';
 import { priceEstimateRouter } from './price-estimate.js';
 import { ratingsRouter } from './ratings.js';
 import { digestRouter } from './digest.js';
+import { dealerPortalRouter } from './dealer-portal.js';
 import { cacheMiddleware } from './middleware/cache.js';
 import { env } from '../config/env.js';
 
@@ -71,6 +72,7 @@ export function createApp(): express.Application {
   app.use('/api/price-estimate', priceEstimateRouter);
   app.use('/api/ratings', ratingsRouter);
   app.use('/api/digest', digestRouter);
+  app.use('/api/dealer', dealerPortalRouter);
 
   return app;
 }
