@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { ListingCard } from '../components/ListingCard';
+import { DealerRating } from '../components/DealerRating';
 import { useLanguage } from '../i18n';
 import type { FilterCriteria, SellerType } from '@car-ads/shared';
 
@@ -63,6 +64,7 @@ export function SellerPage() {
             <p className="text-sm text-surface-400">
               {totalCount} {locale === 'nl' ? 'advertenties' : 'listings'}
             </p>
+            <DealerRating location={location} sellerType={sellerType} />
           </div>
         </div>
       </div>

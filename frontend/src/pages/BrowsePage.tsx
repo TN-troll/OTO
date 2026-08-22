@@ -13,6 +13,7 @@ import { CATEGORY_CONTENT } from '../data/category-content';
 import { useCompare } from '../hooks/useCompare';
 import { formatPrice, formatNumber } from '../utils/formatNumber';
 import { SavedSearchPrompt } from '../components/SavedSearchPrompt';
+import { DigestSubscribe } from '../components/DigestSubscribe';
 import { InFeedAd } from '../components/AdSlot';
 
 const DEFAULT_PAGE_SIZE = 20;
@@ -357,6 +358,11 @@ export function BrowsePage() {
       )}
 
       <SavedSearchPrompt filtersActive={filtersActive} filterSummary={filterSummary} />
+
+      {/* Weekly digest signup */}
+      <div className="mt-8">
+        <DigestSubscribe />
+      </div>
     </div>
   );
 }

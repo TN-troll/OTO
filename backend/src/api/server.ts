@@ -21,6 +21,8 @@ import { adsRouter } from './ads.js';
 import { rdwRouter } from './rdw.js';
 import { authRouter } from './auth.js';
 import { priceEstimateRouter } from './price-estimate.js';
+import { ratingsRouter } from './ratings.js';
+import { digestRouter } from './digest.js';
 import { cacheMiddleware } from './middleware/cache.js';
 import { env } from '../config/env.js';
 
@@ -67,6 +69,8 @@ export function createApp(): express.Application {
   app.use('/api/rdw', rdwRouter);
   app.use('/api/auth', authRouter);
   app.use('/api/price-estimate', priceEstimateRouter);
+  app.use('/api/ratings', ratingsRouter);
+  app.use('/api/digest', digestRouter);
 
   return app;
 }
