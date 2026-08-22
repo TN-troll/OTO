@@ -5,10 +5,10 @@ import { useLanguage } from '../../i18n/LanguageContext';
 
 /** Background images for each preset — use high-quality Unsplash photos */
 const PRESET_IMAGES: Record<PerformancePresetId, string> = {
-  v8_grand_tourers: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=200&fit=crop&q=80', // Winding mountain road
-  track_weapons: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=200&fit=crop&q=80', // Race track
-  daily_luxury: 'https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=400&h=200&fit=crop&q=80', // Luxury/diamond
-  classic_collectibles: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400&h=200&fit=crop&q=80', // Classic car
+  v8_grand_tourers: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&h=200&fit=crop&q=80', // Winding coastal road at sunset (GT vibe)
+  track_weapons: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=400&h=200&fit=crop&q=80', // Race car on track / racing stripes
+  daily_luxury: 'https://images.unsplash.com/photo-1563720223185-11003d516935?w=400&h=200&fit=crop&q=80', // Luxury car interior / leather
+  classic_collectibles: 'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?w=400&h=200&fit=crop&q=80', // Classic vintage car (E-Type / old Porsche)
 };
 
 /** Maps preset IDs to their i18n translation keys */
