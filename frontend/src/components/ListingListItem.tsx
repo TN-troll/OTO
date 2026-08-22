@@ -23,6 +23,25 @@ function ListingListItemInner({ listing }: ListingListItemProps) {
   const isNew = listing.dateAdded && (Date.now() - new Date(listing.dateAdded).getTime()) < 48 * 60 * 60 * 1000;
   const marketTrend = getMarketTrend(listing.make, listing.model);
 
+  // Price fairness indicator — based on market average if available,
+  // or heuristic based on €/HP ratio for the segment
+  const priceFairness: 'good' | 'fair' | 'high' | null = (() => {
+    if (listing.marketAvgPrice && listing.marketAvgPrice > 0) {
+      const ratio = listing.price / listing.marketAvgPrice;
+      if (ratio < 0.9) return 'good';
+      if (ratio > 1.1) return 'high';
+      return 'fair';
+    }
+    // Fallback heuristic: €/HP ratio (lower is better deal)
+    if (listing.horsepower && listing.horsepower > 0) {
+      const pricePerHp = listing.price / listing.horsepower;
+      if (pricePerHp < 150) return 'good';
+      if (pricePerHp > 400) return 'high';
+      return 'fair';
+    }
+    return null;
+  })();
+
   const images = listing.imageUrls?.length > 0 ? listing.imageUrls.slice(0, 4) : (listing.primaryImageUrl ? [listing.primaryImageUrl] : []);
   const hasMultiple = images.length > 1;
 
@@ -109,6 +128,20 @@ function ListingListItemInner({ listing }: ListingListItemProps) {
           {/* Key specs — prominent row */}
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
             <span className="font-bold text-brand-accent text-lg">{formatPrice(listing.price, locale)}</span>
+            {priceFairness && (
+              <span className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${
+                priceFairness === 'good' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                priceFairness === 'high' ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' :
+                'bg-surface-100 text-surface-500 dark:bg-surface-800 dark:text-surface-400'
+              }`}>
+                <span className={`inline-block h-1.5 w-1.5 rounded-full ${
+                  priceFairness === 'good' ? 'bg-green-500' :
+                  priceFairness === 'high' ? 'bg-red-500' :
+                  'bg-surface-400'
+                }`} />
+                {priceFairness === 'good' ? 'Good deal' : priceFairness === 'high' ? 'High' : 'Fair'}
+              </span>
+            )}
             {listing.mileage != null && (
               <span className="flex items-center gap-1 font-medium text-surface-200">
                 <svg className="h-3.5 w-3.5 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>

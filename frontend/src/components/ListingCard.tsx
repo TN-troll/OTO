@@ -81,6 +81,25 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
     } catch { return false; }
   })();
 
+  // Price fairness indicator — based on market average if available,
+  // or heuristic based on €/HP ratio for the segment
+  const priceFairness: 'good' | 'fair' | 'high' | null = (() => {
+    if (listing.marketAvgPrice && listing.marketAvgPrice > 0) {
+      const ratio = listing.price / listing.marketAvgPrice;
+      if (ratio < 0.9) return 'good';
+      if (ratio > 1.1) return 'high';
+      return 'fair';
+    }
+    // Fallback heuristic: €/HP ratio (lower is better deal)
+    if (listing.horsepower && listing.horsepower > 0) {
+      const pricePerHp = listing.price / listing.horsepower;
+      if (pricePerHp < 150) return 'good';
+      if (pricePerHp > 400) return 'high';
+      return 'fair';
+    }
+    return null;
+  })();
+
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
   }, []);
@@ -275,11 +294,27 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
 
       {/* Content — generous padding, clean hierarchy */}
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        {/* Price */}
-        <div className="flex items-baseline justify-between">
+        {/* Price + fairness indicator */}
+        <div className="flex items-center gap-2">
           <span className="text-xl font-bold text-brand dark:text-brand-accent">
             {formatPrice(listing.price, locale)}
           </span>
+          {priceFairness && (
+            <span className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${
+              priceFairness === 'good' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+              priceFairness === 'high' ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' :
+              'bg-surface-100 text-surface-500 dark:bg-surface-800 dark:text-surface-400'
+            }`}>
+              <span className={`inline-block h-1.5 w-1.5 rounded-full ${
+                priceFairness === 'good' ? 'bg-green-500' :
+                priceFairness === 'high' ? 'bg-red-500' :
+                'bg-surface-400'
+              }`} />
+              {priceFairness === 'good' ? (locale === 'nl' ? 'Goed' : 'Good') :
+               priceFairness === 'high' ? (locale === 'nl' ? 'Hoog' : 'High') :
+               (locale === 'nl' ? 'Markt' : 'Fair')}
+            </span>
+          )}
         </div>
 
         {/* Make & Model — tracking-tight, 17px semibold */}
