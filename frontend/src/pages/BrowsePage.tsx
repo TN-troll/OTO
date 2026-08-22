@@ -241,15 +241,6 @@ export function BrowsePage() {
         </div>
       )}
 
-      {/* Quick links */}
-      <div className="mb-4 flex gap-3">
-        <a href="/leaderboard" className="inline-flex items-center gap-1.5 text-xs font-medium text-surface-500 hover:text-brand-accent transition-colors dark:text-surface-400">
-          <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M13 2L4.5 13h6L9 22l9.5-12h-6L15 2" />
-          </svg>
-          0-100 Sprint Leaderboard
-        </a>
-      </div>
 
       {/* Sponsored content */}
       <div className="my-4">
