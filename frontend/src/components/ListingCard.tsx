@@ -5,7 +5,6 @@ import { useCompare } from '../hooks/useCompare';
 import { getProxyImageUrl } from '../utils/imageProxy';
 import { formatPrice, formatNumber } from '../utils/formatNumber';
 import { getMakeLogo } from '../utils/makeLogos';
-import { calculateOtoScore, getScoreColor, getScoreBgColor } from '../utils/otoScore';
 import { useLanguage } from '../i18n';
 
 // Track last visit time — set on first card render each session
@@ -100,8 +99,6 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
     }
     return null;
   })();
-
-  const otoScore = calculateOtoScore(listing);
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -297,14 +294,6 @@ function ListingCardInner({ listing, featured = false, priority = false }: Listi
 
       {/* Content — generous padding, clean hierarchy */}
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        {/* OTO Score™ */}
-        {otoScore && (
-          <div className={`mb-2 inline-flex items-center gap-1.5 rounded-lg border px-2 py-1 ${getScoreBgColor(otoScore)}`}>
-            <span className={`text-base font-bold ${getScoreColor(otoScore)}`}>{otoScore}</span>
-            <span className="text-[9px] font-semibold uppercase tracking-wider text-surface-400">OTO Score</span>
-          </div>
-        )}
-
         {/* Price + fairness indicator */}
         <div className="flex items-center gap-2">
           <span className="text-xl font-bold text-brand dark:text-brand-accent">

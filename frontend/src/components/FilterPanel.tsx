@@ -4,7 +4,6 @@ import { MultiSelect } from './filters/MultiSelect';
 import { SoundFilters } from './filters/SoundFilters';
 import { MakeModelSelector } from './filters/MakeModelSelector';
 import { CollapsibleSection } from './filters/CollapsibleSection';
-import { PresetCards } from './filters/PresetCards';
 import { FilterSummaryBar } from './filters/FilterSummaryBar';
 import { DrivetrainFilter } from './filters/DrivetrainFilter';
 import { ColorFilter } from './filters/ColorFilter';
@@ -145,16 +144,6 @@ export function FilterContent() {
 
       {/* Filter Summary Bar — shows active filter chips above results */}
       <FilterSummaryBar />
-
-      {/* ══════════════════════════════════════════════════════════════════════════
-          1. Quick Presets (top)
-         ══════════════════════════════════════════════════════════════════════════ */}
-      <div className="border-b border-glass-border py-3 dark:border-white/[0.06]">
-        <span className="mb-2 block text-sm font-semibold text-surface-800 dark:text-surface-200">
-          {t.filterSectionPresets}
-        </span>
-        <PresetCards />
-      </div>
 
       {/* ══════════════════════════════════════════════════════════════════════════
           2. Existing filters (Make/Model, Price, Year, HP, Displacement, Mileage,

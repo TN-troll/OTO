@@ -5,7 +5,6 @@ import { useCompare } from '../hooks/useCompare';
 import { getProxyImageUrl } from '../utils/imageProxy';
 import { formatPrice, formatNumber } from '../utils/formatNumber';
 import { getMakeLogo } from '../utils/makeLogos';
-import { calculateOtoScore, getScoreColor, getScoreBgColor } from '../utils/otoScore';
 import { useLanguage } from '../i18n';
 import { getMarketTrend } from '../data/market-trends';
 
@@ -43,8 +42,6 @@ function ListingListItemInner({ listing }: ListingListItemProps) {
     }
     return null;
   })();
-
-  const otoScore = calculateOtoScore(listing);
 
   const images = listing.imageUrls?.length > 0 ? listing.imageUrls.slice(0, 4) : (listing.primaryImageUrl ? [listing.primaryImageUrl] : []);
   const hasMultiple = images.length > 1;
@@ -131,12 +128,6 @@ function ListingListItemInner({ listing }: ListingListItemProps) {
 
           {/* Key specs — prominent row */}
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
-            {otoScore && (
-              <span className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${getScoreBgColor(otoScore)}`}>
-                <span className={getScoreColor(otoScore)}>{otoScore}</span>
-                <span className="text-surface-400">OTO</span>
-              </span>
-            )}
             <span className="font-bold text-brand-accent text-lg">{formatPrice(listing.price, locale)}</span>
             {priceFairness && (
               <span className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${
