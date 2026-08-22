@@ -117,12 +117,18 @@ export function Header({ activeTab, onTabChange }: { activeTab?: 'listings' | 'm
           </a>
 
           {/* Desktop nav links */}
-          <nav className="ml-3 hidden items-center gap-1 md:flex">
-            <a href="/brands" className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-surface-400 transition-colors hover:bg-white/[0.06] hover:text-white">
+          <nav className="ml-4 hidden items-center gap-1.5 md:flex">
+            <a href="/brands" className="flex items-center gap-1.5 rounded-lg border border-transparent px-3 py-2 text-xs font-medium text-surface-600 transition-all hover:border-surface-200 hover:bg-surface-100 hover:text-surface-900 dark:text-surface-400 dark:hover:border-white/[0.1] dark:hover:bg-white/[0.06] dark:hover:text-white">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+              </svg>
               {locale === 'nl' ? 'Merken' : 'Brands'}
             </a>
-            <a href="/leaderboard" className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-surface-400 transition-colors hover:bg-white/[0.06] hover:text-white">
-              {locale === 'nl' ? '0-100 Sprint' : 'Leaderboard'}
+            <a href="/leaderboard" className="flex items-center gap-1.5 rounded-lg border border-transparent px-3 py-2 text-xs font-medium text-surface-600 transition-all hover:border-surface-200 hover:bg-surface-100 hover:text-surface-900 dark:text-surface-400 dark:hover:border-white/[0.1] dark:hover:bg-white/[0.06] dark:hover:text-white">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+              </svg>
+              Leaderboard
             </a>
           </nav>
 
@@ -151,9 +157,9 @@ export function Header({ activeTab, onTabChange }: { activeTab?: 'listings' | 'm
           <div className="ml-auto flex items-center gap-1">
             <ThemeToggle />
             {/* Language toggle */}
-            <div className="hidden sm:flex items-center gap-0.5 rounded-full border border-white/[0.1] bg-white/[0.04] p-0.5">
-              <button type="button" onClick={() => setLocale('nl')} className={`rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors ${locale === 'nl' ? 'bg-white/[0.12] text-white' : 'text-surface-500 hover:text-surface-300'}`}>NL</button>
-              <button type="button" onClick={() => setLocale('en')} className={`rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors ${locale === 'en' ? 'bg-white/[0.12] text-white' : 'text-surface-500 hover:text-surface-300'}`}>EN</button>
+            <div className="hidden sm:flex items-center gap-0.5 rounded-full border border-surface-200 bg-surface-100 p-0.5 dark:border-white/[0.1] dark:bg-white/[0.04]">
+              <button type="button" onClick={() => setLocale('nl')} className={`rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors ${locale === 'nl' ? 'bg-white shadow-sm text-surface-900 dark:bg-white/[0.15] dark:text-white dark:shadow-none' : 'text-surface-500 hover:text-surface-700 dark:hover:text-surface-300'}`}>NL</button>
+              <button type="button" onClick={() => setLocale('en')} className={`rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors ${locale === 'en' ? 'bg-white shadow-sm text-surface-900 dark:bg-white/[0.15] dark:text-white dark:shadow-none' : 'text-surface-500 hover:text-surface-700 dark:hover:text-surface-300'}`}>EN</button>
             </div>
             <a href="/favorites" className="flex h-10 w-10 items-center justify-center rounded-xl text-surface-400 transition-colors hover:bg-white/[0.06] hover:text-red-400" aria-label="Favorites">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>

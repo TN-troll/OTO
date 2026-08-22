@@ -20,7 +20,7 @@ const MapPage = lazy(() => import('../pages/MapPage'));
  */
 function FilterSidebar() {
   return (
-    <aside className="sticky top-0 hidden h-screen w-80 shrink-0 overflow-y-auto border-r border-white/[0.08] bg-surface-950/60 p-6 backdrop-blur-glass [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:block">
+    <aside className="sticky top-0 hidden h-screen w-80 shrink-0 overflow-y-auto border-r border-surface-200 bg-white/90 p-6 backdrop-blur-xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:block dark:border-white/[0.08] dark:bg-surface-950/80">
       <FilterPanel />
     </aside>
   );

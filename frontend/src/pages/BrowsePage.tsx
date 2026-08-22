@@ -8,28 +8,7 @@ import { useFilterContext } from '../hooks/FilterContext';
 import { useInfiniteListings } from '../hooks/useInfiniteListings';
 import { useLanguage } from '../i18n';
 import { CATEGORIES } from '../data/categories';
-import {
-  SupercarIcon,
-  LuxuryIcon,
-  PerformanceSedanIcon,
-  HotHatchIcon,
-  SportsCarIcon,
-  PerformanceSuvIcon,
-  ElectricPerformanceIcon,
-  ClassicIcon,
-} from '../components/icons/CategoryIcons';
 
-/** Maps category IDs to their premium SVG icon components */
-const CATEGORY_ICONS: Record<string, React.FC<{ className?: string }>> = {
-  supercar: SupercarIcon,
-  luxury: LuxuryIcon,
-  'performance-sedan': PerformanceSedanIcon,
-  'hot-hatch': HotHatchIcon,
-  'sports-car': SportsCarIcon,
-  suv: PerformanceSuvIcon,
-  electric: ElectricPerformanceIcon,
-  classic: ClassicIcon,
-};
 import { CATEGORY_CONTENT } from '../data/category-content';
 import { useCompare } from '../hooks/useCompare';
 import { formatPrice, formatNumber } from '../utils/formatNumber';
@@ -237,50 +216,7 @@ export function BrowsePage() {
         </button>
       </div>
 
-      {/* Category filter buttons */}
-      <div className="mb-6 grid grid-cols-2 gap-2.5 sm:grid-cols-4 lg:grid-cols-7">
-        {CATEGORIES.filter(c => c.id !== 'classic').map((category, idx) => {
-          const isActive = activeCategory === category.id;
-          const IconComponent = CATEGORY_ICONS[category.id];
-          return (
-            <button
-              key={category.id}
-              type="button"
-              onClick={() => {
-                if (isActive) {
-                  setActiveCategory(null);
-                  setCategory({});
-                } else {
-                  setActiveCategory(category.id);
-                  setCategory(category.filter);
-                }
-              }}
-              className={`group relative min-h-[72px] overflow-hidden rounded-2xl px-3.5 py-4 text-left backdrop-blur-[20px] transition-[transform,box-shadow,border-color,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] border ${
-                isActive
-                  ? 'border-brand-accent/60 bg-gradient-to-br from-brand-accent/15 to-brand-accent/5 shadow-[0_0_20px_rgba(var(--color-accent-rgb),0.2)] scale-[1.02] dark:from-brand-accent/20 dark:to-brand-accent/5'
-                  : 'border-white/[0.15] bg-white/60 hover:border-brand-accent/30 hover:bg-white/80 hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 dark:border-white/[0.08] dark:bg-[rgba(30,30,30,0.60)] dark:hover:border-white/[0.15] dark:hover:bg-[rgba(30,30,30,0.80)]'
-              }`}
-            >
-              <div className="relative flex flex-col gap-2">
-                {IconComponent && (
-                  <IconComponent
-                    className={`h-6 w-12 transition-colors duration-200 ${
-                      isActive
-                        ? 'text-brand-accent'
-                        : 'text-surface-400 group-hover:text-brand-accent/70 dark:text-surface-500'
-                    }`}
-                  />
-                )}
-                <p className={`text-[11px] font-semibold leading-tight tracking-tight ${
-                  isActive ? 'text-brand-accent' : 'text-surface-800 dark:text-surface-200'
-                }`}>
-                  {locale === 'nl' ? category.labelNl : category.label}
-                </p>
-              </div>
-            </button>
-          );
-        })}
-      </div>
+
 
       {/* Category content (shown when a category is active) */}
       {activeCategory && CATEGORY_CONTENT[activeCategory] && (
