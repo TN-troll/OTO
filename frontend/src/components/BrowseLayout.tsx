@@ -9,6 +9,7 @@ import { BrowsePage } from '../pages/BrowsePage';
 import { FilterProvider } from '../hooks/FilterContext';
 import { CompareTray } from './CompareTray';
 import { JustListedToast } from './JustListedToast';
+import { OtoLogo } from './OtoLogo';
 import { useLanguage } from '../i18n';
 
 const MapPage = lazy(() => import('../pages/MapPage'));
@@ -101,25 +102,6 @@ export class MapErrorBoundary extends Component<MapErrorBoundaryProps, MapErrorB
   }
 }
 
-/** OTO logo */
-function OtoLogo({ className = '' }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="OTO logo" role="img">
-      <defs>
-        <linearGradient id="oto-gold-browse" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#C9A84C" /><stop offset="50%" stopColor="#F2D680" /><stop offset="100%" stopColor="#C9A84C" />
-        </linearGradient>
-      </defs>
-      <ellipse cx="50" cy="40" rx="35" ry="28" stroke="url(#oto-gold-browse)" strokeWidth="6" />
-      <ellipse cx="50" cy="40" rx="22" ry="17" stroke="url(#oto-gold-browse)" strokeWidth="2.5" opacity="0.4" />
-      <rect x="85" y="28" width="30" height="6" rx="3" fill="url(#oto-gold-browse)" />
-      <rect x="97" y="28" width="6" height="30" rx="3" fill="url(#oto-gold-browse)" />
-      <ellipse cx="150" cy="40" rx="35" ry="28" stroke="url(#oto-gold-browse)" strokeWidth="6" />
-      <ellipse cx="150" cy="40" rx="22" ry="17" stroke="url(#oto-gold-browse)" strokeWidth="2.5" opacity="0.4" />
-    </svg>
-  );
-}
-
 function Footer() {
   const { t, locale, setLocale } = useLanguage();
   return (
@@ -128,7 +110,7 @@ function Footer() {
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           {/* Brand */}
           <div className="col-span-2 sm:col-span-1">
-            <OtoLogo className="h-6 w-auto" />
+            <OtoLogo className="h-6 w-auto" id="browse" />
             <p className="mt-2 text-xs text-surface-500">{t.tagline}</p>
             <p className="mt-1 text-[10px] text-surface-600">Netherlands only</p>
           </div>

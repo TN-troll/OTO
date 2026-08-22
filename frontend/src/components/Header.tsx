@@ -2,39 +2,9 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { SearchBar } from './SearchBar';
 import { ThemeToggle } from './ThemeToggle';
 import { PremiumBadge } from './PremiumBadge';
+import { OtoLogo } from './OtoLogo';
 import { useLanguage } from '../i18n';
 import { isPushSupported } from '../hooks/usePushNotifications';
-
-/** OTO exhaust-pipe logo — uses currentColor so it adapts to dark/light mode */
-function OtoLogo({ className = '' }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 200 80"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-label="OTO logo"
-      role="img"
-    >
-      <defs>
-        <linearGradient id="oto-gold-header" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#C97B4A" />
-          <stop offset="50%" stopColor="#E8A67A" />
-          <stop offset="100%" stopColor="#C97B4A" />
-        </linearGradient>
-      </defs>
-      {/* Left exhaust pipe (O) */}
-      <ellipse cx="50" cy="40" rx="35" ry="28" stroke="url(#oto-gold-header)" strokeWidth="6" />
-      <ellipse cx="50" cy="40" rx="22" ry="17" stroke="url(#oto-gold-header)" strokeWidth="2.5" opacity="0.4" />
-      {/* Center bridge (T) */}
-      <rect x="85" y="28" width="30" height="6" rx="3" fill="url(#oto-gold-header)" />
-      <rect x="97" y="28" width="6" height="30" rx="3" fill="url(#oto-gold-header)" />
-      {/* Right exhaust pipe (O) */}
-      <ellipse cx="150" cy="40" rx="35" ry="28" stroke="url(#oto-gold-header)" strokeWidth="6" />
-      <ellipse cx="150" cy="40" rx="22" ry="17" stroke="url(#oto-gold-header)" strokeWidth="2.5" opacity="0.4" />
-    </svg>
-  );
-}
 
 /** Hamburger / X icon for mobile menu toggle */
 function MenuIcon({ open }: { open: boolean }) {
@@ -113,7 +83,7 @@ export function Header({ activeTab, onTabChange }: { activeTab?: 'listings' | 'm
         <div className="mx-auto flex h-14 items-center gap-2 px-4 sm:h-16 sm:px-6 lg:px-8 max-w-[1400px]">
           {/* Logo — pushed left */}
           <a href="/" className="flex shrink-0 items-center">
-            <OtoLogo className="h-7 w-auto" />
+            <OtoLogo className="h-7 w-auto" id="header" />
           </a>
 
           {/* Desktop nav links */}
