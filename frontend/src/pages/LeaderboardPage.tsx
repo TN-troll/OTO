@@ -1,90 +1,127 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '../api/client';
-import { getAcceleration } from '../data/performance';
-import { getProxyImageUrl } from '../utils/imageProxy';
+import { ACCELERATION_DATA, ACCELERATION_0_200, ACCELERATION_100_200 } from '../data/performance';
+import { getMakeLogo } from '../utils/makeLogos';
 import { useLanguage } from '../i18n';
-import { formatPrice } from '../utils/formatNumber';
+
+type SpeedCategory = '0-100' | '0-200' | '100-200';
+
+interface ModelEntry {
+  make: string;
+  model: string;
+  time: number;
+}
+
+function getEntriesForCategory(category: SpeedCategory): ModelEntry[] {
+  const dataMap = category === '0-100' ? ACCELERATION_DATA : category === '0-200' ? ACCELERATION_0_200 : ACCELERATION_100_200;
+  const entries: ModelEntry[] = [];
+  for (const [make, models] of Object.entries(dataMap)) {
+    for (const [model, time] of Object.entries(models)) {
+      entries.push({ make, model, time });
+    }
+  }
+  return entries.sort((a, b) => a.time - b.time);
+}
 
 export function LeaderboardPage() {
   const { locale } = useLanguage();
-  const { data, isLoading } = useQuery({
-    queryKey: ['listings', { page: 1, pageSize: 100, sortBy: 'horsepower', sortOrder: 'desc' }],
-    queryFn: () => api.getListings({ page: 1, pageSize: 100, sortBy: 'horsepower', sortOrder: 'desc' }),
-  });
+  const [category, setCategory] = useState<SpeedCategory>('0-100');
 
-  // Calculate 0-100 for each listing and sort
-  const rankedListings = (data?.listings || [])
-    .map(listing => ({
-      ...listing,
-      acceleration: getAcceleration(listing.make, listing.model),
-    }))
-    .filter(l => l.acceleration !== null)
-    .sort((a, b) => (a.acceleration as number) - (b.acceleration as number))
-    .slice(0, 30);
+  useEffect(() => {
+    document.title = `${category} km/h Leaderboard | OTO`;
+    return () => { document.title = 'OTO — Online Top Occasions'; };
+  }, [category]);
+
+  const entries = useMemo(() => getEntriesForCategory(category), [category]);
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-      <Link to="/" className="inline-flex items-center gap-1 text-sm font-medium text-surface-600 transition-colors hover:text-brand-accent dark:text-surface-400">
-        ← Back to listings
+    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+      <Link to="/" className="inline-flex items-center gap-1 text-sm font-medium text-surface-400 transition-colors hover:text-brand-accent">
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+        {locale === 'nl' ? 'Terug' : 'Back'}
       </Link>
-      
-      <h1 className="mt-6 text-2xl font-bold text-surface-900 dark:text-white">
-        <svg className="mr-2 inline-block h-6 w-6 text-brand-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-          <path d="M13 2L4.5 13h6L9 22l9.5-12h-6L15 2" />
-        </svg>
-        0-100 km/h Sprint Leaderboard
-      </h1>
-      <p className="mt-2 text-sm text-surface-500 dark:text-surface-400">The fastest cars currently listed on OTO, ranked by acceleration</p>
 
-      {isLoading ? (
-        <div className="mt-8 flex items-center justify-center py-16">
-          <div className="h-5 w-5 animate-spin rounded-full border-2 border-surface-200 border-t-brand-accent" />
-        </div>
-      ) : (
-        <div className="mt-8 space-y-3">
-          {rankedListings.map((listing, index) => (
+      <div className="mt-6">
+        <h1 className="text-2xl font-bold text-surface-900 dark:text-white">
+          ⚡ Sprint Leaderboard
+        </h1>
+        <p className="mt-1 text-sm text-surface-500 dark:text-surface-400">
+          {locale === 'nl' ? 'De snelste auto\'s, gerangschikt op acceleratie' : 'The fastest cars, ranked by acceleration'}
+        </p>
+      </div>
+
+      {/* Speed category toggle */}
+      <div className="mt-5 inline-flex items-center gap-1 rounded-xl border border-surface-200 bg-surface-50 p-1 dark:border-white/[0.1] dark:bg-white/[0.04]">
+        {(['0-100', '0-200', '100-200'] as SpeedCategory[]).map((cat) => (
+          <button
+            key={cat}
+            type="button"
+            onClick={() => setCategory(cat)}
+            className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+              category === cat
+                ? 'bg-brand-accent text-white shadow-sm'
+                : 'text-surface-500 hover:text-surface-900 dark:text-surface-400 dark:hover:text-white'
+            }`}
+          >
+            {cat} km/h
+          </button>
+        ))}
+      </div>
+
+      {/* Leaderboard list */}
+      <div className="mt-6 space-y-2">
+        {entries.map((entry, index) => {
+          const logo = getMakeLogo(entry.make);
+          return (
             <a
-              key={listing.id}
-              href={`/listing/${listing.id}`}
-              className="group flex items-center gap-4 rounded-xl bg-white p-4 shadow-card transition-all hover:shadow-card-hover dark:bg-surface-800"
+              key={`${entry.make}-${entry.model}`}
+              href={`/?makes=${encodeURIComponent(entry.make)}&models=${encodeURIComponent(entry.model)}`}
+              className="group flex items-center gap-4 rounded-xl border border-surface-100 bg-white p-4 transition-all hover:border-brand-accent/30 hover:shadow-md dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-brand-accent/30"
             >
               {/* Rank */}
-              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-                index === 0 ? 'bg-yellow-100 text-yellow-800' :
-                index === 1 ? 'bg-surface-200 text-surface-700' :
-                index === 2 ? 'bg-orange-100 text-orange-800' :
-                'bg-surface-100 text-surface-600 dark:bg-surface-700 dark:text-surface-300'
+              <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                index === 0 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                index === 1 ? 'bg-surface-200 text-surface-600 dark:bg-surface-700 dark:text-surface-300' :
+                index === 2 ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' :
+                'bg-surface-100 text-surface-500 dark:bg-surface-800 dark:text-surface-400'
               }`}>
                 {index + 1}
               </div>
 
-              {/* Image */}
-              <div className="h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-surface-100 dark:bg-surface-700">
-                {listing.primaryImageUrl ? (
-                  <img src={getProxyImageUrl(listing.primaryImageUrl)} alt="" className="h-full w-full object-cover" />
-                ) : null}
+              {/* Brand logo */}
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center">
+                {logo ? (
+                  <img src={logo} alt={entry.make} className="h-7 w-7 object-contain" loading="lazy" />
+                ) : (
+                  <span className="text-xs font-bold text-surface-400">{entry.make.charAt(0)}</span>
+                )}
               </div>
 
-              {/* Info */}
+              {/* Make + Model */}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-surface-900 group-hover:text-brand-accent dark:text-white truncate">
-                  {listing.make} {listing.model}
+                <p className="text-sm font-semibold text-surface-900 group-hover:text-brand-accent dark:text-white truncate">
+                  {entry.make} {entry.model}
                 </p>
-                <p className="text-xs text-surface-500 dark:text-surface-400">
-                  {listing.horsepower} HP • {listing.year} • {formatPrice(listing.price, locale)}
+                <p className="text-[11px] text-surface-400">
+                  {locale === 'nl' ? 'Bekijk advertenties' : 'View listings'} →
                 </p>
               </div>
 
-              {/* Acceleration time */}
+              {/* Time */}
               <div className="shrink-0 text-right">
-                <p className="text-lg font-bold text-brand-accent">{listing.acceleration}s</p>
-                <p className="text-[10px] text-surface-400">0-100 km/h</p>
+                <p className="text-xl font-bold text-brand-accent">{entry.time}s</p>
+                <p className="text-[10px] text-surface-400">{category} km/h</p>
               </div>
             </a>
-          ))}
-        </div>
-      )}
+          );
+        })}
+
+        {entries.length === 0 && (
+          <p className="py-8 text-center text-sm text-surface-400">
+            {locale === 'nl' ? 'Geen data beschikbaar voor deze categorie' : 'No data available for this category'}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

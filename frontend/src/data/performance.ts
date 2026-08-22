@@ -112,3 +112,46 @@ export function getAcceleration(make: string, model: string): number | null {
   
   return null;
 }
+
+/**
+ * 0-200 km/h acceleration times for known models.
+ */
+export const ACCELERATION_0_200: Record<string, Record<string, number>> = {
+  'Bugatti': { 'Chiron': 6.1 },
+  'Ferrari': { 'SF90 Spider': 6.7, 'LaFerrari': 6.9, '812': 7.9, 'F8 Tributo': 7.8 },
+  'Lamborghini': { 'Revuelto': 6.7, 'Aventador': 8.6, 'Huracán': 9.0 },
+  'Porsche': { '918 Spyder': 7.2, '911 Turbo S': 8.9, 'Taycan': 9.6, '911 GT3 RS': 10.6 },
+  'McLaren': { '720S': 7.8, '750S': 7.2, '600LT': 8.4 },
+  'Nissan': { 'GT-R': 8.6 },
+  'Mercedes-Benz': { 'AMG ONE': 7.0, 'AMG GT': 10.8 },
+  'BMW': { 'M5': 11.1, 'M8': 10.5 },
+  'Audi': { 'R8': 9.9, 'e-tron GT': 10.5 },
+  'Tesla': { 'Model S': 9.4 },
+};
+
+/**
+ * 100-200 km/h acceleration times for known models.
+ */
+export const ACCELERATION_100_200: Record<string, Record<string, number>> = {
+  'Bugatti': { 'Chiron': 4.3 },
+  'Ferrari': { 'SF90 Spider': 4.2, 'LaFerrari': 4.3, '812': 5.0, 'F8 Tributo': 4.9 },
+  'Lamborghini': { 'Revuelto': 4.2, 'Aventador': 5.8, 'Huracán': 6.1 },
+  'Porsche': { '918 Spyder': 4.7, '911 Turbo S': 6.2, 'Taycan': 6.8 },
+  'McLaren': { '720S': 5.0, '750S': 4.4, '600LT': 5.5 },
+  'Nissan': { 'GT-R': 5.9 },
+  'Mercedes-Benz': { 'AMG ONE': 4.1 },
+  'BMW': { 'M5': 7.7, 'M8': 7.3 },
+  'Audi': { 'R8': 6.8 },
+};
+
+/** Get acceleration for a specific category */
+export function getAccelerationByCategory(make: string, model: string, category: '0-100' | '0-200' | '100-200'): number | null {
+  const dataMap = category === '0-100' ? ACCELERATION_DATA : category === '0-200' ? ACCELERATION_0_200 : ACCELERATION_100_200;
+  const makeData = dataMap[make];
+  if (!makeData) return null;
+  if (makeData[model]) return makeData[model];
+  for (const [key, value] of Object.entries(makeData)) {
+    if (model.includes(key) || key.includes(model)) return value;
+  }
+  return null;
+}
