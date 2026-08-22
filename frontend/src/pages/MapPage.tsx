@@ -21,6 +21,7 @@ import {
   PerformanceSuvIcon,
   ElectricPerformanceIcon,
 } from '../components/icons/CategoryIcons';
+import { PageTransition } from '../components/PageTransition';
 import type { MapLocation } from '@car-ads/shared';
 
 // Leaflet core CSS
@@ -129,6 +130,7 @@ export default function MapPage() {
   }
 
   return (
+    <PageTransition>
     <div className="relative flex h-[calc(100vh-120px)] flex-col">
       {/* Map container — fills available height */}
       <div className="relative flex-1">
@@ -284,5 +286,6 @@ export default function MapPage() {
         </MobileBottomSheet>
       )}
     </div>
+    </PageTransition>
   );
 }

@@ -18,6 +18,7 @@ import { MarketplaceHealthBanner } from './components/MarketplaceHealthBanner';
 import { Header } from './components/Header';
 import { CompareTray } from './components/CompareTray';
 import { CookieConsent } from './components/CookieConsent';
+import { ScrollToTop } from './components/ScrollToTop';
 import { useLanguage } from './i18n';
 
 /** Error boundary to prevent full-page crashes */
@@ -319,6 +320,7 @@ export function App() {
         />
       </Routes>
       <CompareTray />
+      <ScrollToTop />
       <CookieConsent />
     </div>
     </ErrorBoundary>

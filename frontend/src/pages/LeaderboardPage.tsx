@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ACCELERATION_DATA, ACCELERATION_0_200, ACCELERATION_100_200 } from '../data/performance';
 import { getMakeLogo } from '../utils/makeLogos';
 import { useLanguage } from '../i18n';
+import { PageTransition } from '../components/PageTransition';
 
 type SpeedCategory = '0-100' | '0-200' | '100-200';
 
@@ -73,6 +74,7 @@ export function LeaderboardPage() {
   const entries = useMemo(() => getEntriesForCategory(category), [category]);
 
   return (
+    <PageTransition>
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
       <Link to="/" className="inline-flex items-center gap-1 text-sm font-medium text-surface-400 transition-colors hover:text-brand-accent">
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
@@ -161,5 +163,6 @@ export function LeaderboardPage() {
         )}
       </div>
     </div>
+    </PageTransition>
   );
 }

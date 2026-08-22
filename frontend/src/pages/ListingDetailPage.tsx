@@ -15,6 +15,9 @@ import { useClickTracker } from '../hooks/useClickTracker';
 import { resolveTranslation } from '../utils/translation';
 import { sanitizeHtmlDescription, escapeHtml } from '../utils/sanitizer';
 import { formatPrice, formatNumber, formatDecimal } from '../utils/formatNumber';
+import { PageTransition } from '../components/PageTransition';
+import { AnimateOnScroll } from '../components/AnimateOnScroll';
+import { useCountUp } from '../hooks/useCountUp';
 
 /** Extended listing type as returned by the detail API (includes nested soundProfile) */
 interface ListingDetail {
@@ -122,6 +125,7 @@ export function ListingDetailPage() {
   }
 
   return (
+    <PageTransition>
     <div className="animate-fade-in scroll-smooth space-y-8 pb-20 md:pb-0">
       <Link to="/" className="inline-flex items-center gap-1 text-sm font-medium text-surface-600 transition-colors hover:text-brand-accent dark:text-surface-400 dark:hover:text-brand-accent">
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -304,24 +308,30 @@ export function ListingDetailPage() {
           )}
 
           {/* Specifications Grid */}
+          <AnimateOnScroll animation="fade-in-up">
           <div id="specifications" className="scroll-mt-4">
             <SpecificationsSection listing={listing} />
           </div>
+          </AnimateOnScroll>
 
           {/* Description */}
           {listing.description && (
+            <AnimateOnScroll animation="fade-in-up">
             <div id="description" className="scroll-mt-4">
               <DescriptionSection
                 description={listing.description}
                 descriptionEn={listing.descriptionEn}
               />
             </div>
+            </AnimateOnScroll>
           )}
 
           {/* Price History */}
+          <AnimateOnScroll animation="fade-in-up">
           <div id="price-history" className="scroll-mt-4">
             <PriceHistorySection history={priceHistoryData?.history} />
           </div>
+          </AnimateOnScroll>
 
           {/* Depreciation Calculator */}
           <div id="depreciation" className="scroll-mt-4">
@@ -374,6 +384,7 @@ export function ListingDetailPage() {
 
       {/* Similar Cars Section */}
       {similarListings && similarListings.length > 0 && (
+        <AnimateOnScroll animation="fade-in-up">
         <div className="mt-8">
           <div className="flex items-baseline justify-between">
             <h2 className="text-lg font-bold text-surface-900 dark:text-white">
@@ -412,6 +423,7 @@ export function ListingDetailPage() {
             })}
           </div>
         </div>
+        </AnimateOnScroll>
       )}
 
       {/* Sticky mobile contact bar */}
@@ -441,6 +453,7 @@ export function ListingDetailPage() {
         </div>
       </div>
     </div>
+    </PageTransition>
   );
 }
 

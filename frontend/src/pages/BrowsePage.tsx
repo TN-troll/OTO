@@ -16,34 +16,10 @@ import { formatPrice, formatNumber } from '../utils/formatNumber';
 import { SavedSearchPrompt } from '../components/SavedSearchPrompt';
 import { DigestSubscribe } from '../components/DigestSubscribe';
 import { InFeedAd } from '../components/AdSlot';
+import { PageTransition } from '../components/PageTransition';
+import { SkeletonGrid } from '../components/SkeletonCard';
 
 const DEFAULT_PAGE_SIZE = 20;
-
-/** Skeleton card placeholder for loading state */
-function SkeletonCard() {
-  return (
-    <div className="animate-pulse motion-reduce:animate-none overflow-hidden rounded-xl bg-white shadow-card dark:bg-surface-800">
-      <div className="aspect-[3/2] bg-surface-200 dark:bg-surface-700" />
-      <div className="p-4 space-y-3">
-        <div className="h-4 w-3/4 rounded bg-surface-200 dark:bg-surface-700" />
-        <div className="flex gap-2">
-          <div className="h-6 w-16 rounded-md bg-surface-100 dark:bg-surface-700" />
-          <div className="h-6 w-12 rounded-md bg-surface-100 dark:bg-surface-700" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SkeletonGrid() {
-  return (
-    <div className="grid w-full max-w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
-      {Array.from({ length: 9 }).map((_, i) => (
-        <SkeletonCard key={i} />
-      ))}
-    </div>
-  );
-}
 
 export function BrowsePage() {
   const { t, locale } = useLanguage();
@@ -198,6 +174,7 @@ export function BrowsePage() {
   const hasListings = listings.length > 0;
 
   return (
+    <PageTransition>
     <div className="relative w-full max-w-full overflow-x-hidden">
       {/* Value proposition — shown only when no filters/search active */}
       {!filtersActive && !isSearchActive && (
@@ -400,5 +377,6 @@ export function BrowsePage() {
         <DigestSubscribe />
       </div>
     </div>
+    </PageTransition>
   );
 }

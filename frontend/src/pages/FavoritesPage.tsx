@@ -5,6 +5,7 @@ import { api } from '../api/client';
 import { ListingCard } from '../components/ListingCard';
 import { useLanguage } from '../i18n';
 import type { ListingSummary } from '@car-ads/shared';
+import { PageTransition } from '../components/PageTransition';
 
 export function FavoritesPage() {
   const { favorites } = useFavorites();
@@ -39,6 +40,7 @@ export function FavoritesPage() {
   });
 
   return (
+    <PageTransition>
     <div className="animate-fade-in space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-surface-900 dark:text-white">
@@ -77,5 +79,6 @@ export function FavoritesPage() {
         </div>
       )}
     </div>
+    </PageTransition>
   );
 }

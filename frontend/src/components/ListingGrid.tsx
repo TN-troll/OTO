@@ -1,3 +1,4 @@
+import { useRef, useEffect, useState } from 'react';
 import type { ListingSummary } from '@car-ads/shared';
 import { ListingCard } from './ListingCard';
 import { ListingListItem } from './ListingListItem';
@@ -7,24 +8,44 @@ interface ListingGridProps {
   view?: 'grid' | 'list';
 }
 
-/** Stagger animation classes for the first 6 items, then instant for the rest */
-const STAGGER_CLASSES = [
-  'animate-stagger-1',
-  'animate-stagger-2',
-  'animate-stagger-3',
-  'animate-stagger-4',
-  'animate-stagger-5',
-  'animate-stagger-6',
-];
+/** Number of items to stagger on each batch load */
+const STAGGER_COUNT = 6;
+const STAGGER_DELAY_MS = 50;
 
 export function ListingGrid({ listings, view = 'grid' }: ListingGridProps) {
+  const prevCountRef = useRef(0);
+  const [animateFrom, setAnimateFrom] = useState(0);
+
+  // Track when new items are added (infinite scroll)
+  useEffect(() => {
+    if (listings.length > prevCountRef.current) {
+      setAnimateFrom(prevCountRef.current);
+    }
+    prevCountRef.current = listings.length;
+  }, [listings.length]);
+
+  const getAnimationStyle = (index: number) => {
+    if (index < animateFrom) return {}; // Already visible, no animation
+    const relativeIndex = index - animateFrom;
+    if (relativeIndex >= STAGGER_COUNT) return {}; // Beyond stagger range
+    return { animationDelay: `${relativeIndex * STAGGER_DELAY_MS}ms` };
+  };
+
+  const getAnimationClass = (index: number) => {
+    if (index < animateFrom) return '';
+    const relativeIndex = index - animateFrom;
+    if (relativeIndex < STAGGER_COUNT) return 'animate-fade-in-up motion-reduce:animate-none';
+    return 'animate-fade-in motion-reduce:animate-none';
+  };
+
   if (view === 'list') {
     return (
       <div className="flex w-full max-w-full flex-col gap-4">
         {listings.map((listing, index) => (
           <div
             key={listing.id}
-            className={index < STAGGER_CLASSES.length ? `${STAGGER_CLASSES[index]} motion-reduce:animate-none` : 'animate-fade-in motion-reduce:animate-none'}
+            className={getAnimationClass(index)}
+            style={getAnimationStyle(index)}
           >
             <ListingListItem listing={listing} />
           </div>
@@ -38,9 +59,10 @@ export function ListingGrid({ listings, view = 'grid' }: ListingGridProps) {
       {listings.map((listing, index) => (
         <div
           key={listing.id}
-          className={index < STAGGER_CLASSES.length ? `${STAGGER_CLASSES[index]} motion-reduce:animate-none` : 'animate-fade-in motion-reduce:animate-none'}
+          className={getAnimationClass(index)}
+          style={getAnimationStyle(index)}
         >
-          <ListingCard listing={listing} featured={index === 0} priority={index === 0} />
+          <ListingCard listing={listing} featured={index === 0 && animateFrom === 0} priority={index < 3} />
         </div>
       ))}
     </div>

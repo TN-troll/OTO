@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { useLanguage } from '../i18n';
 import { getMakeLogo } from '../utils/makeLogos';
+import { PageTransition } from '../components/PageTransition';
+import { AnimateOnScroll } from '../components/AnimateOnScroll';
 
 export function BrandsPage() {
   const { locale } = useLanguage();
@@ -22,6 +24,7 @@ export function BrandsPage() {
   const modelsByMake = filterOptions?.modelsByMake ?? {};
 
   return (
+    <PageTransition>
     <div className="animate-fade-in space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-surface-900 dark:text-white">
@@ -66,5 +69,6 @@ export function BrandsPage() {
         </div>
       )}
     </div>
+    </PageTransition>
   );
 }
