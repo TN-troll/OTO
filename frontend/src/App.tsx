@@ -19,6 +19,7 @@ import { Header } from './components/Header';
 import { CompareTray } from './components/CompareTray';
 import { CookieConsent } from './components/CookieConsent';
 import { ScrollToTop } from './components/ScrollToTop';
+import { LoadingBar } from './components/LoadingBar';
 import { useLanguage } from './i18n';
 
 /** Error boundary to prevent full-page crashes */
@@ -68,9 +69,9 @@ function OtoLogo({ className = '' }: { className?: string }) {
     >
       <defs>
         <linearGradient id="oto-gold" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#C9A84C" />
-          <stop offset="50%" stopColor="#F2D680" />
-          <stop offset="100%" stopColor="#C9A84C" />
+          <stop offset="0%" stopColor="#C97B4A" />
+          <stop offset="50%" stopColor="#E8A67A" />
+          <stop offset="100%" stopColor="#C97B4A" />
         </linearGradient>
       </defs>
       {/* Left exhaust pipe (O) */}
@@ -110,6 +111,7 @@ export function App() {
   return (
     <ErrorBoundary>
     <div className="glass-mesh-bg flex min-h-screen flex-col transition-colors duration-300">
+      <LoadingBar />
       <MarketplaceHealthBanner />
       <Routes>
         <Route path="/" element={<BrowseLayout />} />
