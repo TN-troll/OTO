@@ -8,6 +8,7 @@ import { RecentlyViewedStrip } from './RecentlyViewedStrip';
 import { BrowsePage } from '../pages/BrowsePage';
 import { FilterProvider } from '../hooks/FilterContext';
 import { CompareTray } from './CompareTray';
+import { JustListedToast } from './JustListedToast';
 import { useLanguage } from '../i18n';
 
 const MapPage = lazy(() => import('../pages/MapPage'));
@@ -220,6 +221,7 @@ export function BrowseLayout() {
 
       <Footer />
       <MobileBottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      <JustListedToast />
       <CompareTray />
     </FilterProvider>
   );
