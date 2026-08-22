@@ -77,7 +77,7 @@ export function BrandDetailPage() {
             {(models ?? []).map((model) => (
               <a
                 key={model}
-                href={`/?makes=${encodeURIComponent(decodedMake)}&models=${encodeURIComponent(model)}`}
+                href={`/models/${encodeURIComponent(decodedMake)}/${encodeURIComponent(model)}`}
                 className="rounded-xl border border-surface-200 bg-surface-50 px-4 py-2.5 text-sm font-medium text-surface-700 transition-all hover:border-brand-accent/40 hover:bg-brand-accent/5 hover:text-brand-accent dark:border-white/[0.08] dark:bg-white/[0.02] dark:text-surface-200 dark:hover:border-brand-accent/30"
               >
                 {model}
