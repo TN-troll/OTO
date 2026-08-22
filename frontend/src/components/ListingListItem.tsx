@@ -196,6 +196,19 @@ function ListingListItemInner({ listing }: ListingListItemProps) {
                 {marketTrend.trend < 0 ? '↓' : '↑'}{Math.abs(marketTrend.trend)}% {marketTrend.period}
               </span>
             )}
+            {listing.dateAdded && (
+              <span className="flex items-center gap-1">
+                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></svg>
+                {(() => {
+                  const hours = Math.floor((Date.now() - new Date(listing.dateAdded).getTime()) / 3600000);
+                  if (hours < 1) return locale === 'nl' ? 'Zojuist' : 'Just now';
+                  if (hours < 24) return `${hours}h`;
+                  const days = Math.floor(hours / 24);
+                  if (days < 7) return `${days}d`;
+                  return `${Math.floor(days / 7)}w`;
+                })()}
+              </span>
+            )}
           </div>
         </div>
       </div>

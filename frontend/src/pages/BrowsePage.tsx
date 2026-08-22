@@ -199,6 +199,26 @@ export function BrowsePage() {
 
   return (
     <div className="relative w-full max-w-full overflow-x-hidden">
+      {/* Value proposition — shown only when no filters/search active */}
+      {!filtersActive && !isSearchActive && (
+        <div className="mb-6 rounded-2xl border border-surface-200 bg-gradient-to-r from-surface-50 to-white p-5 dark:border-white/[0.08] dark:from-surface-900 dark:to-surface-800">
+          <h2 className="text-lg font-bold text-surface-900 dark:text-white">
+            {locale === 'nl' ? '🏎️ De beste performance & luxe auto\'s van Nederland' : '🏎️ The best performance & luxury cars in the Netherlands'}
+          </h2>
+          <p className="mt-1 text-sm text-surface-500 dark:text-surface-400">
+            {locale === 'nl'
+              ? '3.000+ exclusieve advertenties van AutoScout24, AutoTrack & Marktplaats — op één plek, met prijsvergelijking en marktanalyse.'
+              : '3,000+ exclusive listings from AutoScout24, AutoTrack & Marktplaats — in one place, with price comparison and market analysis.'}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-4 text-xs text-surface-400">
+            <span className="flex items-center gap-1">✓ {locale === 'nl' ? 'Alleen NL' : 'NL only'}</span>
+            <span className="flex items-center gap-1">✓ {locale === 'nl' ? 'Prijsvergelijking' : 'Price comparison'}</span>
+            <span className="flex items-center gap-1">✓ {locale === 'nl' ? 'RDW check' : 'RDW check'}</span>
+            <span className="flex items-center gap-1">✓ {locale === 'nl' ? 'Dagelijks bijgewerkt' : 'Updated daily'}</span>
+          </div>
+        </div>
+      )}
+
       {/* Mobile filter button */}
       <div className="mb-4 lg:hidden">
         <button
